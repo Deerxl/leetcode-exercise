@@ -20,6 +20,41 @@ public class LinkedList {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/palindrome-linked-list/">234. 回文链表</a>
+     * 给你一个单链表的头节点 head ，请你判断该链表是否为回文链表。如果是，返回 true ；否则，返回 false 。
+     * 进阶：你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+     * @param head
+     * @return
+     */
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+
+        ListNode i = head;
+        ListNode j = head.next;
+        StringBuilder sb1 = new StringBuilder();
+        sb1.append(i.val);
+        while (j != null && j.next != null) {
+            i = i.next;
+            j = j.next.next;
+            sb1.append(i.val);
+        }
+
+        StringBuilder sb2 = new StringBuilder();
+        while (i.next != null) {
+            sb2.append(i.next.val);
+            i = i.next;
+        }
+
+        if (sb1.length() > sb2.length()) {
+            sb1.deleteCharAt(sb1.length() - 1);
+        }
+
+        return sb1.reverse().toString().contentEquals(sb2);
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/description/">LCR 140. 训练计划 II</a>
      * 给定一个头节点为 head 的链表用于记录一系列核心肌群训练项目编号，请查找并返回倒数第 cnt 个训练项目编号。
      * 示例 1：

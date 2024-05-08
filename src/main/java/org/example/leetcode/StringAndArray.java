@@ -12,11 +12,99 @@ public class StringAndArray {
 
     public static void main(String[] args) {
 
-        System.out.println(decodeString("3[a2[c]]"));
+        System.out.println(majorityElement(new int[] {7, 7, 5, 7, 5, 1,5, 7, 5, 5, 7, 7,7, 7, 7, 7}));
         // System.out.println(Arrays.toString(maxSlidingWindow(ints, 7273)));
         // long t1 = System.currentTimeMillis();
         // System.out.println(findKthLargest(new int[] {1,1}, 1));
         // System.out.println(System.currentTimeMillis() - t1);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/majority-element/">169. 多数元素</a>
+     * 给定一个大小为 n 的数组 nums ，返回其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+     * 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+     * 示例 1：
+     * 输入：nums = [3,2,3]
+     * 输出：3
+     * @param nums
+     * @return
+     */
+    public static int majorityElement(int[] nums) {
+        int count = 0;
+        Integer candidate = null;
+
+        for (int num : nums) {
+            if (count == 0) {
+                candidate = num;
+            }
+            count += (num == candidate) ? 1 : -1;
+        }
+
+        return candidate;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/longest-consecutive-sequence/">128. 最长连续序列</a>
+     * 给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
+     * 请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
+     * @param nums
+     * @return
+     */
+    public static int longestConsecutive(int[] nums) {
+        if (nums.length <= 1) {
+            return nums.length;
+        }
+
+        Arrays.sort(nums);
+        int result = 1;
+        int tmpLen = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (tmpLen == 1 && nums.length - i < result) {
+                break;
+            }
+            if (nums[i] - nums[i - 1] == 1) {
+                tmpLen++;
+            } else if (nums[i] - nums[i - 1] > 1) {
+                result = Math.max(result, tmpLen);
+                tmpLen = 1;
+            }
+        }
+        result = Math.max(result, tmpLen);
+
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/longest-common-prefix/">14. 最长公共前缀</a>
+     * 编写一个函数来查找字符串数组中的最长公共前缀。
+     * 如果不存在公共前缀，返回空字符串 ""。
+     * 输入：strs = ["flower","flow","flight"]
+     * 输出："fl"
+     * @param strs
+     * @return
+     */
+    public String longestCommonPrefix(String[] strs) {
+        if (strs.length == 0) {
+            return "";
+        }
+        if (strs.length == 1) {
+            return strs[0];
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < strs[0].length(); i++) {
+            char c = strs[0].charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                String str = strs[j];
+                if (i >= str.length()) {
+                    return sb.toString();
+                }
+                if (str.charAt(i) != c) {
+                    return sb.toString();
+                }
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     /**

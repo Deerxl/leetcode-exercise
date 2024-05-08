@@ -16,6 +16,35 @@ public class Dp {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/maximum-length-of-repeated-subarray/">718. 最长重复子数组</a>
+     * 给两个整数数组 nums1 和 nums2 ，返回 两个数组中 公共的 、长度最长的子数组的长度 。
+     * 示例 1：
+     * 输入：nums1 = [1,2,3,2,1], nums2 = [3,2,1,4,7]
+     * 输出：3
+     * 解释：长度最长的公共子数组是 [3,2,1] 。
+     * @param nums1
+     * @param nums2
+     * @return
+     */
+    public int findLength(int[] nums1, int[] nums2) {
+        if (nums1.length == 0 || nums2.length == 0) {
+            return 0;
+        }
+
+        int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+        int result = 0;
+        for (int i = 0; i < nums1.length; i++) {
+            for (int j = 0; j < nums2.length; j++) {
+                if (nums1[i] == nums2[j]) {
+                    dp[i + 1][j + 1] = dp[i][j] + 1;
+                    result = Math.max(result, dp[i + 1][j + 1]);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/climbing-stairs/">70. 爬楼梯</a>
      * 假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
      * 每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？

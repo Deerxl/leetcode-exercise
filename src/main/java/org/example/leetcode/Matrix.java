@@ -3,6 +3,7 @@ package org.example.leetcode;
 import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jialu.yxl
@@ -11,17 +12,71 @@ import java.util.List;
 public class Matrix {
 
     public static void main(String[] args) {
-        int[][] nums = new int[][]{
-                {1, 4, 7, 11, 15},
-                {2, 5, 8, 12, 19},
-                {3, 6, 9, 16, 22},
-                {10, 13, 14, 17, 24},
-                {18, 21, 23, 26, 30}
-        };
+        char[][] nums = new char[][]{
+                {'0','1','1','0','0','1','0','1','0','1'},
+                {'0','0','1','0','1','0','1','0','1','0'},
+                {'1','0','0','0','0','1','0','1','1','0'},
+                {'0','1','1','1','1','1','1','0','1','0'},
+                {'0','0','1','1','1','1','1','1','1','0'},
+                {'1','1','0','1','0','1','1','1','1','0'},
+                {'0','0','0','1','1','0','0','0','1','0'},
+                {'1','1','0','1','1','0','0','1','1','1'},
+                {'0','1','0','1','1','0','1','0','1','1'}}
+                ;
 
-        rotate(nums);
+        maximalSquare(nums);
         // System.out.println();
 
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/maximal-square/">221. 最大正方形</a>
+     * 在一个由 '0' 和 '1' 组成的二维矩阵内，找到只包含 '1' 的最大正方形，并返回其面积。
+     * @param matrix
+     * @return
+     */
+    public static int maximalSquare(char[][] matrix) {
+        if (matrix.length == 0) {
+            return 0;
+        }
+
+        int m = matrix.length, n = matrix[0].length;
+        int result = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int maxLen = Math.min(m - i, n - j);
+                if (maxLen * maxLen < result) {
+                    break;
+                }
+
+                if (matrix[i][j] == '0') {
+                    continue;
+                }
+
+                result = maximalSquare(matrix, i, j, maxLen, result);
+                System.out.println("i: " + i + ", j: " + j + ", result: " + result);
+            }
+        }
+        return result;
+    }
+
+    private static int maximalSquare(char[][] matrix, int i, int j, int maxLen, int result) {
+        int tmpResult = 1;
+        for (int k = 1; k < maxLen; k++) {
+            for (int row = i; row <= i + k; row++) {
+                if (matrix[row][j + k] != '1') {
+                    return Math.max(result, tmpResult);
+                }
+            }
+            for (int col = j; col <= j + k; col++) {
+                if (matrix[i + k][col] != '1') {
+                    return Math.max(result, tmpResult);
+                }
+            }
+            tmpResult = (k + 1) * (k + 1);
+        }
+
+        return Math.max(result, tmpResult);
     }
 
     /**
@@ -115,8 +170,10 @@ public class Matrix {
         for (int i = 0; i < n / 2; i++) {
             for (int j = i; j < n - i - 1; j++) {
                 int temp = matrix[i][j];
-                matrix[i][j] = matrix[j][n - 1 - j];
-                matrix[j][n - 1 - j] = matrix[j][j];
+                matrix[i][j] = matrix[n - 1 - j][i];
+                matrix[n - 1 - j][i] = matrix[n - i - 1][n - j - 1];
+                matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1];
+                matrix[j][n - i - 1] = temp;
             }
         }
     }
