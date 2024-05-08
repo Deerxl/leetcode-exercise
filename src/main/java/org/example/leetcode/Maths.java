@@ -20,9 +20,24 @@ public class Maths {
      * 每个测试用例将有一个内部参数 n，即你实现的函数 rand10() 在测试时将被调用的次数。请注意，这不是传递给 rand10() 的参数。
      * @return
      */
-    // public int rand10() {
-    //
-    // }
+    public int rand10() {
+        while (true) {
+            int num = (rand7() - 1) * 7 + rand7();
+            if (num <= 40) {
+                return num % 10 + 1;
+            } else {
+                num = (num - 40 - 1) * 7 + rand7();
+                if (num <= 60) {
+                    return num % 10 + 1;
+                }
+            }
+        }
+    }
+
+    public int rand7() {
+        Random random = new Random();
+        return random.nextInt(7) + 1;
+    }
 
 
     /**

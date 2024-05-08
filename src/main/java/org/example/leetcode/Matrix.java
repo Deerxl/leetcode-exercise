@@ -25,6 +25,86 @@ public class Matrix {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/search-a-2d-matrix-ii/">240. 搜索二维矩阵 II</a>
+     * 编写一个高效的算法来搜索 m x n 矩阵 matrix 中的一个目标值 target 。该矩阵具有以下特性：
+     * 每行的元素从左到右升序排列。
+     * 每列的元素从上到下升序排列。
+     * @param matrix
+     * @param target
+     * @return
+     */
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        int j;
+        for (j = 0; j < n; j++) {
+            if (matrix[0][j] == target) {
+                return true;
+            } else if (matrix[0][j] > target) {
+                break;
+            }
+        }
+
+        j--;
+        if (j < 0) {
+            return false;
+        }
+
+        int i = 0;
+        while (true) {
+            while (i < m && matrix[i][j] < target) {
+                i++;
+            }
+            if (i >= m) {
+                break;
+            }
+            if (matrix[i][j] == target) {
+                return true;
+            }
+            while (j >= 0 && matrix[i][j] > target) {
+                j--;
+            }
+            if (j < 0) {
+                break;
+            }
+            if (matrix[i][j] == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/minimum-path-sum/">64. 最小路径和</a>
+     * 给定一个包含非负整数的 m x n 网格 grid ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+     * 说明：每次只能向下或者向右移动一步。
+     * @param grid
+     * @return
+     */
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+
+        dp[0][0] = grid[0][0];
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = dp[i - 1][0] + grid[i][0];
+        }
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = dp[0][j - 1] + grid[0][j];
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = Math.min(dp[i][j - 1], dp[i - 1][j]) + grid[i][j];
+            }
+        }
+
+        return dp[m - 1][n - 1];
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/rotate-image/">48. 旋转图像</a>
      * 给定一个 n × n 的二维矩阵 matrix 表示一个图像。请你将图像顺时针旋转 90 度。
      * 你必须在 原地 旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要 使用另一个矩阵来旋转图像。

@@ -17,6 +17,42 @@ public class Tree {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/path-sum-ii/">113. 路径总和 II</a>
+     * 给你二叉树的根节点 root 和一个整数目标和 targetSum ，找出所有 从根节点到叶子节点 路径总和等于给定目标和的路径。
+     * 叶子节点 是指没有子节点的节点。
+     * @param root
+     * @param targetSum
+     * @return
+     */
+    List<List<Integer>> pathSumResult = new ArrayList<>();
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        pathSum(root, targetSum, new ArrayList<>());
+
+        return pathSumResult;
+    }
+
+    private void pathSum(TreeNode root, int targetSum, List<Integer> list) {
+        if (root == null) {
+            return;
+        }
+
+        List<Integer> newList = new ArrayList<>(list);
+        newList.add(root.val);
+        if (root.val == targetSum && root.left == null && root.right == null) {
+            pathSumResult.add(newList);
+            return;
+        }
+
+        if (root.left != null) {
+            pathSum(root.left, targetSum - root.val, newList);
+        }
+
+        if (root.right != null) {
+            pathSum(root.right, targetSum - root.val, newList);
+        }
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/validate-binary-search-tree/">98. 验证二叉搜索树</a>
      * 给你一个二叉树的根节点 root ，判断其是否是一个有效的二叉搜索树。
      * 有效 二叉搜索树定义如下：

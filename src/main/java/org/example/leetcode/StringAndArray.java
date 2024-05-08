@@ -12,11 +12,124 @@ public class StringAndArray {
 
     public static void main(String[] args) {
 
-        System.out.println(combinationSum(new int[] {2,3,6,7}, 7));
+        System.out.println(decodeString("3[a2[c]]"));
         // System.out.println(Arrays.toString(maxSlidingWindow(ints, 7273)));
         // long t1 = System.currentTimeMillis();
         // System.out.println(findKthLargest(new int[] {1,1}, 1));
         // System.out.println(System.currentTimeMillis() - t1);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/decode-string/">394. 字符串解码</a>
+     * 给定一个经过编码的字符串，返回它解码后的字符串。
+     * 编码规则为: k[encoded_string]，表示其中方括号内部的 encoded_string 正好重复 k 次。注意 k 保证为正整数。
+     * 你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。
+     * 此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 k ，例如不会出现像 3a 或 2[4] 的输入。
+     * @param s
+     * @return
+     */
+    public static String decodeString(String s) {
+        if (s.length() < 4) {
+            return s;
+        }
+
+        StringBuilder result = new StringBuilder();
+        Stack<String> stack = new Stack<>();
+        int i = 0;
+        while (i < s.length()) {
+            char c = s.charAt(i);
+
+            if (c - '0' >= 0 && c - '0' <= 9) {
+                StringBuilder tmp = new StringBuilder();
+                while (i < s.length() && s.charAt(i) - '0' >= 0 && s.charAt(i) - '0' <= 9) {
+                    tmp.append(s.charAt(i));
+                    i++;
+                }
+                stack.push(tmp.toString());
+            } else if (c - 'a' >= 0 && c - 'a' < 26) {
+                StringBuilder tmp = new StringBuilder();
+                while (i < s.length() && s.charAt(i) - 'a' >= 0&& s.charAt(i) - 'a' < 26) {
+                    tmp.append(s.charAt(i));
+                    i++;
+                }
+
+                if (stack.isEmpty()) {
+                    result.append(tmp);
+                } else {
+                    stack.push(tmp.toString());
+                }
+            } else if (c - ']' == 0) {
+                StringBuilder tmpStr = new StringBuilder(stack.pop());
+                while (stack.peek().charAt(0) - 'a' >= 0 && stack.peek().charAt(0) - 'a' < 26) {
+                    tmpStr.insert(0, stack.pop());
+                }
+
+                String tmpNum = stack.pop();
+                StringBuilder stringBuilder = new StringBuilder();
+
+                for (int j = 0; j < Integer.parseInt(tmpNum); j++) {
+                    stringBuilder.append(tmpStr);
+                }
+                if (stack.isEmpty()) {
+                    result.append(stringBuilder);
+                } else {
+                    stack.push(stringBuilder.toString());
+                }
+                i++;
+            } else {
+                i++;
+            }
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/">34. 在排序数组中查找元素的第一个和最后一个位置</a>
+     * 给你一个按照非递减顺序排列的整数数组 nums，和一个目标值 target。请你找出给定目标值在数组中的开始位置和结束位置。
+     *
+     * 如果数组中不存在目标值 target，返回 [-1, -1]。
+     *
+     * 你必须设计并实现时间复杂度为 O(log n) 的算法解决此问题。
+     *
+     *输入：nums = [5,7,7,8,8,10], target = 8
+     * 输出：[3,4]
+     * @param nums
+     * @param target
+     * @return
+     */
+    int[] searchRangeResult = new int[]{Integer.MAX_VALUE,Integer.MIN_VALUE};
+    public int[] searchRange(int[] nums, int target) {
+        if (nums.length == 0) {
+            return new int[]{-1,-1};
+        }
+
+        searchRange(nums, 0, nums.length - 1, target);
+
+        return searchRangeResult[0] == Integer.MAX_VALUE ? new int[]{-1, -1} : searchRangeResult;
+    }
+
+    private void searchRange(int[] nums, int start, int end, int target) {
+        if (start > end) {
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+        if (nums[mid] < target) {
+            searchRange(nums, mid + 1, end, target);
+        } else if (nums[mid] > target) {
+            searchRange(nums, start, mid - 1, target);
+        } else {
+            if (mid < searchRangeResult[0]) {
+                searchRangeResult[0] = mid;
+            }
+            if (mid > searchRangeResult[1]) {
+                searchRangeResult[1] = mid;
+            }
+
+            searchRange(nums, mid + 1, end, target);
+            searchRange(nums, start, mid - 1, target);
+        }
     }
 
     /**
