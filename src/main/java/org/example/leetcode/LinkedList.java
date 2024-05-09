@@ -20,6 +20,29 @@ public class LinkedList {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/remove-duplicates-from-sorted-list/">83. 删除排序链表中的重复元素</a>
+     * 给定一个已排序的链表的头 head ， 删除所有重复的元素，使每个元素只出现一次 。返回 已排序的链表 。
+     * @param head
+     * @return
+     */
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode dummyHead = head;
+        while (dummyHead.next != null) {
+            if (dummyHead.val == dummyHead.next.val) {
+                dummyHead.next = dummyHead.next.next;
+            } else {
+                dummyHead = dummyHead.next;
+            }
+        }
+
+        return head;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/palindrome-linked-list/">234. 回文链表</a>
      * 给你一个单链表的头节点 head ，请你判断该链表是否为回文链表。如果是，返回 true ；否则，返回 false 。
      * 进阶：你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
@@ -171,37 +194,6 @@ public class LinkedList {
 
         if (rightHead != null) {
             dummyHead.next = rightHead;
-        }
-
-        return pre.next;
-    }
-
-    /**
-     * <a href="https://leetcode.cn/problems/remove-duplicates-from-sorted-list-ii/">82. 删除排序链表中的重复元素 II</a>
-     *给定一个已排序的链表的头 head ， 删除原始链表中所有重复数字的节点，只留下不同的数字 。返回 已排序的链表 。
-     * @param head
-     * @return
-     */
-    public ListNode deleteDuplicates(ListNode head) {
-        if (head == null || head.next == null) {
-            return head;
-        }
-
-        ListNode pre = new ListNode();
-        pre.next = head;
-
-        ListNode dummyHead = pre;
-        ListNode next;
-        while (dummyHead.next != null) {
-            next = dummyHead.next.next;
-            if (next != null && next.val == dummyHead.next.val) {
-                while (next != null && next.val == dummyHead.next.val) {
-                    next = next.next;
-                }
-                dummyHead.next = next;
-            } else {
-                dummyHead = dummyHead.next;
-            }
         }
 
         return pre.next;
