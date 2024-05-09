@@ -13,11 +13,38 @@ public class StringAndArray {
 
     public static void main(String[] args) {
 
-        System.out.println(largestNumber(new int[] {7, 7, 5, 7, 5, 1,5, 7, 5, 5, 7, 7,7, 7, 7, 7}));
+        // System.out.println(largestNumber(new int[] {7, 7, 5, 7, 5, 1,5, 7, 5, 5, 7, 7,7, 7, 7, 7}));
         // System.out.println(Arrays.toString(maxSlidingWindow(ints, 7273)));
         // long t1 = System.currentTimeMillis();
-        // System.out.println(findKthLargest(new int[] {1,1}, 1));
+        System.out.println(subarraySum(new int[] {1,1, 1}, 2));
         // System.out.println(System.currentTimeMillis() - t1);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/subarray-sum-equals-k/">560. 和为 K 的子数组</a>
+     * 给你一个整数数组 nums 和一个整数 k ，请你统计并返回 该数组中和为 k 的子数组的个数 。
+     * 子数组是数组中元素的连续非空序列。
+     * 示例 1：
+     * 输入：nums = [1,1,1], k = 2
+     * 输出：2
+     * @param nums
+     * @param k
+     * @return
+     */
+    public static int subarraySum(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int result = 0;
+        int preSum = 0;
+        map.put(0, 1);
+        for (int i = 0; i < nums.length; i++) {
+            preSum += nums[i];
+            if (map.containsKey(preSum - k)) {
+                result += map.get(preSum - k);
+            }
+
+            map.put(preSum, map.getOrDefault(preSum, 0) + 1);
+        }
+        return result;
     }
 
     /**
@@ -2061,30 +2088,6 @@ public class StringAndArray {
         }
 
         return count;
-    }
-
-    /**
-     * <a href="https://leetcode.cn/problems/subarray-sum-equals-k/">560. 和为 K 的子数组</a>
-     * @param nums
-     * @param k
-     * @return
-     */
-    public int subarraySum(int[] nums, int k) {
-        int result = 0;
-        for (int i = 0; i < nums.length; i++) {
-            long sum = nums[i];
-            if (sum == k) {
-                result++;
-            }
-            for (int j = i + 1; j < nums.length; j++) {
-                sum += nums[j];
-                if (sum == k) {
-                    result++;
-                }
-            }
-        }
-
-        return result;
     }
 
     /**

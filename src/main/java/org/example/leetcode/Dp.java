@@ -1,5 +1,7 @@
 package org.example.leetcode;
 
+import com.google.common.collect.Lists;
+
 import java.util.*;
 
 /**
@@ -9,10 +11,62 @@ import java.util.*;
 public class Dp {
 
     public static void main(String[] args) {
-        System.out.println(minDistance("zoologicoarchaeologist", "zoogeologist"));
+        System.out.println(wordBreak("leetcode", Lists.newArrayList("leet","code")));
 
         // System.out.println(maxProfit(2, new int[]{3,2,6,5,0,3}));
 
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/word-break/">139. 单词拆分</a>
+     * 给你一个字符串 s 和一个字符串列表 wordDict 作为字典。如果可以利用字典中出现的一个或多个单词拼接出 s 则返回 true。
+     * 注意：不要求字典中出现的单词全部都使用，并且字典中的单词可以重复使用。
+     * @param s
+     * @param wordDict
+     * @return
+     */
+    public static boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = 0; j < wordDict.size(); j++) {
+                String str = wordDict.get(j);
+                if (i - str.length() + 1 >= 0
+                        && dp[i - str.length() + 1]
+                        && str.equals(s.substring(i - str.length() + 1, i + 1))) {
+                    dp[i + 1] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[s.length()];
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/house-robber/">198. 打家劫舍</a>
+     * 你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，
+     * 影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+     * 给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
+     * 示例 1：
+     * 输入：[1,2,3,1]
+     * 输出：4
+     * 解释：偷窃 1 号房屋 (金额 = 1) ，然后偷窃 3 号房屋 (金额 = 3)。
+     *      偷窃到的最高金额 = 1 + 3 = 4 。
+     * @param nums
+     * @return
+     */
+    public int rob(int[] nums) {
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0], nums[1]);
+        for (int i = 2; i < nums.length; i++) {
+            dp[i] = Math.max(dp[i - 2] + nums[i], dp[i - 1]);
+        }
+        return dp[nums.length - 1];
     }
 
     /**
@@ -337,27 +391,6 @@ public class Dp {
             modSecond = (int) resultMod;
         }
         return (int) resultMod % 1000000007;
-    }
-
-    /**
-     * <a href="https://leetcode.cn/problems/word-break/">139. 单词拆分</a>
-     * @param s
-     * @param wordDict
-     * @return
-     */
-    public static boolean wordBreak(String s, List<String> wordDict) {
-        Set<String> set = new HashSet<>(wordDict);
-        boolean[] dp = new boolean[s.length() + 1];
-        dp[0] = true;
-        for (int i = 1; i <= s.length(); i++) {
-            for (int j = 0; j < i; j++) {
-                if (dp[j] && set.contains(s.substring(j, i))) {
-                    dp[i] = true;
-                }
-            }
-        }
-
-        return dp[s.length()];
     }
 
 }

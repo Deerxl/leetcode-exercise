@@ -9,9 +9,115 @@ import java.util.*;
 public class Maths {
 
     public static void main(String[] args) {
-        System.out.println(convertBase10toBase2(7));
+        System.out.println(calculate("14-3/2"));
     }
 
+    /**
+     * <a href="https://leetcode.cn/problems/maximum-product-subarray/">152. 乘积最大子数组</a>
+     * 给你一个整数数组 nums ，请你找出数组中乘积最大的非空连续子数组
+     * （该子数组中至少包含一个数字），并返回该子数组所对应的乘积。
+     * 测试用例的答案是一个 32-位 整数。
+     * 示例 2:
+     * 输入: nums = [-2,0,-1]
+     * 输出: 0
+     * 解释: 结果不能为 2, 因为 [-2,-1] 不是子数组。
+     * @param nums
+     * @return
+     */
+    public int maxProduct(int[] nums) {
+        if (nums.length <= 1) {
+            return nums[0];
+        }
+
+        int result = nums[0];
+        int posMax = nums[0];
+        int negMax = nums[0];
+        int tmpMax, tmpMin;
+        for (int i = 1; i < nums.length; i++) {
+            int num = nums[i];
+            tmpMax = posMax;
+            tmpMin = negMax;
+            posMax = Math.max(num, Math.max(tmpMax * num, tmpMin * num));
+            negMax = Math.min(num, Math.min(tmpMax * num, tmpMin * num));
+            result = Math.max(result, Math.max(posMax, negMax));
+        }
+
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/basic-calculator-ii/">227. 基本计算器 II</a>
+     * 给你一个字符串表达式 s ，请你实现一个基本计算器来计算并返回它的值。
+     * 整数除法仅保留整数部分。
+     * 你可以假设给定的表达式总是有效的。所有中间结果将在 [-231, 231 - 1] 的范围内。
+     * 注意：不允许使用任何将字符串作为数学表达式计算的内置函数，比如 eval() 。
+     * s 由整数和算符 ('+', '-', '*', '/') 组成，中间由一些空格隔开
+     * @param s
+     * @return
+     */
+    public static int calculate(String s) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ' ') {
+                continue;
+            }
+            stringBuilder.append(s.charAt(i));
+        }
+        s = stringBuilder.toString();
+
+        if (s.length() <= 2) {
+            return Integer.parseInt(s);
+        }
+
+        if (s.charAt(0) == '-') {
+            s = "0" + s;
+        }
+
+        Deque<Integer> numStack = new ArrayDeque<>();
+        Deque<Character> opStack = new ArrayDeque<>();
+        int i = 0;
+        while (i < s.length()) {
+            char c = s.charAt(i);
+            if (c - '0' >= 0 && c - '0' <= 9) {
+                StringBuilder sb = new StringBuilder();
+                while (i < s.length() && s.charAt(i) - '0' >= 0 && s.charAt(i) - '0' <= 9) {
+                    sb.append(s.charAt(i));
+                    i++;
+                }
+                numStack.offerLast(Integer.parseInt(sb.toString()));
+            } else if (c == '+' || c == '-') {
+                opStack.offerLast(c);
+                i++;
+            } else if (c == '*' || c == '/') {
+                i++;
+                StringBuilder sb = new StringBuilder();
+                while (i < s.length() && s.charAt(i) - '0' >= 0 && s.charAt(i) - '0' <= 9) {
+                    sb.append(s.charAt(i));
+                    i++;
+                }
+                int nextNum = Integer.parseInt(sb.toString());
+                if (c == '*') {
+                    numStack.offerLast(numStack.pollLast() * nextNum);
+                } else {
+                    numStack.offerLast(numStack.pollLast() / nextNum);
+                }
+            } else {
+                i++;
+            }
+        }
+
+        int result = numStack.pollFirst();
+        while (!opStack.isEmpty()) {
+            Character op = opStack.pollFirst();
+            if (op == '+') {
+                result += numStack.pollFirst();
+            } else {
+                result -= numStack.pollFirst();
+            }
+        }
+
+        return result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/implement-rand10-using-rand7/">470. 用 Rand7() 实现 Rand10()</a>
