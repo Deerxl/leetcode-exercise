@@ -19,6 +19,36 @@ public class LinkedList {
         // System.out.println(reorderList(head));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/swap-nodes-in-pairs/">24. 两两交换链表中的节点</a>
+     * 给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。
+     * @param head
+     * @return
+     */
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode pre = new ListNode();
+        pre.next = head;
+
+        ListNode dummy = pre;
+        ListNode first, second, tail;
+        while (dummy.next != null && dummy.next.next != null) {
+            first = dummy.next;
+            second = dummy.next.next;
+            tail = dummy.next.next.next;
+            dummy.next = second;
+            first.next = tail;
+            second.next = first;
+            dummy = first;
+        }
+
+        return pre.next;
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/remove-duplicates-from-sorted-list/">83. 删除排序链表中的重复元素</a>
      * 给定一个已排序的链表的头 head ， 删除所有重复的元素，使每个元素只出现一次 。返回 已排序的链表 。
