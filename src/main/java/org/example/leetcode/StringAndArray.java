@@ -16,8 +16,124 @@ public class StringAndArray {
         // System.out.println(largestNumber(new int[] {7, 7, 5, 7, 5, 1,5, 7, 5, 5, 7, 7,7, 7, 7, 7}));
         // System.out.println(Arrays.toString(maxSlidingWindow(ints, 7273)));
         // long t1 = System.currentTimeMillis();
-        System.out.println(subarraySum(new int[] {1,1, 1}, 2));
+        System.out.println(validIPAddress("f:f:f:f:f:f:f:f"));
         // System.out.println(System.currentTimeMillis() - t1);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/validate-ip-address/">468. 验证IP地址</a>
+     * 给定一个字符串 queryIP。如果是有效的 IPv4 地址，返回 "IPv4" ；如果是有效的 IPv6 地址，返回 "IPv6" ；如果不是上述类型的 IP 地址，返回 "Neither"
+     * 有效的IPv4地址 是 “x1.x2.x3.x4” 形式的IP地址。 其中 0 <= xi <= 255 且 xi 不能包含 前导零。例如: “192.168.1.1” 、 “192.168.1.0” 为有效IPv4地址， “192.168.01.1” 为无效IPv4地址; “192.168.1.00” 、 “192.168@1.1” 为无效IPv4地址。
+     * 一个有效的IPv6地址 是一个格式为“x1:x2:x3:x4:x5:x6:x7:x8” 的IP地址，其中:
+     * 1 <= xi.length <= 4
+     * xi 是一个 十六进制字符串 ，可以包含数字、小写英文字母( 'a' 到 'f' )和大写英文字母( 'A' 到 'F' )。
+     * 在 xi 中允许前导零。
+     * 例如 "2001:0db8:85a3:0000:0000:8a2e:0370:7334" 和 "2001:db8:85a3:0:0:8A2E:0370:7334" 是有效的 IPv6 地址，而 "2001:0db8:85a3::8A2E:037j:7334" 和 "02001:0db8:85a3:0000:0000:8a2e:0370:7334" 是无效的 IPv6 地址。
+     * @param queryIP
+     * @return
+     */
+    public static String validIPAddress(String queryIP) {
+        if (validIPAddressIPv4(queryIP)) {
+            return "IPv4";
+        }
+        if (validIPAddressIPv6(queryIP)) {
+            return "IPv6";
+        }
+
+        return "Neither";
+    }
+
+    private static boolean validIPAddressIPv6(String queryIP) {
+        if (queryIP.length() < 1 * 8 + 7 || queryIP.length() > 8 * 4 + 7) {
+            return false;
+        }
+        if (queryIP.charAt(0) == ':' || queryIP.charAt(queryIP.length() - 1) == ':') {
+            return false;
+        }
+        String[] split = queryIP.split(":");
+        if (split.length != 8) {
+            return false;
+        }
+
+        for (int i = 0; i < split.length; i++) {
+            String s = split[i];
+            if (s.length() == 0 || s.length() > 4) {
+                return false;
+            }
+
+            for (int j = 0; j < s.length(); j++) {
+                char c = s.charAt(j);
+                if (!(c - '0' >= 0 && c - '0' <= 9)
+                        && !(c - 'a' >= 0 && c - 'a' <= 5)
+                        && !(c - 'A' >= 0 && c - 'A' <= 5)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean validIPAddressIPv4(String queryIP) {
+        if (queryIP.length() < 1 * 4 + 3 || queryIP.length() > 3 * 4 + 3) {
+            return false;
+        }
+        if (queryIP.charAt(0) == '.' || queryIP.charAt(queryIP.length() - 1) == '.') {
+            return false;
+        }
+        String[] split = queryIP.split("\\.");
+        if (split.length != 4) {
+            return false;
+        }
+
+        for (int i = 0; i < split.length; i++) {
+            String s = split[i];
+            if (s.length() == 0 || s.length() > 3) {
+                return false;
+            }
+
+            if ('0' == s.charAt(0) && s.length() > 1) {
+                return false;
+            }
+
+            for (int j = 0; j < s.length(); j++) {
+                if (s.charAt(j) - '0' < 0 || s.charAt(j) - '0' > 9) {
+                    return false;
+                }
+            }
+
+            if (Integer.parseInt(s) > 255) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/move-zeroes/">283. 移动零</a>
+     * 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+     * 请注意 ，必须在不复制数组的情况下原地对数组进行操作。
+     * 示例 1:
+     * 输入: nums = [0,1,0,3,12]
+     * 输出: [1,3,12,0,0]
+     * @param nums
+     */
+    public void moveZeroes(int[] nums) {
+        int zeroIndex = -1;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                if (zeroIndex != i - 1) {
+                    nums[zeroIndex + 1] = nums[i];
+                }
+                zeroIndex++;
+            }
+        }
+        if (zeroIndex >= 0) {
+            for (int i = zeroIndex + 1; i < nums.length; i++) {
+                nums[i] = 0;
+            }
+        }
     }
 
     /**
@@ -2121,7 +2237,7 @@ public class StringAndArray {
      * @param queryIP
      * @return
      */
-    public static String validIPAddress(String queryIP) {
+    public static String validIPAddress1(String queryIP) {
         if (queryIP.length() < 7
                 || queryIP.charAt(queryIP.length() - 1) == '.'
                 ||  queryIP.charAt(queryIP.length() - 1) == ':') {

@@ -9,7 +9,98 @@ import java.util.*;
 public class Maths {
 
     public static void main(String[] args) {
-        System.out.println(calculate("14-3/2"));
+        System.out.println(calculate("-1+(2-11-(2+3))-1+3"));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/basic-calculator/description/">224. 基本计算器</a>
+     * 给你一个字符串表达式 s ，请你实现一个基本计算器来计算并返回它的值。
+     * 注意:不允许使用任何将字符串作为数学表达式计算的内置函数，比如 eval() 。
+     * 1 <= s.length <= 3 * 105
+     * s 由数字、'+'、'-'、'('、')'、和 ' ' 组成
+     * s 表示一个有效的表达式
+     * '+' 不能用作一元运算(例如， "+1" 和 "+(2 + 3)" 无效)
+     * '-' 可以用作一元运算(即 "-1" 和 "-(2 + 3)" 是有效的)
+     * 输入中不存在两个连续的操作符
+     * 每个数字和运行的计算将适合于一个有符号的 32位 整数
+     * @param s
+     * @return
+     */
+    public static int calculate(String s) {
+        Stack<Integer> numStack = new Stack<>();
+        Stack<Character> opStack = new Stack<>();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == ' ') {
+                continue;
+            }
+            if (c == '-') {
+                if (stringBuilder.length() == 0) {
+                    stringBuilder.append("0-");
+                } else if (stringBuilder.charAt(stringBuilder.length() - 1) == '(') {
+                    stringBuilder.append("0-");
+                } else {
+                    stringBuilder.append("-");
+                }
+            } else {
+                stringBuilder.append(c);
+            }
+        }
+        s = stringBuilder.toString();
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            switch (c) {
+                case '(':
+                    opStack.push(c);
+                    break;
+                case '+':
+                case '-' :
+                    if (!opStack.isEmpty() && (opStack.peek() == '+' || opStack.peek() == '-')) {
+                        calculateDoOp(numStack, opStack);
+                    }
+                    opStack.push(c);
+                    break;
+                case ')':
+                    while (opStack.peek() != '(') {
+                        calculateDoOp(numStack, opStack);
+                    }
+                    opStack.pop();
+                    break;
+                case ' ':
+                    break;
+                default:
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(c);
+                    while (++i < s.length() && s.charAt(i) - '0' >= 0 && s.charAt(i) - '0' <= 9) {
+                        sb.append(s.charAt(i));
+                    }
+                    i--;
+                    numStack.push(Integer.parseInt(sb.toString()));
+                    break;
+            }
+        }
+
+        while (!opStack.isEmpty()) {
+            calculateDoOp(numStack, opStack);
+        }
+        return numStack.pop();
+    }
+
+    private static void calculateDoOp(Stack<Integer> numStack, Stack<Character> opStack) {
+        int num1 = numStack.pop();
+        int num2 = 0;
+        if (!numStack.isEmpty()) {
+            num2 = numStack.pop();
+        }
+        Character op = opStack.pop();
+        if (op == '+') {
+            numStack.push(num1 + num2);
+        } else if (op == '-') {
+            numStack.push(num2 - num1);
+        }
     }
 
     /**
@@ -55,7 +146,7 @@ public class Maths {
      * @param s
      * @return
      */
-    public static int calculate(String s) {
+    public static int calculate2(String s) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == ' ') {
