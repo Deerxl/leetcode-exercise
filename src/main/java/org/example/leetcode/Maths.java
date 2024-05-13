@@ -13,6 +13,21 @@ public class Maths {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/single-number/">136. Single Number</a>
+     * Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+     * You must implement a solution with a linear runtime complexity and use only constant extra space.
+     * @param nums
+     * @return
+     */
+    public int singleNumber(int[] nums) {
+        int num = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            num = num ^ nums[i];
+        }
+        return num;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/basic-calculator/description/">224. 基本计算器</a>
      * 给你一个字符串表达式 s ，请你实现一个基本计算器来计算并返回它的值。
      * 注意:不允许使用任何将字符串作为数学表达式计算的内置函数，比如 eval() 。

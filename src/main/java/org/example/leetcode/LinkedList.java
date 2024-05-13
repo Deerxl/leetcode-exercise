@@ -11,13 +11,111 @@ import java.util.*;
 public class LinkedList {
 
     public static void main(String[] args) {
-        ListNode head = new ListNode(4);
-        head.next = new ListNode(2);
-        head.next.next = new ListNode(1);
-        head.next.next.next = new ListNode(3);
-        sortList(head);
+        Node root = new Node(4);
+        root.left = new Node(2);
+        root.left.left = new Node(1);
+        root.left.right = new Node(3);
+        root.right = new Node(5);
+        treeToDoublyList(root);
+
+        // ListNode head = new ListNode(4);
+        // head.next = new ListNode(2);
+        // head.next.next = new ListNode(1);
+        // head.next.next.next = new ListNode(3);
+        // sortList(head);
         // System.out.println(reorderList(head));
     }
+
+    /**
+     * <a href="https://leetcode.cn/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/">LCR 155. 将二叉搜索树转化为排序的双向链表</a>
+     * 将一个 二叉搜索树 就地转化为一个 已排序的双向循环链表 。
+     * 对于双向循环列表，你可以将左右孩子指针作为双向循环链表的前驱和后继指针，第一个节点的前驱是最后一个节点，最后一个节点的后继是第一个节点。
+     * 特别地，我们希望可以 就地 完成转换操作。当转化完成以后，树中节点的左指针需要指向前驱，树中节点的右指针需要指向后继。还需要返回链表中最小元素的指针。
+     * @param root
+     * @return
+     */
+    public static Node treeToDoublyList(Node root) {
+        if (root == null) {
+            return null;
+        }
+
+        treeToDoublyListInOrder(root);
+
+        head.left = pre;
+        pre.right = head;
+        return head;
+    }
+
+    static Node pre, head;
+    private static void treeToDoublyListInOrder(Node root) {
+        if (root == null) {
+            return;
+        }
+
+        treeToDoublyListInOrder(root.left);
+        if (pre == null) {
+            head = root;
+            pre = root;
+        } else {
+            pre.right = root;
+            root.left = pre;
+            pre = root;
+        }
+        treeToDoublyListInOrder(root.right);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/copy-list-with-random-pointer/">138. Copy List with Random Pointer</a>
+     * A linked list of length n is given such that each node contains an additional random pointer,
+     * which could point to any node in the list, or null.
+     * Construct a deep copy of the list.
+     * The deep copy should consist of exactly n brand new nodes,
+     * where each new node has its value set to the value of its corresponding original node.
+     * Both the next and random pointer of the new nodes should point to new nodes in the copied list
+     * such that the pointers in the original list and copied list represent the same list state.
+     * None of the pointers in the new list should point to nodes in the original list.
+     * For example, if there are two nodes X and Y in the original list, where X.random --> Y,
+     * then for the corresponding two nodes x and y in the copied list, x.random --> y.
+     * Return the head of the copied linked list.
+     * @param head
+     * @return
+     */
+    public Node copyRandomList(Node head) {
+        if (head == null) {
+            return null;
+        }
+
+        Node dummy = head;
+        Map<Node, Integer> oldNodeMap = new HashMap<>();
+        List<Node> newNodeList = new ArrayList<>();
+        int count = 0;
+
+        Node pre = new Node(0);
+        Node newDummy = pre;
+
+        while (dummy != null) {
+            oldNodeMap.put(dummy, count++);
+
+            newDummy.next = new Node(dummy.val);
+            newDummy = newDummy.next;
+            newNodeList.add(newDummy);
+
+            dummy = dummy.next;
+        }
+
+        for (Map.Entry<Node, Integer> entry : oldNodeMap.entrySet()) {
+            Node node = entry.getKey();
+            Integer index = entry.getValue();
+
+            Integer randomIndex = oldNodeMap.get(node.random);
+            if (randomIndex != null) {
+                newNodeList.get(index).random = newNodeList.get(randomIndex);
+            }
+        }
+
+        return pre.next;
+    }
+
 
 
     /**
@@ -629,41 +727,5 @@ public class LinkedList {
         }
 
         return pre.next;
-    }
-
-    /**
-     * <a href="https://leetcode.cn/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/">剑指 Offer 36. 二叉搜索树与双向链表</a>
-     * @param root
-     * @return
-     */
-    public static Node treeToDoublyList(Node root) {
-        if (root == null) {
-            return null;
-        }
-
-        inOrder(root);
-        head.left = pre;
-        pre.right = head;
-
-        return head;
-    }
-
-    static Node pre, head;
-    public static void inOrder(Node root) {
-        if (root == null) {
-            return;
-        }
-        inOrder(root.left);
-
-        if (pre != null) {
-            pre.right = root;
-        } else {
-            head = root;
-        }
-        root.left = pre;
-        pre = root;
-
-        inOrder(root.right);
-
     }
 }

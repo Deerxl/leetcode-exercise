@@ -13,11 +13,88 @@ public class StringAndArray {
 
     public static void main(String[] args) {
 
-        // System.out.println(largestNumber(new int[] {7, 7, 5, 7, 5, 1,5, 7, 5, 5, 7, 7,7, 7, 7, 7}));
+        System.out.println(permuteUnique(new int[] {1,1,2}));
         // System.out.println(Arrays.toString(maxSlidingWindow(ints, 7273)));
         // long t1 = System.currentTimeMillis();
-        System.out.println(validIPAddress("f:f:f:f:f:f:f:f"));
+        // System.out.println(validIPAddress("f:f:f:f:f:f:f:f"));
         // System.out.println(System.currentTimeMillis() - t1);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/container-with-most-water/">11. Container With Most Water</a>
+     * You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+     * Find two lines that together with the x-axis form a container, such that the container contains the most water.
+     * Return the maximum amount of water a container can store.
+     * Notice that you may not slant the container.
+     * Input: height = [1,8,6,2,5,4,8,3,7]
+     * Output: 49
+     * Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+     * @param height
+     * @return
+     */
+    public int maxArea(int[] height) {
+        int result = 0;
+        int i = 0, j = height.length - 1;
+        while (i < j) {
+            if (height[i] < height[j]) {
+                result = Math.max(result, height[i] * (j - i));
+                i++;
+            } else {
+                result = Math.max(result, height[j] * (j - i));
+                j--;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/permutations-ii/">47. Permutations II</a>
+     * Given a collection of numbers, nums, that might contain duplicates, return all possible unique permutations in any order.
+     * Example 1:
+     * Input: nums = [1,1,2]
+     * Output:
+     * [[1,1,2],
+     *  [1,2,1],
+     *  [2,1,1]]
+     * @param nums
+     * @return
+     */
+    static List<List<Integer>> permuteUniqueResult = new ArrayList<>();
+    static List<Integer> permuteUniqueNums = new ArrayList<>();
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+
+        for (int num : nums) {
+            permuteUniqueNums.add(num);
+        }
+
+        permuteUnique(0);
+
+        return permuteUniqueResult;
+    }
+
+    private static void permuteUnique(int start) {
+        if (start == permuteUniqueNums.size() - 1) {
+            permuteUniqueResult.add(new ArrayList<>(permuteUniqueNums));
+            return;
+        }
+
+        Set<Integer> set = new HashSet<>();
+        for (int i = start; i < permuteUniqueNums.size(); i++) {
+            if (set.contains(permuteUniqueNums.get(i))) {
+                continue;
+            }
+            set.add(permuteUniqueNums.get(i));
+            swap(permuteUniqueNums, i, start);
+            permuteUnique(start + 1);
+            swap(permuteUniqueNums, i, start);
+        }
+    }
+
+    private static void swap(List<Integer> list, int i, int j) {
+        int tmp = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, tmp);
     }
 
     /**
@@ -1962,26 +2039,6 @@ public class StringAndArray {
         }
 
         System.arraycopy(tempArr, 0, nums, start, end - start + 1);
-    }
-
-    /**
-     * <a href="https://leetcode.cn/problems/container-with-most-water/">11. 盛最多水的容器</a>
-     * @param height
-     * @return
-     */
-    public int maxArea(int[] height) {
-        int i = 0, j = height.length - 1;
-        int result = 0;
-        while (i < j) {
-            result = Math.max(result, (j - i) * Math.min(height[i], height[j]));
-            if (height[i] < height[j]) {
-                i++;
-            } else {
-                j--;
-            }
-        }
-
-        return result;
     }
 
     /**

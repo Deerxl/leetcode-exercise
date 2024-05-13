@@ -7,37 +7,38 @@ import java.util.Objects;
  * @date 07/02/2023 14:43
  */
 public class LFUNode implements Comparable<LFUNode> {
-    int count;
-    int time;
+
     int key;
     int value;
+    int count;
+    int time;
 
-    public LFUNode(int count, int time, int key, int value) {
-        this.count = count;
-        this.time = time;
+    public LFUNode(int key, int value, int count, int time) {
         this.key = key;
         this.value = value;
+        this.count = count;
+        this.time = time;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        LFUNode lfuNode = (LFUNode) o;
-        return count == lfuNode.count && time == lfuNode.time && key == lfuNode.key && value == lfuNode.value;
+    public int compareTo(LFUNode node) {
+        return count == node.count ? time - node.time : count - node.count;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(count, time, key, value);
+        return Objects.hash(this.value, this.key, this.time, this.count);
     }
 
     @Override
-    public int compareTo(LFUNode lfuNode) {
-        return count == lfuNode.count ? time - lfuNode.time : count - lfuNode.count;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof LFUNode) {
+            LFUNode node = (LFUNode) obj;
+            return this.key == node.key && this.count == node.count && this.value == node.value && this.time == node.time;
+        }
+        return false;
     }
 }
