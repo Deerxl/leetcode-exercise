@@ -18,6 +18,35 @@ public class Dp {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii/">123. Best Time to Buy and Sell Stock III</a>
+     * You are given an array prices where prices[i] is the price of a given stock on the ith day.
+     * Find the maximum profit you can achieve. You may complete at most two transactions.
+     * Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+     * Example 1:
+     * Input: prices = [3,3,5,0,0,3,1,4]
+     * Output: 6
+     * Explanation: Buy on day 4 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
+     * Then buy on day 7 (price = 1) and sell on day 8 (price = 4), profit = 4-1 = 3.
+     * @param prices
+     * @return
+     */
+    public int maxProfit3(int[] prices) {
+        if (prices.length <= 1) {
+            return 0;
+        }
+
+        int buy1 = prices[0], buy2 = prices[0];
+        int sell1 = 0, sell2 = 0;
+        for (int i = 1; i < prices.length; i++) {
+            buy1 = Math.min(buy1, prices[i]);
+            sell1 = Math.max(sell1, prices[i] - buy1);
+            buy2 = Math.min(buy2, prices[i] - sell1);
+            sell2 = Math.max(sell2, prices[i] - buy2);
+        }
+        return sell2;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/word-break/">139. 单词拆分</a>
      * 给你一个字符串 s 和一个字符串列表 wordDict 作为字典。如果可以利用字典中出现的一个或多个单词拼接出 s 则返回 true。
      * 注意：不要求字典中出现的单词全部都使用，并且字典中的单词可以重复使用。

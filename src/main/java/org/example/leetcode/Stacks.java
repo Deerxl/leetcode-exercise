@@ -1,5 +1,7 @@
 package org.example.leetcode;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 /**
@@ -7,6 +9,74 @@ import java.util.Stack;
  * @date 5/11/24 8:42 PM
  */
 public class Stacks {
+
+    public static void main(String[] args) {
+        System.out.println(removeKdigits("112", 1));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/remove-k-digits/">402. Remove K Digits</a>
+     * Given string num representing a non-negative integer num, and an integer k, return the smallest possible integer after removing k digits from num.
+     * Example 1:
+     * Input: num = "1432219", k = 3
+     * Output: "1219"
+     * Explanation: Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest.
+     * @param num
+     * @param k
+     * @return
+     */
+    public static String removeKdigits(String num, int k) {
+        if (num.length() <= 1) {
+            return "0";
+        }
+        Stack<Character> stack = new Stack<>();
+        stack.push(num.charAt(0));
+        int i = 1;
+        while (i < num.length()) {
+            char c = num.charAt(i);
+            if (stack.isEmpty()) {
+                stack.push(c);
+                i++;
+            } else {
+                if (c - stack.peek() >= 0) {
+                    stack.push(c);
+                    i++;
+                } else {
+                    while (k > 0 && !stack.isEmpty() && c - stack.peek() < 0) {
+                        stack.pop();
+                        k--;
+                    }
+                    stack.push(c);
+                    i++;
+                    if (k == 0) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        while (k > 0) {
+            stack.pop();
+            k--;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        while (!stack.isEmpty()) {
+            stringBuilder.insert(0, stack.pop());
+        }
+        if (i < num.length()) {
+            stringBuilder.append(num.substring(i));
+        }
+        i = 0;
+        while (i < stringBuilder.length()) {
+            if (stringBuilder.charAt(i) == '0') {
+                i++;
+            } else {
+                break;
+            }
+        }
+        return i >= stringBuilder.length() ? "0" : stringBuilder.substring(i);
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/daily-temperatures/">739. 每日温度</a>

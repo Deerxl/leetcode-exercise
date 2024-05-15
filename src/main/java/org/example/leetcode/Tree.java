@@ -17,6 +17,38 @@ public class Tree {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/check-completeness-of-a-binary-tree/">958. Check Completeness of a Binary Tree</a>
+     * Given the root of a binary tree, determine if it is a complete binary tree.
+     * In a complete binary tree, every level, except possibly the last, is completely filled,
+     * and all nodes in the last level are as far left as possible.
+     * It can have between 1 and 2h nodes inclusive at the last level h.
+     * @param root
+     * @return
+     */
+    public boolean isCompleteTree(TreeNode root) {
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        root.val = 1;
+        queue.offer(root);
+        int index = 1;
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node.val != index) {
+                return false;
+            }
+            index++;
+            if (node.left != null) {
+                node.left.val = node.val * 2;
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                node.right.val = node.val * 2 + 1;
+                queue.offer(node.right);
+            }
+        }
+        return true;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/invert-binary-tree/">226. 翻转二叉树</a>
      * 给你一棵二叉树的根节点 root ，翻转这棵二叉树，并返回其根节点。
      * @param root
@@ -880,49 +912,5 @@ public class Tree {
         inOrder(root.left);
         list.add(root.val);
         inOrder(root.right);
-    }
-
-    /**
-     * <a href="https://leetcode.cn/problems/check-completeness-of-a-binary-tree/">958. 二叉树的完全性检验</a>
-     * @param root
-     * @return
-     */
-    public boolean isCompleteTree(TreeNode root) {
-        if (root == null) {
-            return true;
-        }
-
-        Queue<TreeNode> queue = new ArrayDeque<>();
-        queue.add(root);
-        int curLevelCount = 1;
-        int nextLevelCount = 0;
-        boolean end = false;
-        while (!queue.isEmpty()) {
-            int count = 0;
-            while (count < curLevelCount) {
-                TreeNode node = queue.poll();
-                count++;
-                if (end && (node.left != null || node.right != null)) {
-                    return false;
-                }
-                if (node.left != null && node.right != null) {
-                    queue.offer(node.left);
-                    queue.offer(node.right);
-                    nextLevelCount += 2;
-                } else if (node.left != null && node.right == null) {
-                    end = true;
-                    queue.offer(node.left);
-                    nextLevelCount += 1;
-                } else if (node.left == null && node.right != null) {
-                    return false;
-                } else {
-                    end = true;
-                }
-            }
-            curLevelCount = nextLevelCount;
-            nextLevelCount = 0;
-        }
-
-        return true;
     }
 }

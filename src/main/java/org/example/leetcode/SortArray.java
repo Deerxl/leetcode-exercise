@@ -1,7 +1,6 @@
 package org.example.leetcode;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author jialu.yxl
@@ -10,9 +9,68 @@ import java.util.Random;
 public class SortArray {
 
     public static void main(String[] args) {
+        System.out.println(reversePairs(new int[] {9,7,5,4,6}));
         System.out.println(Arrays.toString(quickSortArray(new int[]{5,4,4,2,1,32,3,52,1,32,4,4,1,1,3,2,1})));
     }
 
+    /**
+     * <a href="https://leetcode.cn/problems/shu-zu-zhong-de-ni-xu-dui-lcof/">LCR 170. 交易逆序对的总数</a>
+     * 在股票交易中，如果前一天的股价高于后一天的股价，则可以认为存在一个「交易逆序对」。
+     * 请设计一个程序，输入一段时间内的股票交易记录 record，返回其中存在的「交易逆序对」总数。
+     * 示例 1:
+     * 输入：record = [9, 7, 5, 4, 6]
+     * 输出：8
+     * 解释：交易中的逆序对为 (9, 7), (9, 5), (9, 4), (9, 6), (7, 5), (7, 4), (7, 6), (5, 4)。
+     * @param record
+     * @return
+     */
+    static int reversePairsResult = 0;
+    public static int reversePairs(int[] record) {
+        if (record.length <= 1) {
+            return 0;
+        }
+
+        int[] tmpArr = new int[record.length];
+        reversePairsMergeSort(record, 0, record.length - 1, tmpArr);
+
+        return reversePairsResult;
+    }
+
+    private static void reversePairsMergeSort(int[] record, int start, int end, int[] tmpArr) {
+        if (start >= end) {
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+        reversePairsMergeSort(record, start, mid, tmpArr);
+        reversePairsMergeSort(record, mid + 1, end, tmpArr);
+
+        if (record[mid] <= record[mid + 1]) {
+            return;
+        }
+
+        reversePairsMergeSortMerge(record, start, mid, mid + 1, end, tmpArr);
+    }
+
+    private static void reversePairsMergeSortMerge(int[] record, int start1, int end1, int start2, int end2, int[] tmpArr) {
+        int i = start1, j = start2;
+        int index = i;
+        while (i <= end1 || j <= end2) {
+            if (i <= end1 && j <= end2) {
+                if (record[i] <= record[j]) {
+                    tmpArr[index++] = record[i++];
+                } else {
+                    reversePairsResult += end1 - i + 1;
+                    tmpArr[index++] = record[j++];
+                }
+            } else if (i <= end1) {
+                tmpArr[index++] = record[i++];
+            } else {
+                tmpArr[index++] = record[j++];
+            }
+        }
+        System.arraycopy(tmpArr, start1, record, start1, end2 - start1 + 1);
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/sort-an-array/description/">912. 排序数组</a>

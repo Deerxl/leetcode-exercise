@@ -1,7 +1,10 @@
 package org.example.leetcode;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.security.KeyPair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +12,7 @@ import java.util.Map;
  * @author jialu.yxl
  * @date 08/03/2023 17:11
  */
+@Slf4j
 public class Matrix {
 
     public static void main(String[] args) {
@@ -24,15 +28,178 @@ public class Matrix {
                 {'0','1','0','1','1','0','1','0','1','1'}}
                 ;
 
-        int[][] nums1 = new int[][]{
-                {1,0,0},
-                {1,0,1},
-                {0,1,1}
+        char[][] board = new char[][] {
+                {'A','B','C','E'},
+                {'S','F','E','S'},
+                {'A','D','E','E'}
         };
 
-        maxAreaOfIsland(nums1);
-        // System.out.println();
+        int[][] nums1 = new int[][]{
+                {1,2,3},
+                {4,5,6},
+                {7,8,9}
+        };
 
+        System.out.println(exist(board, "ABCESEEEFS"));
+
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/search-a-2d-matrix/">74. Search a 2D Matrix</a>
+     * You are given an m x n integer matrix matrix with the following two properties:
+     * Each row is sorted in non-decreasing order.
+     * The first integer of each row is greater than the last integer of the previous row.
+     * Given an integer target, return true if target is in matrix or false otherwise.
+     * You must write a solution in O(log(m * n)) time complexity.
+     * @param matrix
+     * @param target
+     * @return
+     */
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length, n = matrix[0].length;
+
+        int row = searchMatrixRow(matrix, target, 0, m - 1);
+        if (row == -1) {
+            return false;
+        }
+        return searchMatrixCol(matrix, target, row, 0, n - 1);
+    }
+
+    private boolean searchMatrixCol(int[][] matrix, int target, int row, int startCol, int endCol) {
+        if (startCol > endCol) {
+            return false;
+        }
+        int mid = (startCol + endCol) / 2;
+        if (matrix[row][mid] == target) {
+            return true;
+        }
+
+        if (matrix[row][mid] > target) {
+            return searchMatrixCol(matrix, target, row, startCol, mid - 1);
+        } else {
+            return searchMatrixCol(matrix, target, row, mid + 1, endCol);
+        }
+    }
+
+    private int searchMatrixRow(int[][] matrix, int target, int startRow, int endRow) {
+        if (startRow > endRow) {
+            return -1;
+        }
+
+        int mid = (startRow + endRow) / 2;
+        if (matrix[mid][0] > target) {
+            return searchMatrixRow(matrix, target, startRow, mid - 1);
+        } else if (matrix[mid][0] == target) {
+            return mid;
+        } else {
+            if (mid == matrix.length - 1 || matrix[mid + 1][0] > target) {
+                return mid;
+            } else {
+                return searchMatrixRow(matrix, target, mid + 1, endRow);
+            }
+        }
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/word-search/">79. Word Search</a>
+     * Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+     * The word can be constructed from letters of sequentially adjacent cells,
+     * where adjacent cells are horizontally or vertically neighboring.
+     * The same letter cell may not be used more than once.
+     * @param board
+     * @param word
+     * @return
+     */
+    public static boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        if (word.length() > m * n) {
+            return false;
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == word.charAt(0)) {
+                    boolean[][] visit = new boolean[m][n];
+                    if (existDfs(board, i, j, visit, word, 0)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean existDfs(char[][] board, int i, int j, boolean[][] visit, String word, int index) {
+        if (index == word.length()) {
+            return true;
+        }
+
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
+            return false;
+        }
+
+        if (visit[i][j] || board[i][j] != word.charAt(index)) {
+            return false;
+        }
+
+        visit[i][j] = true;
+        index++;
+
+        int[][] dirs = new int[][] {{1,0}, {-1,0}, {0,1}, {0,-1}};
+        for (int[] dir : dirs) {
+            boolean[][] newVisit = Arrays.copyOf(visit, visit.length);
+            if (existDfs(board, i + dir[0], j + dir[1], newVisit, word, index)) {
+                return true;
+            }
+        }
+        visit[i][j] = false;
+
+        return false;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/diagonal-traverse/">498. Diagonal Traverse</a>
+     * Given an m x n matrix mat, return an array of all the elements of the array in a diagonal order.
+     * @param mat
+     * @return
+     */
+    public static int[] findDiagonalOrder(int[][] mat) {
+        if (mat.length == 0 || mat[0].length == 0) {
+            return new int[]{};
+        }
+        int m = mat.length, n = mat[0].length;
+        int[] result = new int[m * n];
+        int index = 0;
+
+        int i = 0, j = 0;
+        while (i >= 0 && i < m && j >= 0 && j < n) {
+            while (i >= 0 && j < n) {
+                result[index++] = mat[i][j];
+                i--;
+                j++;
+            }
+
+            i++;
+            if (j >= n) {
+                j--;
+                i++;
+            }
+
+            while (i < m && j >= 0) {
+                result[index++] = mat[i][j];
+                i++;
+                j--;
+            }
+
+            j++;
+            if (i >= m) {
+                i--;
+                j++;
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -139,7 +306,7 @@ public class Matrix {
      * @param target
      * @return
      */
-    public boolean searchMatrix(int[][] matrix, int target) {
+    public boolean searchMatrix240(int[][] matrix, int target) {
         int m = matrix.length;
         int n = matrix[0].length;
 
