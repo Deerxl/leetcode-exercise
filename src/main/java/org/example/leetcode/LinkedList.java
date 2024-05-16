@@ -27,6 +27,52 @@ public class LinkedList {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/rotate-list/">61. Rotate List</a>
+     * Given the head of a linked list, rotate the list to the right by k places.
+     * Input: head = [1,2,3,4,5], k = 2
+     * Output: [4,5,1,2,3]
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        int count = 0;
+        ListNode dummy = head;
+        while (dummy != null) {
+            count++;
+            dummy = dummy.next;
+        }
+
+        k = k % count;
+        if (k == 0) {
+            return head;
+        }
+
+        int cut = count - k - 1;
+        dummy = head;
+        while (cut > 0) {
+            dummy = dummy.next;
+            cut--;
+        }
+
+        ListNode newHead = dummy.next;
+        dummy.next = null;
+
+        dummy = head;
+        ListNode dummy2 = newHead;
+        while (dummy2.next != null) {
+            dummy2 = dummy2.next;
+        }
+        dummy2.next = dummy;
+
+        return newHead;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/">LCR 155. 将二叉搜索树转化为排序的双向链表</a>
      * 将一个 二叉搜索树 就地转化为一个 已排序的双向循环链表 。
      * 对于双向循环列表，你可以将左右孩子指针作为双向循环链表的前驱和后继指针，第一个节点的前驱是最后一个节点，最后一个节点的后继是第一个节点。

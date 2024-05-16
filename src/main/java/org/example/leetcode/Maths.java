@@ -9,7 +9,48 @@ import java.util.*;
 public class Maths {
 
     public static void main(String[] args) {
-        System.out.println(reverse(Integer.MAX_VALUE));
+        System.out.println(myPow(1.0000000000002, -2147483648));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/powx-n/">50. Pow(x, n)</a>
+     * Implement pow(x, n), which calculates x raised to the power n (i.e., xn).
+     * Input: x = 2.00000, n = -2
+     * Output: 0.25000
+     * Explanation: 2-2 = 1/22 = 1/4 = 0.25
+     * @param x -100.0 < x < 100.0
+     * @param n -231 <= n <= 231-1
+     * @return
+     */
+    public static double myPow(double x, int n) {
+        if (x == 1 || x == 0) {
+            return x;
+        }
+        if (n == 0) {
+            return 1;
+        }
+        if (x == -1) {
+            return Math.abs(n) % 2 == 0 ? 1 : -1;
+        }
+
+        long n1 = n;
+        if (n < 0) {
+            x = 1 / x;
+            n1 = -n1;
+        }
+        return myPowSimple(x, n1);
+    }
+
+    private static double myPowSimple(double x, long n) {
+        if (n == 1) {
+            return x;
+        }
+        double half = myPowSimple(x, n / 2);
+        if (n % 2 == 1) {
+            return half * half * x;
+        } else {
+            return half * half;
+        }
     }
 
     /**
@@ -475,7 +516,7 @@ public class Maths {
      * @param n
      * @return
      */
-    public static double myPow(double x, int n) {
+    public static double myPow1(double x, int n) {
         if (n == 0 || x == 1) {
             return 1;
         }

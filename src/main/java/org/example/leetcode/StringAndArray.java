@@ -13,11 +13,112 @@ public class StringAndArray {
 
     public static void main(String[] args) {
 
-        System.out.println(permuteUnique(new int[] {1,1,2}));
+        System.out.println(combinationSum2(new int[] {1,2,2,2,5}, 5));
         // System.out.println(Arrays.toString(maxSlidingWindow(ints, 7273)));
         // long t1 = System.currentTimeMillis();
         // System.out.println(validIPAddress("f:f:f:f:f:f:f:f"));
         // System.out.println(System.currentTimeMillis() - t1);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/remove-duplicates-from-sorted-array/">26. Remove Duplicates from Sorted Array</a>
+     * Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears only once. The relative order of the elements should be kept the same. Then return the number of unique elements in nums.
+     *
+     * Consider the number of unique elements of nums to be k, to get accepted, you need to do the following things:
+     *
+     * Change the array nums such that the first k elements of nums contain the unique elements in the order they were present in nums initially. The remaining elements of nums are not important as well as the size of nums.
+     * Return k.
+     * @param nums
+     * @return
+     */
+    public int removeDuplicates(int[] nums) {
+        if (nums.length <= 1) {
+            return nums.length;
+        }
+
+        int index = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[i - 1]) {
+                if (index != i) {
+                    nums[index] = nums[i];
+                }
+                index++;
+            }
+        }
+        return index;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/combination-sum-ii/"> 40. Combination Sum II</a>
+     * Given a collection of candidate numbers (candidates) and a target number (target),
+     * find all unique combinations in candidates where the candidate numbers sum to target.
+     * Each number in candidates may only be used once in the combination.
+     * Note: The solution set must not contain duplicate combinations.
+     * Input: candidates = [10,1,2,7,6,1,5], target = 8
+     * Output:
+     * [
+     * [1,1,6],
+     * [1,2,5],
+     * [1,7],
+     * [2,6]
+     * ]
+     * @param candidates
+     * @param target
+     * @return
+     */
+    static List<List<Integer>> combinationSum2Result = new ArrayList<>();
+    public static List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+
+        combinationSum2(candidates, target, 0, new ArrayList<>());
+
+        return combinationSum2Result;
+    }
+
+    private static void combinationSum2(int[] candidates, int target, int startIndex, List<Integer> list) {
+        if (startIndex >= candidates.length) {
+            return;
+        }
+
+        while (startIndex < candidates.length) {
+            int num = candidates[startIndex];
+            if (num > target) {
+                return;
+            }
+
+            List<Integer> newList = new ArrayList<>(list);
+            newList.add(num);
+
+            if (startIndex > 0 && num == candidates[startIndex - 1]) {
+                int listCount = 0;
+                for (int i = newList.size() - 1; i >= 0; i--) {
+                    if (newList.get(i) == num) {
+                        listCount++;
+                    } else {
+                        break;
+                    }
+                }
+                int arrCount = 2;
+                for (int i = startIndex - 2; i >= 0; i--) {
+                    if (candidates[i] == num) {
+                        arrCount++;
+                    } else {
+                        break;
+                    }
+                }
+                if (listCount != arrCount) {
+                    startIndex++;
+                    continue;
+                }
+            }
+
+
+            if (num == target) {
+                combinationSum2Result.add(newList);
+            }
+            combinationSum2(candidates, target - num, startIndex + 1, newList);
+            startIndex++;
+        }
     }
 
     /**

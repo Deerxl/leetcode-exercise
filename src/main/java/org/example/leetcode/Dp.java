@@ -18,6 +18,66 @@ public class Dp {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/coin-change-ii/">518. Coin Change II</a>
+     * You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+     * Return the number of combinations that make up that amount. If that amount of money cannot be made up by any combination of the coins, return 0.
+     * You may assume that you have an infinite number of each kind of coin.
+     * The answer is guaranteed to fit into a signed 32-bit integer.
+     * Example 1:
+     * Input: amount = 5, coins = [1,2,5]
+     * Output: 4
+     * Explanation: there are four ways to make up the amount:
+     * 5=5
+     * 5=2+2+1
+     * 5=2+1+1+1
+     * 5=1+1+1+1+1
+     * @param amount
+     * @param coins
+     * @return
+     */
+    public int change(int amount, int[] coins) {
+        if (amount == 0) {
+            return 0;
+        }
+        int[] dp = new int[amount + 1];
+        Arrays.sort(coins);
+        dp[0] = 1;
+        for (int i = 0; i < coins.length; i++) {
+            int coin = coins[i];
+            for (int j = coin; j <= amount; j++) {
+                dp[j] += dp[j - coin];
+            }
+        }
+
+        return dp[amount];
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/jump-game/">55. Jump Game</a>
+     * You are given an integer array nums. You are initially positioned at the array's first index,
+     * and each element in the array represents your maximum jump length at that position.
+     * Return true if you can reach the last index, or false otherwise.
+     * @param nums
+     * @return
+     */
+    public boolean canJump(int[] nums) {
+        if (nums.length <= 1) {
+            return true;
+        }
+
+        int maxIndex = nums[0];
+        int curIndex = 0;
+        while (curIndex <= maxIndex && curIndex < nums.length) {
+            if (curIndex == nums.length - 1 || maxIndex >= nums.length - 1) {
+                return true;
+            }
+            maxIndex = Math.max(maxIndex, nums[curIndex] + curIndex);
+            curIndex++;
+        }
+        return false;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii/">123. Best Time to Buy and Sell Stock III</a>
      * You are given an array prices where prices[i] is the price of a given stock on the ith day.
      * Find the maximum profit you can achieve. You may complete at most two transactions.
@@ -357,7 +417,7 @@ public class Dp {
      * @param coins
      * @return
      */
-    public static int change(int amount, int[] coins) {
+    public static int change1(int amount, int[] coins) {
         if (amount == 0) {
             return 1;
         }

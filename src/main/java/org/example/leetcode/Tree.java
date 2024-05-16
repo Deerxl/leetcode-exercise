@@ -12,8 +12,70 @@ public class Tree {
     public static void main(String[] args) {
 
         TreeNode root = TreeNode.buildTree(Arrays.asList(3,9,20,null,null,15,7));
-        System.out.println(inorderTraversal(root));
+        System.out.println(postorderTraversal1(root));
         // deleteNode(root, 3);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/er-cha-sou-suo-shu-de-di-kda-jie-dian-lcof/">LCR 174. 寻找二叉搜索树中的目标节点</a>
+     * 某公司组织架构以二叉搜索树形式记录，节点值为处于该职位的员工编号。请返回第 cnt 大的员工编号。
+     * @param root
+     * @param cnt
+     * @return
+     */
+    public int findTargetNode(TreeNode root, int cnt) {
+        findTargetNodeCnt = cnt;
+        findTargetNodeInOrder(root);
+        return findTargetNodeResult;
+    }
+
+    int findTargetNodeResult, findTargetNodeCnt;
+    private void findTargetNodeInOrder(TreeNode root) {
+        if (root == null || findTargetNodeCnt == 0) {
+            return;
+        }
+
+        findTargetNodeInOrder(root.right);
+        findTargetNodeCnt--;
+        if (findTargetNodeCnt == 0) {
+            findTargetNodeResult = root.val;
+            return;
+        }
+        findTargetNodeInOrder(root.left);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/binary-tree-postorder-traversal/">145. Binary Tree Postorder Traversal</a>
+     * Given the root of a binary tree, return the postorder traversal of its nodes' values
+     * @param root
+     * @return
+     */
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode pre = null;
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+
+            root = stack.pop();
+            if (root.right == null || pre == root.right) {
+                result.add(root.val);
+                pre = root;
+                root = null;
+            } else {
+                stack.push(root);
+                root = root.right;
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -859,7 +921,7 @@ public class Tree {
 
 
     static List<Integer> posOrderList = new ArrayList<>();
-    public static List<Integer> postorderTraversal(TreeNode root) {
+    public static List<Integer> postorderTraversal1(TreeNode root) {
         List<Integer> result = new ArrayList<>();
         if (root == null) {
             return result;
