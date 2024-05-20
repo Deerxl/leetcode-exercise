@@ -17,6 +17,80 @@ public class Tree {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/delete-node-in-a-bst/">450. 删除二叉搜索树中的节点</a>
+     * Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.
+     * Basically, the deletion can be divided into two stages:
+     * Search for a node to remove.
+     * If the node is found, delete the node.
+     * @param root
+     * @param key
+     * @return
+     */
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+
+        if (root.val == key) {
+            return deleteNode(root);
+        }
+
+        TreeNode dump = root;
+        while (dump != null) {
+            if (dump.left != null && dump.left.val == key) {
+                dump.left = deleteNode(dump.left);
+                break;
+            }
+            if (dump.right != null && dump.right.val == key) {
+                dump.right = deleteNode(dump.right);
+                break;
+            }
+            if (dump.val < key) {
+                dump = dump.right;
+            } else if (dump.val > key) {
+                dump = dump.left;
+            }
+        }
+
+        return root;
+    }
+
+
+
+    public TreeNode deleteNode(TreeNode root) {
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        if (left == null) {
+            return right;
+        } else if (right == null) {
+            return left;
+        } else {
+            if (right.left == null) {
+                right.left = left;
+                return right;
+            } else {
+                root = right;
+                TreeNode pre = root;
+                while (root.left != null) {
+                    root = root.left;
+                    if (root.left != null) {
+                        pre = root;
+                    }
+                }
+                pre.left = null;
+                root.left = left;
+                pre = root;
+                while (pre.right != null) {
+                    pre = pre.right;
+                }
+                pre.right = right;
+
+                return root;
+            }
+        }
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/er-cha-sou-suo-shu-de-di-kda-jie-dian-lcof/">LCR 174. 寻找二叉搜索树中的目标节点</a>
      * 某公司组织架构以二叉搜索树形式记录，节点值为处于该职位的员工编号。请返回第 cnt 大的员工编号。
      * @param root
@@ -889,16 +963,16 @@ public class Tree {
      * @param key
      * @return
      */
-    public static TreeNode deleteNode(TreeNode root, int key) {
+    public static TreeNode deleteNode1(TreeNode root, int key) {
         if (root == null) {
             return null;
         }
 
         if (root.val > key) {
-            root.left = deleteNode(root.left, key);
+            root.left = deleteNode1(root.left, key);
             return root;
         } else if (root.val < key) {
-            root.right = deleteNode(root.right, key);
+            root.right = deleteNode1(root.right, key);
             return root;
         }
 
@@ -912,7 +986,7 @@ public class Tree {
         while (right.left != null) {
             right = right.left;
         }
-        root.right = deleteNode(root.right, right.val);
+        root.right = deleteNode1(root.right, right.val);
         right.right = root.right;
         right.left = root.left;
 
