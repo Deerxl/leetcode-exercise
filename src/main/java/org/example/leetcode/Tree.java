@@ -17,6 +17,41 @@ public class Tree {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/shu-de-zi-jie-gou-lcof/">LCR 143. 子结构判断</a>
+     * 给定两棵二叉树 tree1 和 tree2，判断 tree2 是否以 tree1 的某个节点为根的子树具有 相同的结构和节点值 。
+     * 注意，空树 不会是以 tree1 的某个节点为根的子树具有 相同的结构和节点值 。
+     * @param A
+     * @param B
+     * @return
+     */
+    public boolean isSubStructure(TreeNode A, TreeNode B) {
+        if (B == null || A == null) {
+            return false;
+        }
+
+        if (A.val == B.val) {
+            if (isSubStructureSame(A, B)) {
+                return true;
+            }
+        }
+
+        return isSubStructure(A.left, B) || isSubStructure(A.right, B);
+    }
+
+    public boolean isSubStructureSame(TreeNode A, TreeNode B) {
+        if (B == null) {
+            return true;
+        }
+        if (A == null) {
+            return false;
+        }
+        if (A.val != B.val) {
+            return false;
+        }
+        return isSubStructureSame(A.left, B.left) && isSubStructureSame(A.right, B.right);
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/delete-node-in-a-bst/">450. 删除二叉搜索树中的节点</a>
      * Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.
      * Basically, the deletion can be divided into two stages:

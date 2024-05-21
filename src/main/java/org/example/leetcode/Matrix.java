@@ -40,8 +40,46 @@ public class Matrix {
                 {7,8,9}
         };
 
-        System.out.println(exist(board, "ABCESEEEFS"));
+        System.out.println(Arrays.deepToString(generateMatrix(3)));
 
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/spiral-matrix-ii/">59. Spiral Matrix II</a>
+     * Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
+     * Input: n = 3
+     * Output: [[1,2,3],[8,9,4],[7,6,5]]
+     * @param n 1 <= n <= 20
+     * @return
+     */
+    public static int[][] generateMatrix(int n) {
+        int[][] result = new int[n][n];
+        int index = 1;
+
+        for (int i = 0; i < (n + 1) / 2; i++) {
+            int row = i;
+            int col = i;
+            while (col <= n - i - 1) {
+                result[row][col++] = index++;
+            }
+            col--;
+            row++;
+            while (row <= n - i - 1) {
+                result[row++][col] = index++;
+            }
+            row--;
+            col--;
+            while (col >= i) {
+                result[row][col--] = index++;
+            }
+            col++;
+            row--;
+            while (row > i) {
+                result[row--][col] = index++;
+            }
+        }
+
+        return result;
     }
 
     /**

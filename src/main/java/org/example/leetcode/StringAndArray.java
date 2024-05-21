@@ -13,11 +13,129 @@ public class StringAndArray {
 
     public static void main(String[] args) {
 
-        System.out.println(combinationSum2(new int[] {1,2,2,2,5}, 5));
-        // System.out.println(Arrays.toString(maxSlidingWindow(ints, 7273)));
-        // long t1 = System.currentTimeMillis();
-        // System.out.println(validIPAddress("f:f:f:f:f:f:f:f"));
-        // System.out.println(System.currentTimeMillis() - t1);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/sort-colors/">75. Sort Colors</a>
+     * Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
+     * We will use the integers 0, 1, and 2 to represent the color red, white, and blue, respectively.
+     * You must solve this problem without using the library's sort function.
+     * Example 1:
+     * Input: nums = [2,0,2,1,1,0]
+     * Output: [0,0,1,1,2,2]
+     * @param nums
+     */
+    public static void sortColors(int[] nums) {
+        if (nums.length <= 1) {
+            return;
+        }
+
+        int i = -1, j = nums.length;
+        int index = 0;
+        while (index < j) {
+            if (nums[index] == 0) {
+                nums[i + 1] = 0;
+                index++;
+                i++;
+            } else if (nums[index] == 1) {
+                index++;
+            } else if (nums[index] == 2) {
+                if (nums[j - 1] == 0) {
+                    swap(nums, index, j - 1);
+                    j--;
+                } else if (nums[j - 1] == 2) {
+                    j--;
+                } else if (nums[j - 1] == 1) {
+                    nums[j - 1] = 2;
+                    j--;
+                    index++;
+                }
+            }
+        }
+        while (j - i > 1) {
+            nums[i + 1] = 1;
+            i++;
+        }
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/3sum-closest/">16. 最接近的三数之和</a>
+     * 给你一个长度为 n 的整数数组 nums 和 一个目标值 target。请你从 nums 中选出三个整数，使它们的和与 target 最接近。
+     * 返回这三个数的和。
+     * 假定每组输入只存在恰好一个解。
+     * 示例 1：
+     * 输入：nums = [-1,2,1,-4], target = 1
+     * 输出：2
+     * 解释：与 target 最接近的和是 2 (-1 + 2 + 1 = 2) 。
+     * @param nums 3 <= nums.length <= 1000
+     * @param target
+     * @return
+     */
+    public static int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int result = nums[0] + nums[1] + nums[2];
+        int tmpResult = result;
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            int j = i + 1, k = nums.length - 1;
+            while (j < k) {
+                tmpResult = nums[i] + nums[j] + nums[k];
+                if (tmpResult == target) {
+                    return tmpResult;
+                }
+                if (Math.abs(tmpResult - target) < Math.abs(result - target)) {
+                    result = tmpResult;
+                }
+                if (tmpResult < target) {
+                    j++;
+                    while (j < k && nums[j] == nums[j - 1]) {
+                        j++;
+                    }
+                } else {
+                    k--;
+                    while (j < k && nums[k] == nums[k + 1]) {
+                        k--;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/jump-game-ii/">45. 跳跃游戏 II</a>
+     * 给定一个长度为 n 的 0 索引整数数组 nums。初始位置为 nums[0]。
+     * 每个元素 nums[i] 表示从索引 i 向前跳转的最大长度。换句话说，如果你在 nums[i] 处，你可以跳转到任意 nums[i + j] 处:
+     * 0 <= j <= nums[i]
+     * i + j < n
+     * 返回到达 nums[n - 1] 的最小跳跃次数。生成的测试用例可以到达 nums[n - 1]。
+     * @param nums
+     * @return
+     */
+    public static int jump(int[] nums) {
+        if (nums.length <= 1) {
+            return 0;
+        }
+
+        int result = 0;
+        int maxIndex = nums[0];
+        int curIndex = 0, tmpMaxIndex = maxIndex;
+        while (curIndex < nums.length) {
+            while (curIndex < nums.length && curIndex <= maxIndex) {
+                if (curIndex + nums[curIndex] > tmpMaxIndex) {
+                    tmpMaxIndex = curIndex + nums[curIndex];
+                }
+                curIndex++;
+            }
+            result++;
+            curIndex = maxIndex + 1;
+            maxIndex = tmpMaxIndex;
+        }
+
+        return result;
     }
 
     /**
@@ -2016,15 +2134,15 @@ public class StringAndArray {
      *      从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
      * @return
      */
-    public static int jump(int[] nums) {
+    public static int jump1(int[] nums) {
         if (nums.length <= 1) {
             return 0;
         }
 
-        return jump(nums, 0, 0, 0);
+        return jump1(nums, 0, 0, 0);
     }
 
-    private static int jump(int[] nums, int startIndex, int maxIndex, int step) {
+    private static int jump1(int[] nums, int startIndex, int maxIndex, int step) {
         if (startIndex >= nums.length - 1 || maxIndex >= nums.length - 1) {
             return step;
         }
@@ -2034,7 +2152,7 @@ public class StringAndArray {
             nextMaxIndex = Math.max(nextMaxIndex, nums[i] + i);
         }
 
-        return jump(nums, maxIndex + 1, nextMaxIndex, step + 1);
+        return jump1(nums, maxIndex + 1, nextMaxIndex, step + 1);
     }
 
     /**
