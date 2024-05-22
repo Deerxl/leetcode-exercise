@@ -13,122 +13,58 @@ import java.util.List;
  */
 public class Trie {
 
-    private Trie[] children;
-    private boolean isEnd;
+    Trie[] subChars;
+    boolean isEnd;
 
     public Trie() {
-        children = new Trie[26];
+        subChars = new Trie[26];
         isEnd = false;
     }
 
     public void insert(String word) {
-        Trie node = this;
+        Trie trie = this;
         for (int i = 0; i < word.length(); i++) {
-            char temp = word.charAt(i);
-            if (node.children[temp - 'a'] == null) {
-                node.children[temp - 'a'] = new Trie();
+            char c = word.charAt(i);
+            trie = trie.subChars[c - 'a'];
+            if (trie == null) {
+                trie = new Trie();
+                trie.isEnd = false;
             }
-            node = node.children[temp - 'a'];
         }
-        node.isEnd = true;
+        trie.isEnd = true;
     }
 
     public boolean search(String word) {
-        Trie node = searchPrefix(word);
-        return node != null && node.isEnd;
+        Trie trie = findPrefix(word);
+        return trie != null && trie.isEnd;
     }
 
     public boolean startsWith(String prefix) {
-        return searchPrefix(prefix) != null;
+        return findPrefix(prefix) != null;
     }
 
-    public Trie searchPrefix(String prefix) {
-        Trie node = this;
+    public Trie findPrefix(String prefix) {
+        Trie trie = this;
         for (int i = 0; i < prefix.length(); i++) {
-            char temp = prefix.charAt(i);
-            if (node.children[temp - 'a'] == null) {
+            char c = prefix.charAt(i);
+            trie = trie.subChars[c - 'a'];
+            if (trie == null) {
                 return null;
             }
-            node = node.children[temp - 'a'];
         }
-        return node;
-    }
-
-    @Data
-    public static class AreaFilterDto implements Serializable {
-
-        private static final long serialVersionUID = -6041311879869766296L;
-
-        private String id;
-
-        private String name;
-
-        private boolean include = true;
-
-        private List<Division> divisionList;
-
-        @Data
-        public static class Division implements Serializable {
-
-            private static final long serialVersionUID = 1491627359065227481L;
-
-            private Long id;
-
-            private String name;
-
-            /**
-             * COUNTRY, PROVINCE, CITY, AREA, TOWN
-             */
-            private String level;
-
-            /**
-             * PART,ALL
-             */
-            private String childDivisionsType;
-
-            private List<Division> childDivisionList;
-        }
+        return trie;
     }
 
     public static void main(String[] args) {
-        AreaFilterDto areaFilterDto = new AreaFilterDto();
-        areaFilterDto.setId("COMMON-BSG");
-        areaFilterDto.setName("北上广");
-
-        List<AreaFilterDto.Division> divisionList = new ArrayList<>();
-        areaFilterDto.setDivisionList(divisionList);
-
-        AreaFilterDto.Division division1 = new AreaFilterDto.Division();
-        division1.setId(110000L);
-        division1.setName("北京");
-        division1.setLevel("PROVINCE");
-        division1.setChildDivisionsType("ALL");
-        divisionList.add(division1);
-
-        AreaFilterDto.Division division2 = new AreaFilterDto.Division();
-        division2.setId(310000L);
-        division2.setName("上海");
-        division2.setLevel("PROVINCE");
-        division2.setChildDivisionsType("ALL");
-        divisionList.add(division2);
-
-        AreaFilterDto.Division division3 = new AreaFilterDto.Division();
-        division3.setId(440000L);
-        division3.setName("广东省");
-        division3.setLevel("PROVINCE");
-        division3.setChildDivisionsType("PART");
-        List<AreaFilterDto.Division> childDivisionList = new ArrayList<>();
-        AreaFilterDto.Division division4 = new AreaFilterDto.Division();
-        division4.setId(440100L);
-        division4.setName("广州市");
-        division4.setLevel("CITY");
-        division4.setChildDivisionsType("ALL");
-        childDivisionList.add(division4);
-        division3.setChildDivisionList(childDivisionList);
-        divisionList.add(division3);
-
-        System.out.println(JSON.toJSONString(areaFilterDto));
+        Trie trie = new Trie();
+        trie.insert("apple");
+        System.out.println(trie.search("apple"));
+        System.out.println(trie.search("app"));
+        System.out.println(trie.startsWith("app"));
+        trie.insert("app");
+        System.out.println(trie.search("app"));
     }
+
 }
 
 /**
