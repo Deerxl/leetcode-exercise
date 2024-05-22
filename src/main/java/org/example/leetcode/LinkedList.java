@@ -27,6 +27,77 @@ public class LinkedList {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/add-two-numbers-ii/">445. Add Two Numbers II</a>
+     * You are given two non-empty linked lists representing two non-negative integers.
+     * The most significant digit comes first and each of their nodes contains a single digit.
+     * Add the two numbers and return the sum as a linked list.
+     * You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+     * Example 1:
+     * Input: l1 = [7,2,4,3], l2 = [5,6,4]
+     * Output: [7,8,0,7]
+     * @param l1
+     * @param l2
+     * @return
+     */
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        l1 = addTwoNumbersReverse(l1);
+        l2 = addTwoNumbersReverse(l2);
+        ListNode pre = new ListNode();
+        ListNode dummy = pre;
+        int add = 0, sum = 0;
+        while (l1 != null || l2 != null) {
+            sum += add;
+
+            if (l1 != null) {
+                sum += l1.val;
+            }
+            if (l2 != null) {
+                sum += l2.val;
+            }
+
+            if (sum >= 10) {
+                add = 1;
+                sum = sum % 10;
+            } else {
+                add = 0;
+            }
+
+            dummy.next = new ListNode(sum);
+            dummy = dummy.next;
+
+            if (l1 != null) {
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                l2 = l2.next;
+            }
+            sum = 0;
+        }
+
+        if (add == 1) {
+            dummy.next = new ListNode(1);
+        }
+
+        return addTwoNumbersReverse(pre.next);
+    }
+
+    private ListNode addTwoNumbersReverse(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        ListNode next = head.next, tail;
+        head.next = null;
+        while (next != null) {
+            tail = next.next;
+            next.next = head;
+            head = next;
+            next = tail;
+        }
+        return head;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/rotate-list/">61. Rotate List</a>
      * Given the head of a linked list, rotate the list to the right by k places.
      * Input: head = [1,2,3,4,5], k = 2
@@ -291,7 +362,7 @@ public class LinkedList {
      * @param l2
      * @return
      */
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    public ListNode addTwoNumbers1(ListNode l1, ListNode l2) {
         ListNode pre = new ListNode();
         ListNode dummyHead = pre;
 

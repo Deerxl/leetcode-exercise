@@ -11,9 +11,66 @@ public class Tree {
 
     public static void main(String[] args) {
 
-        TreeNode root = TreeNode.buildTree(Arrays.asList(3,9,20,null,null,15,7));
-        System.out.println(postorderTraversal1(root));
+        TreeNode root = TreeNode.buildTree(Arrays.asList(1,2,5,3,4,null,6));
+        flatten(root);
+        // System.out.println(postorderTraversal1(root));
         // deleteNode(root, 3);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/flatten-binary-tree-to-linked-list/">114. Flatten Binary Tree to Linked List</a>
+     * Given the root of a binary tree, flatten the tree into a "linked list":
+     * The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.
+     * The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+     * @param root
+     */
+    public static void flatten(TreeNode root) {
+        TreeNode node = root;
+
+        TreeNode right, left;
+        while (node != null && (node.left != null || node.right != null)) {
+            left = node.left;
+            right = node.right;
+            if (node.left != null) {
+                node.right = left;
+                node.left = null;
+                if (right != null) {
+                    while (left.right != null) {
+                        left = left.right;
+                    }
+                    left.right = right;
+                }
+            }
+            node = node.right;
+        }
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/kth-smallest-element-in-a-bst/">230. 二叉搜索树中第K小的元素</a>
+     * 给定一个二叉搜索树的根节点 root ，和一个整数 k ，请你设计一个算法查找其中第 k 个最小元素（从 1 开始计数）。
+     * @param root
+     * @param k 1 <= k <= n <= 104
+     * @return
+     */
+    public int kthSmallest(TreeNode root, int k) {
+        kthSmallestInOrder(root, k);
+        return kthSmallestResult;
+    }
+
+    int kthSmallestCur = 0, kthSmallestResult = -1;
+    public void kthSmallestInOrder(TreeNode root, int k) {
+        if (root == null) {
+            return;
+        }
+
+        kthSmallestInOrder(root.left, k);
+        kthSmallestCur++;
+        if (kthSmallestCur == k) {
+            kthSmallestResult = root.val;
+            return;
+        }
+
+        kthSmallestInOrder(root.right, k);
     }
 
     /**
@@ -969,7 +1026,7 @@ public class Tree {
      * @param k
      * @return
      */
-    public int kthSmallest(TreeNode root, int k) {
+    public int kthSmallest1(TreeNode root, int k) {
         inOrderFindMin(root, k);
         return smallestK;
     }

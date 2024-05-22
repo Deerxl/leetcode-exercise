@@ -9,42 +9,55 @@ import java.util.List;
  */
 public class DictionaryTree {
 
-    public static void main(String[] args) {
-        System.out.println(findKthNumber(100, 50));
-    }
+    // public static void main(String[] args) {
+    //     System.out.println(findKthNumber(100, 50));
+    // }
 
     /**
      * <a href="https://leetcode.cn/problems/k-th-smallest-in-lexicographical-order/description/">440. 字典序的第K小数字</a>
-     * @param n
+     * 输入: n = 13, k = 2
+     * 输出: 10
+     * 解释: 字典序的排列是 [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]，所以第二小的数字是 10。
+     * @param n 1 <= k <= n <= 10^9
      * @param k
      * @return
      */
-    public static int findKthNumber(int n, int k) {
-        int curr = 1;
+    public int findKthNumber(int n, int k) {
+        long cur = 1;
+
         k--;
         while (k > 0) {
-            int steps = getSteps(curr, n);
-            if (steps <= k) {
-                k -= steps;
-                curr++;
+            int node = findKthNumberGetNodesCount(cur, n);
+            if (node <= k) {
+                cur++;
+                k -= node;
             } else {
-                curr = curr * 10;
+                cur *= 10;
                 k--;
             }
         }
-        return curr;
+
+        return (int) cur;
     }
 
-    public static int getSteps(int curr, long n) {
-        int steps = 0;
-        long first = curr;
-        long last = curr;
-        while (first <= n) {
-            steps += Math.min(last, n) - first + 1;
-            first = first * 10;
-            last = last * 10 + 9;
+    /**
+     * 计算[1,n]内以cur为根(开头)的节点个数
+     * @param cur
+     * @param n
+     * @return
+     */
+    private int findKthNumberGetNodesCount(long cur, int n) {
+        long next = cur + 1;
+        int result = 0;
+
+        while (cur <= n) {
+            result += Math.min(next - cur, n - cur + 1);
+
+            cur *= 10;
+            next *= 10;
         }
-        return steps;
+
+        return result;
     }
 
     /**
