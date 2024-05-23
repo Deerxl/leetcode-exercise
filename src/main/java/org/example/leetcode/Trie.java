@@ -1,13 +1,19 @@
 package org.example.leetcode;
 
-import com.alibaba.fastjson.JSON;
-import lombok.Data;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
+ * <a href="https://leetcode.cn/problems/implement-trie-prefix-tree/description/">208. Implement Trie (Prefix Tree)</a>
+ *A trie (pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
+ * Implement the Trie class:
+ * Trie() Initializes the trie object.
+ * void insert(String word) Inserts the string word into the trie.
+ * boolean search(String word) Returns true if the string word is in the trie (i.e., was inserted before), and false otherwise.
+ * boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.
+ * Example 1:
+ * Input
+ * ["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
+ * [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
+ * Output
+ * [null, null, true, false, true, null, true]
  * @author jialu.yxl
  * @date 06/04/2023 19:24
  */
@@ -25,11 +31,10 @@ public class Trie {
         Trie trie = this;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
-            trie = trie.subChars[c - 'a'];
-            if (trie == null) {
-                trie = new Trie();
-                trie.isEnd = false;
+            if (trie.subChars[c - 'a'] == null) {
+                trie.subChars[c - 'a'] = new Trie();
             }
+            trie = trie.subChars[c - 'a'];
         }
         trie.isEnd = true;
     }
@@ -57,11 +62,11 @@ public class Trie {
 
     public static void main(String[] args) {
         Trie trie = new Trie();
+        trie.insert("app");
         trie.insert("apple");
-        System.out.println(trie.search("apple"));
+        System.out.println(trie.search("apps"));
         System.out.println(trie.search("app"));
         System.out.println(trie.startsWith("app"));
-        trie.insert("app");
         System.out.println(trie.search("app"));
     }
 
