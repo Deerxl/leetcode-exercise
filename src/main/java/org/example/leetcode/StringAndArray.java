@@ -14,6 +14,29 @@ public class StringAndArray {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/find-the-duplicate-number/">287. Find the Duplicate Number</a>
+     * Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.
+     * There is only one repeated number in nums, return this repeated number.
+     * You must solve the problem without modifying the array nums and uses only constant extra space.
+     * Example 1:
+     * Input: nums = [1,3,4,2,2]
+     * Output: 2
+     * @param nums nums.length == n + 1 1 <= nums[i] <= n
+     * @return
+     */
+    public int findDuplicate(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            int temp = Math.abs(nums[i]);
+            if (nums[temp] < 0) {
+                return temp;
+            } else {
+                nums[temp] = -nums[temp];
+            }
+        }
+        return -1;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/find-all-duplicates-in-an-array/description/">442. Find All Duplicates in an Array</a>
      * Given an integer array nums of length n where all the integers of nums are in the range [1, n] and each integer appears once or twice, return an array of all the integers that appears twice.
      * You must write an algorithm that runs in O(n) time and uses only constant extra space.

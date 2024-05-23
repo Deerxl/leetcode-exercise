@@ -17,6 +17,33 @@ public class Tree {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/unique-binary-search-trees/">96. Unique Binary Search Trees</a>
+     * Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
+     * @param n 1 <= n <= 19
+     * @return
+     */
+    public int numTrees(int n) {
+        if (n == 1) {
+            return 1;
+        }
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 3; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                int left = j - 1;
+                int right = i - j;
+                if (left == 0 || right == 0) {
+                    dp[i] += dp[left] + dp[right];
+                } else {
+                    dp[i] += dp[left] * dp[right];
+                }
+            }
+        }
+        return dp[n];
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/flatten-binary-tree-to-linked-list/">114. Flatten Binary Tree to Linked List</a>
      * Given the root of a binary tree, flatten the tree into a "linked list":
      * The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.

@@ -18,6 +18,23 @@ public class Dp {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/regular-expression-matching/">10. Regular Expression Matching</a>
+     * Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
+     * '.' Matches any single character.
+     * '*' Matches zero or more of the preceding element.
+     * The matching should cover the entire input string (not partial).
+     * Input: s = "ab", p = ".*"
+     * Output: true
+     * Explanation: ".*" means "zero or more (*) of any character (.)".
+     * @param s 1 <= s.length <= 20
+     * @param p 1 <= p.length <= 20
+     * @return
+     */
+    public boolean isMatch(String s, String p) {
+        return false;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/house-robber-ii/">213. House Robber II</a>
      * You are a professional robber planning to rob houses along a street.
      * Each house has a certain amount of money stashed.
