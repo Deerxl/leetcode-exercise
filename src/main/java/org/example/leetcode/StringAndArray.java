@@ -1,7 +1,5 @@
 package org.example.leetcode;
 
-import com.google.common.collect.Lists;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -12,7 +10,66 @@ import java.util.stream.Collectors;
 public class StringAndArray {
 
     public static void main(String[] args) {
-        // System.out.println(numDecodings("226"));
+        System.out.println(findDuplicates(new int[] {4,3,2,7,8,2,3,1}));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/find-all-duplicates-in-an-array/description/">442. Find All Duplicates in an Array</a>
+     * Given an integer array nums of length n where all the integers of nums are in the range [1, n] and each integer appears once or twice, return an array of all the integers that appears twice.
+     * You must write an algorithm that runs in O(n) time and uses only constant extra space.
+     * Example 1:
+     * Input: nums = [4,3,2,7,8,2,3,1]
+     * Output: [2,3]
+     * @param nums n == nums.length 1 <= n <= 10^5 1 <= nums[i] <= n
+     * @return
+     */
+    public static List<Integer> findDuplicates(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        if (nums.length <= 1) {
+            return result;
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = -nums[i];
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            int num = Math.abs(nums[i]);
+            int index = num - 1;
+            if (nums[index] > 0) {
+                if (!result.contains(index + 1)) {
+                    result.add(index + 1);
+                }
+            } else {
+                nums[index] = -nums[index];
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/palindrome-number/">9. Palindrome Number</a>
+     * Input: x = -121
+     * Output: false
+     * Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+     * @param x -231 <= x <= 231 - 1
+     * @return
+     */
+    public boolean isPalindrome(int x) {
+        if (x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+        if (x < 10) {
+            return true;
+        }
+
+        int k = 0;
+        while (x > k) {
+            k = k * 10 + x % 10;
+            x /= 10;
+        }
+        return x == k || x == k / 10;
     }
 
     /**

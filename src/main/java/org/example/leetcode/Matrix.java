@@ -44,6 +44,55 @@ public class Matrix {
 
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/longest-increasing-path-in-a-matrix/">329. Longest Increasing Path in a Matrix</a>
+     * Given an m x n integers matrix, return the length of the longest increasing path in matrix
+     * From each cell, you can either move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).
+     * @param matrix
+     * @return
+     */
+    public int longestIncreasingPath(int[][] matrix) {
+        int m = matrix.length, n = matrix[0].length;
+        longestIncreasingPathMemo = new int[m][n];
+        int result = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (longestIncreasingPathMemo[i][j] == 0) {
+                    result = Math.max(result, longestIncreasingPath(matrix, i, j, m, n));
+                }
+            }
+        }
+        return result;
+    }
+
+    int[][] longestIncreasingPathMemo;
+
+    int longestIncreasingPath(int[][] matrix, int i, int j, int m, int n) {
+        if (longestIncreasingPathMemo[i][j] != 0) {
+            return longestIncreasingPathMemo[i][j];
+        }
+        int res = 1;
+        int[][] dirs = new int[][] {{0, 1}, {0, -1}, {-1, 0}, {1,0}};
+        int nextI, nextJ;
+        for (int[] dir : dirs) {
+            nextI = dir[0] + i;
+            nextJ = dir[1] + j;
+            if (nextI < 0 || nextI >= m || nextJ < 0 || nextJ >= n) {
+                continue;
+            }
+            if (matrix[i][j] < matrix[nextI][nextJ]) {
+                if (longestIncreasingPathMemo[nextI][nextJ] == 0) {
+                    longestIncreasingPathMemo[nextI][nextJ] = longestIncreasingPath(matrix, nextI, nextJ, m, n);
+                }
+                res = Math.max(res, longestIncreasingPathMemo[nextI][nextJ] + 1);
+            }
+        }
+        longestIncreasingPathMemo[i][j] = res;
+
+        return res;
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/spiral-matrix-ii/">59. Spiral Matrix II</a>
      * Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
@@ -536,19 +585,19 @@ public class Matrix {
      * @param matrix
      * @return
      */
-    public static int longestIncreasingPath(int[][] matrix) {
+    public static int longestIncreasingPath1(int[][] matrix) {
         int[][] memo = new int[matrix.length][matrix[0].length];
         int result = 0;
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                result = Math.max(result, longestIncreasingPath(matrix, i, j, memo));
+                result = Math.max(result, longestIncreasingPath1(matrix, i, j, memo));
             }
         }
 
         return result;
     }
 
-    private static int longestIncreasingPath(int[][] matrix, int i, int j, int[][] memo) {
+    private static int longestIncreasingPath1(int[][] matrix, int i, int j, int[][] memo) {
         if (memo[i][j] != 0) {
             return memo[i][j];
         }
@@ -561,7 +610,7 @@ public class Matrix {
             int newCol = dir[1] + j;
             if (newRow >= 0 && newRow < matrix.length && newCol >= 0 && newCol < matrix[0].length) {
                 if (matrix[i][j] < matrix[newRow][newCol]) {
-                    memo[i][j] = Math.max(memo[i][j], longestIncreasingPath(matrix, newRow, newCol, memo) + 1);
+                    memo[i][j] = Math.max(memo[i][j], longestIncreasingPath1(matrix, newRow, newCol, memo) + 1);
                 }
             }
         }

@@ -11,19 +11,53 @@ import java.util.*;
 public class LinkedList {
 
     public static void main(String[] args) {
-        Node root = new Node(4);
-        root.left = new Node(2);
-        root.left.left = new Node(1);
-        root.left.right = new Node(3);
-        root.right = new Node(5);
-        treeToDoublyList(root);
+        // Node root = new Node(4);
+        // root.left = new Node(2);
+        // root.left.left = new Node(1);
+        // root.left.right = new Node(3);
+        // root.right = new Node(5);
+        // treeToDoublyList(root);
 
-        // ListNode head = new ListNode(4);
-        // head.next = new ListNode(2);
-        // head.next.next = new ListNode(1);
-        // head.next.next.next = new ListNode(3);
-        // sortList(head);
-        // System.out.println(reorderList(head));
+        ListNode head = new ListNode(1);
+        head.next = new ListNode(2);
+        head.next.next = new ListNode(3);
+        head.next.next.next = new ListNode(4);
+        head.next.next.next.next = new ListNode(5);
+        System.out.println(oddEvenList(head));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/odd-even-linked-list/">328. Odd Even Linked List</a>
+     * Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.
+     * The first node is considered odd, and the second node is even, and so on.
+     * Note that the relative order inside both the even and odd groups should remain as it was in the input.
+     * You must solve the problem in O(1) extra space complexity and O(n) time complexity.
+     * @param head The number of nodes in the linked list is in the range [0, 104].
+     * @return
+     */
+    public static ListNode oddEvenList(ListNode head) {
+        if (head == null || head.next == null || head.next.next == null) {
+            return head;
+        }
+        ListNode oddTail = head;
+        ListNode evenHead = head.next;
+        ListNode evenTail = head.next;
+        ListNode next = evenTail.next;
+        evenTail.next = null;
+        while (next != null) {
+            oddTail.next = next;
+            oddTail = oddTail.next;
+            next = next.next;
+            if (next != null) {
+                evenTail.next = next;
+                evenTail = evenTail.next;
+                next = next.next;
+                evenTail.next = null;
+            }
+        }
+        oddTail.next = evenHead;
+
+        return head;
     }
 
     /**
@@ -810,7 +844,7 @@ public class LinkedList {
      * 你必须在 O(1) 的额外空间复杂度和 O(n) 的时间复杂度下解决这个问题。
      * @return
      */
-    public ListNode oddEvenList(ListNode head) {
+    public ListNode oddEvenList1(ListNode head) {
         if (head == null) {
             return null;
         }
