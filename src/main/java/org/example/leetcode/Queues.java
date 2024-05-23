@@ -1,13 +1,44 @@
 package org.example.leetcode;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * @author jialu.yxl
  * @date 5/16/24 11:41 AM
  */
 public class Queues {
+
+    /**
+     * <a href="https://leetcode.cn/problems/top-k-frequent-elements/">347. Top K Frequent Elements</a>
+     * Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+     * Example 1:
+     * Input: nums = [1,1,1,2,2,3], k = 2
+     * Output: [1,2]
+     * @param nums 1 <= nums.length <= 105 -104 <= nums[i] <= 104
+     * @param k k is in the range [1, the number of unique elements in the array].
+     * @return
+     */
+    public int[] topKFrequent(int[] nums, int k) {
+        Queue<int[]> queue = new PriorityQueue<>((o1, o2) -> o2[1] - o1[1]);
+        Arrays.sort(nums);
+        int i = 0;
+        while (i < nums.length) {
+            int startIndex = i;
+            int num = nums[i++];
+            while (i < nums.length && nums[i] == num) {
+                i++;
+            }
+            queue.offer(new int[] {num, i - startIndex});
+        }
+        int[] result = new int[k];
+        for (i = 0; i < k; i++) {
+            result[i] = queue.poll()[0];
+        }
+        return result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/zui-xiao-de-kge-shu-lcof/">LCR 159. 库存管理 III</a>

@@ -18,6 +18,43 @@ public class Dp {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/house-robber-ii/">213. House Robber II</a>
+     * You are a professional robber planning to rob houses along a street.
+     * Each house has a certain amount of money stashed.
+     * All houses at this place are arranged in a circle.
+     * That means the first house is the neighbor of the last one.
+     * Meanwhile, adjacent houses have a security system connected,
+     * and it will automatically contact the police if two adjacent houses were broken into on the same night.
+     * Given an integer array nums representing the amount of money of each house,
+     * return the maximum amount of money you can rob tonight without alerting the police.
+     * Example 1:
+     * Input: nums = [2,3,2]
+     * Output: 3
+     * Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money = 2), because they are adjacent houses.
+     * @param nums 1 <= nums.length <= 100
+     * @return
+     */
+    public int rob(int[] nums) {
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        int result = 0;
+        int[] dp = new int[nums.length + 2];
+        dp[1] = nums[0];
+        for (int i = 1; i < nums.length - 1; i++) {
+            dp[i + 1] = Math.max(dp[i - 1] + nums[i], dp[i]);
+        }
+        result = dp[nums.length - 1];
+
+        dp[nums.length] = nums[nums.length - 1];
+        for (int i = nums.length - 2; i >= 1; i--) {
+            dp[i + 1] = Math.max(dp[i + 3] + nums[i], dp[i + 2]);
+        }
+        result = Math.max(result, dp[2]);
+        return result;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/decode-ways/">91. Decode Ways</a>
      * A message containing letters from A-Z can be encoded into numbers using the following mapping:
      * 'A' -> "1"
@@ -211,7 +248,7 @@ public class Dp {
      * @param nums
      * @return
      */
-    public int rob(int[] nums) {
+    public int rob1(int[] nums) {
         if (nums.length == 1) {
             return nums[0];
         }
