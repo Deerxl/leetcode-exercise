@@ -45,7 +45,7 @@ public class Maths {
      * @return 能计算出来的楼层 F 0 <= F; 1 <= N
      */
     public static int superEggDropFunc(int k, int t) {
-        // 只有一个鸡蛋，那么从1楼开始扔，能计算出t + 1层楼；
+        // 只有一个鸡蛋，那么从1楼开始扔，能计算出t + 1层楼（含楼层0）；
         // 只有一次机会，从1开始扔，只能计算出两层楼；从1楼扔，碎了，则 F=0, N=1；没碎，则 F=1, N=1；
         if (k == 1 || t == 1) {
             return t + 1;
