@@ -9,21 +9,64 @@ import java.util.*;
 public class Maths {
 
     public static void main(String[] args) {
+        System.out.println(superEggDrop(1, 2));
         System.out.println(myPow(1.0000000000002, -2147483648));
     }
 
     /**
-     * <a href="https://leetcode.cn/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/">LCR 187. 破冰游戏</a>
-     * 社团共有 num 位成员参与破冰游戏，编号为 0 ~ num-1。成员们按照编号顺序围绕圆桌而坐。
-     * 社长抽取一个数字 target，从 0 号成员起开始计数，排在第 target 位的成员离开圆桌，且成员离开后从下一个成员开始计数。
-     * 请返回游戏结束时最后一位成员的编号。
-     * 示例 1：
-     * 输入：num = 7, target = 4
-     * 输出：1
-     * @param num
-     * @param target
+     * <a href="https://leetcode.cn/problems/super-egg-drop/description/">887. Super Egg Drop</a>
+     * You are given k identical eggs and you have access to a building with n floors labeled from 1 to n.
+     * You know that there exists a floor f where 0 <= f <= n such that any egg dropped at a floor higher than f will break, and any egg dropped at or below floor f will not break.
+     * Each move, you may take an unbroken egg and drop it from any floor x (where 1 <= x <= n). If the egg breaks, you can no longer use it. However, if the egg does not break, you may reuse it in future moves.
+     * Return the minimum number of moves that you need to determine with certainty what the value of f is.
+     * Input: k = 1, n = 2
+     * Output: 2
+     * Explanation:
+     * Drop the egg from floor 1. If it breaks, we know that f = 0.
+     * Otherwise, drop the egg from floor 2. If it breaks, we know that f = 1.
+     * If it does not break, then we know f = 2.
+     * Hence, we need at minimum 2 moves to determine with certainty what the value of f is.
+     * @param k 1 <= k <= 100
+     * @param n 1 <= n <= 104
      * @return
      */
+    public static int superEggDrop(int k, int n) {
+        int t = 1;
+        while (superEggDropFunc(k, t) < n + 1) {
+            t++;
+        }
+        return t;
+    }
+
+    /**
+     *
+     * @param k 鸡蛋数量
+     * @param t 机会数量
+     * @return 能计算出来的楼层 F 0 <= F; 1 <= N
+     */
+    public static int superEggDropFunc(int k, int t) {
+        // 只有一个鸡蛋，那么从1楼开始扔，能计算出t + 1层楼；
+        // 只有一次机会，从1开始扔，只能计算出两层楼；从1楼扔，碎了，则 F=0, N=1；没碎，则 F=1, N=1；
+        if (k == 1 || t == 1) {
+            return t + 1;
+        }
+        // superEggDropFunc(k - 1, t - 1) 蛋碎了，鸡蛋-1，机会-1
+        // superEggDropFunc(k, t - 1) 蛋没碎，机会-1
+        return superEggDropFunc(k - 1, t - 1) + superEggDropFunc(k, t - 1);
+    }
+
+        /**
+         * <a href="https://leetcode.cn/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/">LCR 187. 破冰游戏</a>
+         * 社团共有 num 位成员参与破冰游戏，编号为 0 ~ num-1。成员们按照编号顺序围绕圆桌而坐。
+         * 社长抽取一个数字 target，从 0 号成员起开始计数，排在第 target 位的成员离开圆桌，且成员离开后从下一个成员开始计数。
+         * 请返回游戏结束时最后一位成员的编号。
+         * 示例 1：
+         * 输入：num = 7, target = 4
+         * 输出：1
+         * @param num
+         * @param target
+         * @return
+         */
     public int iceBreakingGame(int num, int target) {
         int index = 0;
         // 约瑟夫环

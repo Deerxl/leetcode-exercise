@@ -1,8 +1,7 @@
 package org.example.leetcode;
 
-import com.google.common.collect.Lists;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author jialu.yxl
@@ -11,7 +10,7 @@ import java.util.*;
 public class Dp {
 
     public static void main(String[] args) {
-        System.out.println(numDecodings("226"));
+        System.out.println(isMatch("aab", "c*a*b"));
 
         // System.out.println(maxProfit(2, new int[]{3,2,6,5,0,3}));
 
@@ -30,9 +29,41 @@ public class Dp {
      * @param p 1 <= p.length <= 20
      * @return
      */
-    public boolean isMatch(String s, String p) {
-        return false;
+    public static boolean isMatch(String s, String p) {
+        int m = s.length(), n = p.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+
+        // p匹配s前0个字符
+        for (int j = 0; j < n; j++) {
+            if (p.charAt(j) == '*') {
+                dp[0][j + 1] = dp[0][j - 1];
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // 字符匹配 或 为 .
+                if (s.charAt(i) == p.charAt(j) || p.charAt(j) == '.') {
+                    dp[i + 1][j + 1] = dp[i][j];
+                } else if (p.charAt(j) == '*') {
+                    // p前一个字符和s匹配
+                    if (s.charAt(i) == p.charAt(j - 1) || p.charAt(j - 1) == '.') {
+                        // dp[i + 1][j - 1]：*匹配0次，p后续继续匹配；
+                        // dp[i][j - 1]：*匹配1次；
+                        // dp[i][j + 1]：*匹配2次或以上
+                        dp[i + 1][j + 1] = dp[i + 1][j - 1] || dp[i][j - 1] || dp[i][j + 1];
+                    } else {
+                        // 前一个字符不匹配
+                        dp[i + 1][j + 1] = dp[i + 1][j - 1];
+                    }
+                }
+            }
+        }
+
+        return dp[m][n];
     }
+
 
     /**
      * <a href="https://leetcode.cn/problems/house-robber-ii/">213. House Robber II</a>
