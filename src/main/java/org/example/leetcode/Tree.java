@@ -17,6 +17,65 @@ public class Tree {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/er-cha-shu-de-jing-xiang-lcof/">LCR 144. 翻转二叉树</a>
+     * 给定一棵二叉树的根节点 root，请左右翻转这棵二叉树，并返回其根节点。
+     * @param root
+     * @return
+     */
+    public TreeNode mirrorTree(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+
+        mirrorTree(root.left);
+        mirrorTree(root.right);
+
+        return root;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/construct-binary-tree-from-inorder-and-postorder-traversal/description/">106. Construct Binary Tree from Inorder and Postorder Traversal</a>
+     * Given two integer arrays inorder and postorder where inorder is the inorder traversal of a binary tree and postorder is the postorder traversal of the same tree, construct and return the binary tree.
+     * @param inorder inorder and postorder consist of unique values.
+     * @param postorder
+     * @return
+     */
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return buildTree(inorder, postorder, 0, inorder.length - 1, 0, postorder.length - 1);
+
+    }
+
+    public TreeNode buildTree(int[] inorder, int[] postorder, int inStart, int inEnd, int postStart, int postEnd) {
+        TreeNode root = new TreeNode(postorder[postEnd]);
+        int rootInOrderIndex = inStart;
+
+        if (inorder[inStart] == root.val) {
+            root.left = null;
+        } else {
+            int inOrderLeftEnd = inStart;
+            while (inOrderLeftEnd < inEnd && inorder[inOrderLeftEnd + 1] != root.val) {
+                inOrderLeftEnd++;
+            }
+
+            rootInOrderIndex = inOrderLeftEnd + 1;
+
+            root.left = buildTree(inorder, postorder, inStart, inOrderLeftEnd, postStart, postStart + inOrderLeftEnd - inStart);
+        }
+
+        if (inEnd == rootInOrderIndex) {
+            root.right = null;
+        } else {
+            root.right = buildTree(inorder, postorder, rootInOrderIndex + 1, inEnd, postStart + rootInOrderIndex - inStart, postEnd - 1);
+        }
+
+        return root;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/unique-binary-search-trees/">96. Unique Binary Search Trees</a>
      * Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
      * @param n 1 <= n <= 19
@@ -988,11 +1047,11 @@ public class Tree {
      * @param inorder
      * @return
      */
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
-        return buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    public TreeNode buildTree1(int[] preorder, int[] inorder) {
+        return buildTree1(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
     }
 
-    public TreeNode buildTree(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd) {
+    public TreeNode buildTree1(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd) {
         if (preStart > preEnd) {
             return null;
         }
@@ -1005,10 +1064,10 @@ public class Tree {
         inOrderLeftEnd--;
         int leftCount = inOrderLeftEnd - inStart + 1;
         if (leftCount > 0) {
-            root.left = buildTree(preorder, preStart + 1, preStart + leftCount, inorder, inStart, inOrderLeftEnd);
+            root.left = buildTree1(preorder, preStart + 1, preStart + leftCount, inorder, inStart, inOrderLeftEnd);
         }
 
-        root.right = buildTree(preorder, preStart + leftCount + 1, preEnd, inorder, inOrderLeftEnd + 2, inEnd);
+        root.right = buildTree1(preorder, preStart + leftCount + 1, preEnd, inorder, inOrderLeftEnd + 2, inEnd);
 
         return root;
     }

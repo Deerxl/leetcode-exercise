@@ -1,5 +1,7 @@
 package org.example.leetcode;
 
+import com.google.common.collect.Lists;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,10 +12,48 @@ import java.util.List;
 public class Dp {
 
     public static void main(String[] args) {
-        System.out.println(isMatch("aab", "c*a*b"));
+        System.out.println(minimumTotal(Lists.newArrayList(Lists.newArrayList(2), Lists.newArrayList(3,4), Lists.newArrayList(6,5,7), Lists.newArrayList(4,1,8,3))));
 
         // System.out.println(maxProfit(2, new int[]{3,2,6,5,0,3}));
 
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/triangle/">120. Triangle</a>
+     * Given a triangle array, return the minimum path sum from top to bottom.
+     * For each step, you may move to an adjacent number of the row below.
+     * More formally, if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.
+     * @param triangle 1 <= triangle.length <= 200
+     * @return
+     */
+    public static int minimumTotal(List<List<Integer>> triangle) {
+        int[] dp = new int[triangle.get(triangle.size() - 1).size()];
+        dp[0] = triangle.get(0).get(0);
+        int last = dp[0];
+        for (int i = 1; i < triangle.size(); i++) {
+            for (int j = 0; j < triangle.get(i).size(); j++) {
+                int val = triangle.get(i).get(j);
+                int tmp;
+                if (j == 0) {
+                   last = dp[0];
+                   dp[0] += val;
+                } else if (j == triangle.get(i).size() - 1) {
+                    dp[j] = last + val;
+                } else {
+                    tmp = val + Math.min(last, dp[j]);
+                    last = dp[j];
+                    dp[j] = tmp;
+                }
+            }
+        }
+
+        int result = dp[0];
+        for (int i = 0; i < dp.length; i++) {
+            result = Math.min(result, dp[i]);
+        }
+
+        return result;
     }
 
     /**
