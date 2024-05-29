@@ -9,9 +9,136 @@ import java.util.*;
 public class Maths {
 
     public static void main(String[] args) {
-        System.out.println(superEggDrop(1, 2));
-        System.out.println(myPow(1.0000000000002, -2147483648));
+        // System.out.println(findNthDigit(110));
+
+        System.out.println(add36Strings("1b", "2x"));
     }
+
+    /**
+     * <a href="https://mp.weixin.qq.com/s/XcKQwnwCh5nZsz-DLHJwzQ/">字节高频题补充——36进制加法</a>
+     * 36进制由0-9，a-z，共36个字符表示。
+     * 要求按照加法规则计算出任意两个36进制正整数的和，如1b + 2x = 48  （解释：47+105=152）
+     * 要求：不允许使用先将36进制数字整体转为10进制，相加后再转回为36进制的做法
+     * @param num1
+     * @param num2
+     * @return
+     */
+    public static String add36Strings(String num1, String num2) {
+        Map<Character, Integer> map1 = new HashMap<>(36);
+        Map<Integer, Character> map2 = new HashMap<>(36);
+        String s = "0123456789abcdefghijklmnopqrstuvwxyz";
+        for (int i = 0; i < s.length(); i++) {
+            map1.put(s.charAt(i), i);
+            map2.put(i, s.charAt(i));
+        }
+        int i = num1.length() - 1, j = num2.length() - 1;
+        int add = 0, sum = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        while (i >= 0 || j >= 0) {
+            sum += add;
+            if (i >= 0) {
+                sum += map1.get(num1.charAt(i--));
+            }
+            if (j >= 0) {
+                sum += map1.get(num2.charAt(j--));
+            }
+            if (sum >= 36) {
+                sum %= 36;
+                add = 1;
+            } else {
+                add = 0;
+            }
+            stringBuilder.insert(0, map2.get(sum));
+            sum = 0;
+        }
+        if (add == 1) {
+            stringBuilder.insert(0, "1");
+        }
+        return stringBuilder.toString();
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/valid-triangle-number/">611. Valid Triangle Number</a>
+     * Given an integer array nums, return the number of triplets chosen from the array that can make triangles if we take them as side lengths of a triangle.
+     * Example 1:
+     * Input: nums = [2,2,3,4]
+     * Output: 3
+     * Explanation: Valid combinations are:
+     * 2,3,4 (using the first 2)
+     * 2,3,4 (using the second 2)
+     * 2,2,3
+     * @param nums 1 <= nums.length <= 1000 0 <= nums[i] <= 1000
+     * @return
+     */
+    public static int triangleNumber(int[] nums) {
+        if (nums.length < 3) {
+            return 0;
+        }
+        Arrays.sort(nums);
+
+        int sum = 0;
+        int k;
+        int result = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                sum = nums[i] + nums[j];
+                k = j + 1;
+                while (k < nums.length && nums[k] < sum) {
+                    result++;
+                    k++;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/nth-digit/">400. 第 N 位数字</a>
+     * 给你一个整数 n ，请你在无限的整数序列 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...] 中找出并返回第 n 位上的数字。
+     * @param n 1 <= n <= 2^31 - 1
+     * @return
+     */
+    public static int findNthDigit(int n) {
+        int numCount = 1;
+        long startNum = 1;
+        long endNum = startNum * 10 - 1;
+        long startSerialNum = 1;
+        long endSerialNum = startSerialNum + (endNum - startNum + 1) * numCount - 1;
+        while (n > endSerialNum) {
+            numCount++;
+            startNum = endNum + 1;
+            endNum =  startNum * 10 - 1;
+            startSerialNum = endSerialNum + 1;
+            endSerialNum = startSerialNum + (endNum - startNum + 1) * numCount - 1;
+        }
+        int divideNum = 1;
+        int tmp = numCount;
+        while (tmp-- > 1) {
+            divideNum *= 10;
+        }
+        while (divideNum > 1) {
+            endNum = startNum + divideNum - 1;
+            endSerialNum = startSerialNum + (endNum - startNum + 1) * numCount - 1;
+            if (n > endSerialNum) {
+                startNum = endNum + 1;
+                startSerialNum = endSerialNum + 1;
+            } else {
+                divideNum /= 10;
+            }
+        }
+
+        while (startSerialNum + numCount <= n) {
+            startSerialNum += numCount;
+            startNum++;
+        }
+
+        String numStr = String.valueOf(startNum);
+        return Integer.parseInt(String.valueOf(numStr.charAt(n - (int) startSerialNum)));
+    }
+
+
 
     /**
      * <a href="https://leetcode.cn/problems/super-egg-drop/description/">887. Super Egg Drop</a>
