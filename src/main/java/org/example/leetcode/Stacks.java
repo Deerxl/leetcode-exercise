@@ -1,7 +1,5 @@
 package org.example.leetcode;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Stack;
 
 /**
@@ -11,7 +9,31 @@ import java.util.Stack;
 public class Stacks {
 
     public static void main(String[] args) {
-        System.out.println(removeKdigits("112", 1));
+        System.out.println(largestRectangleArea(new int[] {2,1,5,6,2,3}));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/largest-rectangle-in-histogram/">84. Largest Rectangle in Histogram</a>
+     *Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
+     * @param heights 1 <= heights.length <= 105 0 <= heights[i] <= 104
+     * @return
+     */
+    public static int largestRectangleArea(int[] heights) {
+        int result = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        int i = 0;
+        for (; i < heights.length; i++) {
+            while (stack.peek() != -1 && heights[i] < heights[stack.peek()]) {
+                result = Math.max(result, heights[stack.pop()] * (i - stack.peek() - 1));
+            }
+            stack.push(i);
+        }
+        while (stack.peek() != -1) {
+            result = Math.max(result, heights[stack.pop()] * (i - stack.peek() - 1));
+        }
+
+        return result;
     }
 
     /**

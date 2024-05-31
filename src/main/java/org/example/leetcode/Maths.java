@@ -15,6 +15,27 @@ public class Maths {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/">LCR 158. 库存管理 II</a>
+     * 仓库管理员以数组 stock 形式记录商品库存表。stock[i] 表示商品 id，可能存在重复。请返回库存表中数量大于 stock.length / 2 的商品 id。
+     * 示例 1:
+     * 输入: stock = [6, 1, 3, 1, 1, 1]
+     * 输出: 1
+     * @param stock 1 <= stock.length <= 50000
+     * @return
+     */
+    public int inventoryManagement(int[] stock) {
+        int candidate = stock[0];
+        int count = 0;
+        for (int i = 0; i < stock.length; i++) {
+            if (count == 0) {
+                candidate = stock[i];
+            }
+            count = candidate == stock[i] ? count + 1 : count - 1;
+        }
+        return candidate;
+    }
+
+    /**
      * <a href="https://mp.weixin.qq.com/s/XcKQwnwCh5nZsz-DLHJwzQ/">字节高频题补充——36进制加法</a>
      * 36进制由0-9，a-z，共36个字符表示。
      * 要求按照加法规则计算出任意两个36进制正整数的和，如1b + 2x = 48  （解释：47+105=152）

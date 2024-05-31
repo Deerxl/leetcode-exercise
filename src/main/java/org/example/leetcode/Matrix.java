@@ -2,11 +2,10 @@ package org.example.leetcode;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.Stack;
 
 /**
  * @author jialu.yxl
@@ -42,6 +41,52 @@ public class Matrix {
 
         System.out.println(Arrays.deepToString(generateMatrix(3)));
 
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/maximal-rectangle/description/">85. Maximal Rectangle</a>
+     * Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+     * @param matrix 1 <= row, cols <= 200
+     * @return
+     */
+    public int maximalRectangle(char[][] matrix) {
+        int[][] arr = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (i == 0) {
+                    arr[i][j] = matrix[i][j] == '0' ? 0 : 1;
+                } else {
+                    arr[i][j] = matrix[i][j] == '0' ? 0 : arr[i - 1][j] + 1;
+                }
+            }
+        }
+
+        int result = 0;
+        for (int i = 0; i < arr.length; i++) {
+            int[] nums = arr[i];
+            result = Math.max(result, maximalRectangle(nums));
+        }
+
+        return result;
+    }
+
+    private int maximalRectangle(int[] nums) {
+        int result = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        int i = 0;
+        for (; i < nums.length; i++) {
+            while (stack.peek() != -1 && nums[stack.peek()] > nums[i]) {
+                result = Math.max(result, nums[stack.pop()] * (i - stack.peek() - 1));
+            }
+            stack.push(i);
+        }
+
+        while (stack.peek() != -1) {
+            result = Math.max(result, nums[stack.pop()] * (i - stack.peek() - 1));
+        }
+
+        return result;
     }
 
 
