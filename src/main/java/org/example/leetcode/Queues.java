@@ -1,15 +1,56 @@
 package org.example.leetcode;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @author jialu.yxl
  * @date 5/16/24 11:41 AM
  */
 public class Queues {
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/simplify-path/">71. Simplify Path</a>
+     * Given an absolute path for a Unix-style file system, which begins with a slash '/', transform this path into its simplified canonical path.
+     *
+     * In Unix-style file system context, a single period '.' signifies the current directory, a double period ".." denotes moving up one directory level, and multiple slashes such as "//" are interpreted as a single slash. In this problem, treat sequences of periods not covered by the previous rules (like "...") as valid names for files or directories.
+     *
+     * The simplified canonical path should adhere to the following rules:
+     *
+     * It must start with a single slash '/'.
+     * Directories within the path should be separated by only one slash '/'.
+     * It should not end with a slash '/', unless it's the root directory.
+     * It should exclude any single or double periods used to denote current or parent directories.
+     * Return the new path.
+     * @param path 1 <= path.length <= 3000 path consists of English letters, digits, period '.', slash '/' or '_'. path is a valid absolute Unix path.
+     * @return
+     */
+    public String simplifyPath(String path) {
+        String[] split = path.split("/");
+        Deque<String> queue = new ArrayDeque<>();
+        for (int i = 0; i < split.length; i++) {
+            if (split[i].isEmpty() || split[i].equals(".")) {
+                continue;
+            }
+            if (split[i].equals("..")) {
+                if (!queue.isEmpty()) {
+                    queue.pollLast();
+                }
+            } else {
+                queue.offerLast(split[i]);
+            }
+        }
+
+        if (queue.isEmpty()) {
+            return "/";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while (!queue.isEmpty()) {
+            sb.append("/").append(queue.pollFirst());
+        }
+        return sb.toString();
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/top-k-frequent-elements/">347. Top K Frequent Elements</a>
