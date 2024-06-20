@@ -11,7 +11,99 @@ public class Maths {
     public static void main(String[] args) {
         // System.out.println(findNthDigit(110));
 
-        System.out.println(add36Strings("1b", "2x"));
+        System.out.println(numSquares(12));
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/perfect-squares/description/">279. Perfect Squares</a>
+     * Given an integer n, return the least number of perfect square numbers that sum to n.
+     *
+     * A perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself. For example, 1, 4, 9, and 16 are perfect squares while 3 and 11 are not.
+     * Example 1:
+     * Input: n = 12
+     * Output: 3
+     * Explanation: 12 = 4 + 4 + 4.
+     * @param n
+     * @return
+     */
+    public static int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[1];
+            for (int j = i - 1; j >= i / 2 || j * j >= i; j--) {
+                if (j * j == i) {
+                    dp[i] = 1;
+                    break;
+                } else {
+                    dp[i] = Math.min(dp[i], dp[j] + dp[i - j]);
+                }
+            }
+        }
+        return dp[n];
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/excel-sheet-column-title/">168. Excel Sheet Column Title</a>
+     * Given an integer columnNumber, return its corresponding column title as it appears in an Excel sheet.
+     *
+     * For example:
+     *
+     * A -> 1
+     * B -> 2
+     * C -> 3
+     * ...
+     * Z -> 26
+     * AA -> 27
+     * AB -> 28
+     * @param columnNumber 1 <= columnNumber <= 2^31 - 1
+     * @return
+     */
+    public static String convertToTitle(int columnNumber) {
+        Map<Integer, String> map = new HashMap<>() {
+            {
+                put(1, "A");
+                put(2, "B");
+                put(3, "C");
+                put(4, "D");
+                put(5, "E");
+                put(6, "F");
+                put(7, "G");
+                put(8, "H");
+                put(9, "I");
+                put(10, "J");
+                put(11, "K");
+                put(12, "L");
+                put(13, "M");
+                put(14, "N");
+                put(15, "O");
+                put(16, "P");
+                put(17, "Q");
+                put(18, "R");
+                put(19, "S");
+                put(20, "T");
+                put(21, "U");
+                put(22, "V");
+                put(23, "W");
+                put(24, "X");
+                put(25, "Y");
+                put(0, "Z");
+            }
+        };
+
+        StringBuilder stringBuilder = new StringBuilder();
+        int mod;
+
+        while (columnNumber > 0) {
+            mod = columnNumber % 26;
+            stringBuilder.insert(0, map.get(mod));
+            columnNumber /= 26;
+            if (mod == 0) {
+                columnNumber -= 1;
+            }
+        }
+        return stringBuilder.toString();
     }
 
     /**

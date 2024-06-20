@@ -14,6 +14,35 @@ public class StringAndArray {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/bu-ke-pai-zhong-de-shun-zi-lcof/">LCR 186. 文物朝代判断</a>
+     * 展览馆展出来自 13 个朝代的文物，每排展柜展出 5 个文物。
+     * 某排文物的摆放情况记录于数组 places，其中 places[i] 表示处于第 i 位文物的所属朝代编号。
+     * 其中，编号为 0 的朝代表示未知朝代。请判断并返回这排文物的所属朝代编号是否连续（如遇未知朝代可算作连续情况）。
+     * 输入: places = [0, 6, 9, 0, 7]
+     * 输出: True
+     * @param places places.length = 5
+     * 0 <= places[i] <= 13
+     * @return
+     */
+    public boolean checkDynasty(int[] places) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        Set<Integer> set = new HashSet<>();
+        for (int place : places) {
+            if (place == 0) {
+                continue;
+            }
+            if (set.contains(place)) {
+                return false;
+            }
+            set.add(place);
+            min = Math.min(min, place);
+            max = Math.max(max, place);
+        }
+        return max - min < 5;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/intersection-of-two-arrays/">349. Intersection of Two Arrays</a>
      * Given two integer arrays nums1 and nums2, return an array of their intersection.Each element in the result must be unique and you may return the result in any order.
      * Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
