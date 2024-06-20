@@ -18,6 +18,43 @@ public class Dp {
 
     }
 
+    /**
+     * <a href="https://leetcode.cn/problems/wildcard-matching/description/">44. Wildcard Matching</a>
+     * Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
+     *
+     * '?' Matches any single character.
+     * '*' Matches any sequence of characters (including the empty sequence).
+     * The matching should cover the entire input string (not partial).
+     * @param s
+     * @param p
+     * @return
+     */
+    public boolean isMatch(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+
+        for (int j = 0; j < n; j++) {
+            if (p.charAt(j) == '*') {
+                dp[0][j + 1] = dp[0][j];
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (p.charAt(j) == '*') {
+                    dp[i + 1][j + 1] = dp[i][j] || dp[i + 1][j] || dp[i][j + 1];
+                } else if (p.charAt(j) == '?') {
+                    dp[i + 1][j + 1] = dp[i][j];
+                } else {
+                    dp[i + 1][j + 1] = dp[i][j] && s.charAt(i) == p.charAt(j);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+
 
     /**
      * <a href="https://leetcode.cn/problems/triangle/">120. Triangle</a>
@@ -69,7 +106,7 @@ public class Dp {
      * @param p 1 <= p.length <= 20
      * @return
      */
-    public static boolean isMatch(String s, String p) {
+    public static boolean isMatch10(String s, String p) {
         int m = s.length(), n = p.length();
         boolean[][] dp = new boolean[m + 1][n + 1];
         dp[0][0] = true;
