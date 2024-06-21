@@ -25,6 +25,44 @@ public class LinkedList {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/liang-ge-lian-biao-de-di-yi-ge-gong-gong-jie-dian-lcof/">LCR 171. 训练计划 V</a>
+     * 某教练同时带教两位学员，分别以链表 l1、l2 记录了两套核心肌群训练计划，节点值为训练项目编号。两套计划仅有前半部分热身项目不同，后续正式训练项目相同。请设计一个程序找出并返回第一个正式训练项目编号。如果两个链表不存在相交节点，返回 null 。
+     * @param headA
+     * @param headB
+     * @return
+     */
+    ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode pA = headA;
+        ListNode pB = headB;
+        boolean flagA = true;
+        boolean flagB = true;
+        while (pA != pB) {
+            if (pA == null) {
+                if (flagA) {
+                    flagA = false;
+                } else {
+                    return null;
+                }
+                pA = headB;
+            } else {
+                pA = pA.next;
+            }
+
+            if (pB == null) {
+                if (flagB) {
+                    flagB = false;
+                } else {
+                    return null;
+                }
+                pB = headA;
+            } else {
+                pB = pB.next;
+            }
+        }
+        return pA;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/odd-even-linked-list/">328. Odd Even Linked List</a>
      * Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.
      * The first node is considered odd, and the second node is even, and so on.
@@ -584,7 +622,7 @@ public class LinkedList {
      * @param headB
      * @return
      */
-    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    public ListNode getIntersectionNode160(ListNode headA, ListNode headB) {
         if (headA == null || headB == null) {
             return null;
         }

@@ -14,6 +14,32 @@ public class StringAndArray {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/remove-all-adjacent-duplicates-in-string/">1047. Remove All Adjacent Duplicates In String</a>
+     * You are given a string s consisting of lowercase English letters. A duplicate removal consists of choosing two adjacent and equal letters and removing them.
+     * We repeatedly make duplicate removals on s until we no longer can.
+     * Return the final string after all such duplicate removals have been made. It can be proven that the answer is unique.
+     * Example 1:
+     * Input: s = "abbaca"
+     * Output: "ca"
+     * Explanation:
+     * For example, in "abbaca" we could remove "bb" since the letters are adjacent and equal, and this is the only possible move.  The result of this move is that the string is "aaca", of which only "aa" is possible, so the final string is "ca".
+     * @param s 1 <= s.length <= 10^5
+     * @return
+     */
+    public String removeDuplicates(String s) {
+        List<Character> list = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!list.isEmpty() && list.get(list.size() - 1) == c) {
+                list.remove(list.size() - 1);
+            } else {
+                list.add(c);
+            }
+        }
+        return list.stream().map(String::valueOf).collect(Collectors.joining());
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/bu-ke-pai-zhong-de-shun-zi-lcof/">LCR 186. 文物朝代判断</a>
      * 展览馆展出来自 13 个朝代的文物，每排展柜展出 5 个文物。
      * 某排文物的摆放情况记录于数组 places，其中 places[i] 表示处于第 i 位文物的所属朝代编号。
