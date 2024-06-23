@@ -1,7 +1,5 @@
 package org.example.leetcode;
 
-import com.google.common.collect.Lists;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,10 +10,54 @@ import java.util.List;
 public class Dp {
 
     public static void main(String[] args) {
-        System.out.println(minimumTotal(Lists.newArrayList(Lists.newArrayList(2), Lists.newArrayList(3,4), Lists.newArrayList(6,5,7), Lists.newArrayList(4,1,8,3))));
+        System.out.println(findNumberOfLIS(new int[] {1,3,5,4,7}));
 
         // System.out.println(maxProfit(2, new int[]{3,2,6,5,0,3}));
 
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/number-of-longest-increasing-subsequence/">673. Number of Longest Increasing Subsequence</a>
+     * Given an integer array nums, return the number of longest increasing subsequences.
+     * Notice that the sequence has to be strictly increasing.
+     * Example 1:
+     * Input: nums = [1,3,5,4,7]
+     * Output: 2
+     * Explanation: The two longest increasing subsequences are [1, 3, 4, 7] and [1, 3, 5, 7].
+     * @param nums
+     * @return
+     */
+    public static int findNumberOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, 1);
+        int maxLen = 0;
+
+        int[] count = new int[nums.length];
+        Arrays.fill(count, 1);
+
+        int result = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                   if (dp[j] + 1 > dp[i]) {
+                       dp[i] = dp[j] + 1;
+                       count[i] = count[j];
+                   } else if (dp[j] + 1 == dp[i]) {
+                       count[i] += count[j];
+                   }
+                }
+            }
+
+            if (dp[i] > maxLen) {
+                maxLen = dp[i];
+                result = count[i];
+            } else if (dp[i] == maxLen) {
+                result += count[i];
+            }
+        }
+
+        return result;
     }
 
     /**
