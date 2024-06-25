@@ -16,6 +16,35 @@ public class StringAndArray {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/">LCR 120. 寻找文件副本</a>
+     * 设备中存有 n 个文件，文件 id 记于数组 documents。若文件 id 相同，则定义为该文件存在副本。请返回任一存在副本的文件 id。
+     * 示例 1：
+     * 输入：documents = [2, 5, 3, 0, 5, 0]
+     * 输出：0 或 5
+     * @param documents
+     * @return
+     */
+    public int findRepeatDocument(int[] documents) {
+        int len = documents.length;
+        for (int i = 0; i < documents.length; i++) {
+            int doc = Math.abs(documents[i]);
+            if (doc == len) {
+                doc = 0;
+            }
+            if (documents[doc] < 0) {
+                return doc;
+            }
+            if (documents[doc] == 0) {
+                documents[doc] = -len;
+            } else {
+                documents[doc] = -documents[doc];
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/string-compression/">443. String Compression</a>
      * Given an array of characters chars, compress it using the following algorithm:
      *
