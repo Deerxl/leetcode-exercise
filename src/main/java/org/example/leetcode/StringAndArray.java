@@ -10,8 +10,84 @@ import java.util.stream.Collectors;
 public class StringAndArray {
 
     public static void main(String[] args) {
-        System.out.println(findDuplicates(new int[] {4,3,2,7,8,2,3,1}));
+        System.out.println(fourSum(new int[] {0,0,0,1000000000,1000000000,1000000000,1000000000},1000000000));
     }
+
+    /**
+     * <a href="https://leetcode.cn/problems/4sum/">18. 4Sum</a>
+     * Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
+     * 0 <= a, b, c, d < n
+     * a, b, c, and d are distinct.
+     * nums[a] + nums[b] + nums[c] + nums[d] == target
+     * You may return the answer in any order.
+     * Example 1:
+     * Input: nums = [1,0,-1,0,-2,2], target = 0
+     * Output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+     * @param nums
+     * @param target
+     * @return
+     */
+    public static List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+
+        List<List<Integer>> result = new ArrayList<>();
+        int len = nums.length;
+        if (len < 4) {
+            return result;
+        }
+
+        long maxSum = (long) nums[len - 1] + nums[len - 2] + nums[len - 3] + nums[len - 4];
+        if (maxSum < target) {
+            return result;
+        }
+
+        long minSum, threeSumTarget, twoSumTarget;
+        for (int i = 0; i < len - 3; i++) {
+            minSum = (long) nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3];
+            if (minSum > target) {
+                break;
+            }
+
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            threeSumTarget = target - nums[i];
+            for (int j = i + 1; j < len - 2; j++) {
+                minSum = (long) nums[j] + nums[j + 1] + nums[j + 2];
+                if (minSum > threeSumTarget) {
+                    break;
+                }
+
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+
+                twoSumTarget = threeSumTarget - nums[j];
+
+                int l = j + 1, r = len - 1;
+                while (l < r) {
+                    if ((long) nums[l] + nums[r] == twoSumTarget) {
+                        result.add(Arrays.asList(nums[i], nums[j], nums[l], nums[r]));
+                        do {
+                            l++;
+                        } while (l < r && nums[l] == nums[l - 1]);
+                        do {
+                            r--;
+                        } while (l < r && nums[r] == nums[r + 1]);
+                    } else if ((long) nums[l] + nums[r] < twoSumTarget) {
+                        l++;
+                    } else {
+                        r--;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+
 
     /**
      * <a href="https://leetcode.cn/problems/remove-all-adjacent-duplicates-in-string/">1047. Remove All Adjacent Duplicates In String</a>
