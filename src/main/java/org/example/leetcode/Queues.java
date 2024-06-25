@@ -8,6 +8,38 @@ import java.util.*;
  */
 public class Queues {
 
+    /**
+     * <a href="https://www.lintcode.com/problem/919/description">919 · 会议室 II</a>
+     * 给定一系列的会议时间间隔intervals，包括起始和结束时间[[s1,e1],[s2,e2],...] (si < ei)，找到所需的最小的会议室数量。
+     * 输入: intervals = [(0,30),(5,10),(15,20)]
+     * 输出: 2
+     * 解释:
+     * 需要两个会议室
+     * 会议室1:(0,30)
+     * 会议室2:(5,10),(15,20)
+     * @param intervals
+     * @return
+     */
+    public int minMeetingRooms(List<Interval> intervals) {
+        if (intervals == null || intervals.isEmpty()) {
+            return 0;
+        }
+
+        intervals.sort(Comparator.comparingInt(interval -> interval.start));
+
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        priorityQueue.offer(intervals.get(0).end);
+
+        for (int i = 1; i < intervals.size(); i++) {
+            if (intervals.get(i).start >= priorityQueue.peek()) {
+                priorityQueue.poll();
+            }
+
+            priorityQueue.offer(intervals.get(i).end);
+        }
+
+        return priorityQueue.size();
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/simplify-path/">71. Simplify Path</a>
