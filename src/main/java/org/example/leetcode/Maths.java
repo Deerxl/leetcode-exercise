@@ -11,9 +11,40 @@ public class Maths {
     public static void main(String[] args) {
         // System.out.println(findNthDigit(110));
 
-        System.out.println(numSquares(12));
+        System.out.println(nthUglyNumber(10));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/ugly-number-ii/">264. 丑数 II</a>
+     * 给你一个整数 n ，请你找出并返回第 n 个 丑数 。
+     * 丑数 就是质因子只包含 2、3 和 5 的正整数。
+     * 示例 1：
+     * 输入：n = 10
+     * 输出：12
+     * 解释：[1, 2, 3, 4, 5, 6, 8, 9, 10, 12] 是由前 10 个丑数组成的序列。
+     * @return 1 <= n <= 1690
+     */
+    public static int nthUglyNumber(int n) {
+        int[] factors = new int[] {2,3,5};
+        PriorityQueue<Long> queue = new PriorityQueue<>();
+        queue.offer(1L);
+        Set<Long> set = new HashSet<>();
+
+        long result = -1L;
+        for (int i = 0; i < n; i++) {
+            result = queue.poll();
+            for (int j = 0; j < factors.length; j++) {
+                Long newUglyNum = factors[j] * result;
+                if (!set.contains(newUglyNum)) {
+                    set.add(newUglyNum);
+                    queue.offer(newUglyNum);
+                }
+            }
+        }
+
+        return (int) result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/perfect-squares/description/">279. Perfect Squares</a>
