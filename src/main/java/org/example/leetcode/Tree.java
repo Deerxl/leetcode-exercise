@@ -17,6 +17,46 @@ public class Tree {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/er-cha-shu-zhong-he-wei-mou-yi-zhi-de-lu-jing-lcof/description/">LCR 153. 二叉树中和为目标值的路径</a>
+     * 给你二叉树的根节点 root 和一个整数目标和 targetSum ，找出所有 从根节点到叶子节点 路径总和等于给定目标和的路径。
+     *
+     * 叶子节点 是指没有子节点的节点。
+     * @param root 树中节点总数在范围 [0, 5000] 内
+     * @param target
+     * @return
+     */
+    List<List<Integer>> pathTargetResult = new ArrayList<>();
+    public List<List<Integer>> pathTarget(TreeNode root, int target) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+
+        pathTarget(root, target, new ArrayList<>());
+        return pathTargetResult;
+    }
+
+    private void pathTarget(TreeNode root, int target, List<Integer> curList) {
+        if (root.val == target && root.left == null && root.right == null) {
+            List<Integer> result = new ArrayList<>(curList);
+            result.add(root.val);
+            pathTargetResult.add(result);
+            return;
+        }
+
+        if (root.left != null) {
+            List<Integer> result = new ArrayList<>(curList);
+            result.add(root.val);
+            pathTarget(root.left, target - root.val, result);
+        }
+
+        if (root.right != null) {
+            List<Integer> result = new ArrayList<>(curList);
+            result.add(root.val);
+            pathTarget(root.right, target - root.val, result);
+        }
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/minimum-depth-of-binary-tree/">111. Minimum Depth of Binary Tree</a>
      * Given a binary tree, find its minimum depth.
      *

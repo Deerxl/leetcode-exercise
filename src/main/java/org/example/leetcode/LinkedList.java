@@ -17,11 +17,52 @@ public class LinkedList {
         // treeToDoublyList(root);
 
         ListNode head = new ListNode(1);
-        head.next = new ListNode(2);
+        head.next = new ListNode(4);
         head.next.next = new ListNode(3);
-        head.next.next.next = new ListNode(4);
+        head.next.next.next = new ListNode(2);
         head.next.next.next.next = new ListNode(5);
-        System.out.println(oddEvenList(head));
+        head.next.next.next.next.next = new ListNode(2);
+
+        System.out.println(partition(head, 3));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/partition-list/description/">86. Partition List</a>
+     * Given the head of a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+     *
+     * You should preserve the original relative order of the nodes in each of the two partitions.
+     * Input: head = [1,4,3,2,5,2], x = 3
+     * Output: [1,2,2,4,3,5]
+     * @param head
+     * @param x
+     * @return
+     */
+    public static ListNode partition(ListNode head, int x) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode pre = new ListNode(0);
+
+        ListNode cur = pre;
+        ListNode dummy = head;
+        while (dummy != null) {
+            if (dummy.val < x) {
+                cur.next = new ListNode(dummy.val);
+                cur = cur.next;
+            }
+            dummy = dummy.next;
+        }
+
+        dummy = head;
+        while (dummy != null) {
+            if (dummy.val >= x) {
+                cur.next = new ListNode(dummy.val);
+                cur = cur.next;
+            }
+            dummy = dummy.next;
+        }
+        return pre.next;
     }
 
     /**

@@ -16,6 +16,21 @@ public class StringAndArray {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/repeated-substring-pattern/">459. Repeated Substring Pattern</a>
+     * Given a string s, check if it can be constructed by taking a substring of it and appending multiple copies of the substring together.
+     * Example 1:
+     *
+     * Input: s = "abab"
+     * Output: true
+     * Explanation: It is the substring "ab" twice.
+     * @param s 1 <= s.length <= 104
+     * @return
+     */
+    public boolean repeatedSubstringPattern(String s) {
+        return (s + s).substring(1, s.length() * 2 - 1).contains(s);
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/reverse-string/">344. Reverse String</a>
      * Write a function that reverses a string. The input string is given as an array of characters s.
      * You must do this by modifying the input array in-place with O(1) extra memory.
