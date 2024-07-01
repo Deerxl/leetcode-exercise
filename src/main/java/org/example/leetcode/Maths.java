@@ -9,9 +9,80 @@ import java.util.*;
 public class Maths {
 
     public static void main(String[] args) {
-        // System.out.println(findNthDigit(110));
+        System.out.println(nextGreaterElement(12));
 
         System.out.println(nthUglyNumber(10));
+    }
+
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/fibonacci-number/">509. Fibonacci Number</a>
+     * The Fibonacci numbers, commonly denoted F(n) form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1. That is,
+     *
+     * F(0) = 0, F(1) = 1
+     * F(n) = F(n - 1) + F(n - 2), for n > 1.
+     * Given n, calculate F(n).
+     * @param n 0 <= n <= 30
+     * @return
+     */
+    public int fib(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        return fib(n - 1) + fib(n - 2);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/next-greater-element-iii/">556. Next Greater Element III</a>
+     * Given a positive integer n, find the smallest integer which has exactly the same digits existing in the integer n and is greater in value than n. If no such positive integer exists, return -1.
+     * Note that the returned integer should fit in 32-bit integer, if there is a valid answer but it does not fit in 32-bit integer, return -1.
+     * Example 1:
+     * Input: n = 12
+     * Output: 21
+     * Example 2:
+     * Input: n = 21
+     * Output: -1
+     * @param n 1 <= n <= 2^31 - 1
+     * @return
+     */
+    public static int nextGreaterElement(int n) {
+        if (n <= 11 || n == Integer.MAX_VALUE) {
+            return -1;
+        }
+        String str = String.valueOf(n);
+        StringBuilder resultStr;
+
+        for (int i = str.length() - 2; i >= 0; i--) {
+            if (str.charAt(i) < str.charAt(i + 1)) {
+                char target = str.charAt(i);
+                resultStr = new StringBuilder(str.substring(0, i));
+                int changeIndex = i + 1;
+                for (int j = i + 2; j < str.length() && str.charAt(j) > target; j++) {
+                    if (str.charAt(j) < str.charAt(changeIndex)) {
+                        changeIndex = j;
+                    }
+                }
+                resultStr.append(str.charAt(changeIndex));
+                String remainStr = str.substring(i, changeIndex) + str.substring(changeIndex + 1);
+                char[] arr = new char[remainStr.length()];
+                for (int k = 0; k < remainStr.length(); k++) {
+                    arr[k] = remainStr.charAt(k);
+                }
+                Arrays.sort(arr);
+                for (int k = 0; k < arr.length; k++) {
+                    resultStr.append(arr[k]);
+                }
+                long num = Long.parseLong(resultStr.toString());
+                if (num > Integer.MAX_VALUE) {
+                    return -1;
+                } else {
+                    return (int) num;
+                }
+            }
+        }
+
+        return -1;
     }
 
 
