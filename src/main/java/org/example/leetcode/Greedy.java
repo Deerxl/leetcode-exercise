@@ -12,6 +12,52 @@ public class Greedy {
         System.out.println(canCompleteCircuit(new int[] {5,1,2,3,4}, new int[] {4,4,1,5,1}));
     }
 
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/remove-duplicate-letters/">316. Remove Duplicate Letters</a>
+     * Given a string s, remove duplicate letters so that every letter appears once and only once. You must make sure your result is
+     * the smallest in lexicographical order among all possible results.
+     * Example 1:
+     * Input: s = "bcabc"
+     * Output: "abc"
+     * @param s 1 <= s.length <= 10^4
+     * @return
+     */
+    public static String removeDuplicateLetters(String s) {
+        if (s.length() <= 1) {
+            return s;
+        }
+
+        int[] nums = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            nums[s.charAt(i) - 'a']++;
+        }
+
+        boolean[] visited = new boolean[26];
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!visited[c - 'a']) {
+                while (sb.length() > 0 && sb.charAt(sb.length() - 1) > c) {
+                    if (nums[sb.charAt(sb.length() - 1) - 'a'] > 0) {
+                        visited[sb.charAt(sb.length() - 1) - 'a'] = false;
+                        sb.deleteCharAt(sb.length() - 1);
+                    } else {
+                        break;
+                    }
+                }
+                sb.append(c);
+                visited[c - 'a'] = true;
+            }
+            nums[c - 'a']--;
+        }
+
+        return sb.toString();
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/gas-station/">134. Gas Station</a>
      * There are n gas stations along a circular route, where the amount of gas at the ith station is gas[i].

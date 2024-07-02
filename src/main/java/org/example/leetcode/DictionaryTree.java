@@ -1,6 +1,8 @@
 package org.example.leetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -12,6 +14,34 @@ public class DictionaryTree {
     // public static void main(String[] args) {
     //     System.out.println(findKthNumber(100, 50));
     // }
+
+    /**
+     * <a href="https://leetcode.cn/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/">LCR 164. 破解闯关密码</a>
+     * 闯关游戏需要破解一组密码，闯关组给出的有关密码的线索是：
+     * 一个拥有密码所有元素的非负整数数组 password
+     * 密码是 password 中所有元素拼接后得到的最小的一个数
+     * 请编写一个程序返回这个密码。
+     * 示例 1:
+     * 输入: password = [15, 8, 7]
+     * 输出: "1578"
+     * 示例 2:
+     * 输入: password = [0, 3, 30, 34, 5, 9]
+     * 输出: "03033459"
+     * @param password 0 < password.length <= 100
+     * @return
+     */
+    public String crackPassword(int[] password) {
+        String[] nums = Arrays.stream(password).mapToObj(String::valueOf).toArray(String[]::new);
+        StringBuilder sb = new StringBuilder();
+        Arrays.stream(nums).sorted(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return (s1 + s2).compareTo(s2 + s1);
+            }
+        }).forEach(sb::append);
+
+        return sb.toString();
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/k-th-smallest-in-lexicographical-order/description/">440. 字典序的第K小数字</a>
