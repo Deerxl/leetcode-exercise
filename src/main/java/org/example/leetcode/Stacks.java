@@ -12,6 +12,79 @@ public class Stacks {
         System.out.println(largestRectangleArea(new int[] {2,1,5,6,2,3}));
     }
 
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/largest-rectangle-in-histogram/">84. Largest Rectangle in Histogram</a>
+     * Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
+     * Input: heights = [2,1,5,6,2,3]
+     * Output: 10
+     * @param heights
+     * @return
+     */
+    public int largestRectangleArea2(int[] heights) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        int result = 0;
+        for (int i = 0; i < heights.length; i++) {
+            while (stack.peek() != -1 && heights[i] < heights[stack.peek()]) {
+                result = Math.max(result, heights[stack.pop()] * (i - stack.peek() - 1));
+            }
+            stack.push(i);
+        }
+
+        while (stack.peek() != -1) {
+            result = Math.max(result, heights[stack.pop()] * (heights.length - stack.peek() - 1));
+        }
+
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/next-greater-element-ii/">503. Next Greater Element II</a>
+     * Given a circular integer array nums (i.e., the next element of nums[nums.length - 1] is nums[0]), return the next greater number for every element in nums.
+     *
+     * The next greater number of a number x is the first greater number to its traversing-order next in the array, which means you could search circularly to find its next greater number. If it doesn't exist, return -1 for this number.
+     * Example 1:
+     * Input: nums = [1,2,1]
+     * Output: [2,-1,2]
+     * Explanation: The first 1's next greater number is 2;
+     * The number 2 can't find next greater number.
+     * The second 1's next greater number needs to search circularly, which is also 2.
+     * Example 2:
+     * Input: nums = [1,2,3,4,3]
+     * Output: [2,3,4,-1,4]
+     * @param nums 1 <= nums.length <= 10^4
+     * @return
+     */
+    public int[] nextGreaterElements(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        int[] result = new int[nums.length];
+
+        stack.push(0);
+        for (int i = 1; i < nums.length; i++) {
+            while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
+                result[stack.pop()] = nums[i];
+            }
+            stack.push(i);
+        }
+
+        for (int i = 0; i < nums.length && !stack.isEmpty(); i++) {
+            if (i >= stack.peek()) {
+                break;
+            }
+            while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
+                result[stack.pop()] = nums[i];
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            result[stack.pop()] = -1;
+        }
+
+        return result;
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/largest-rectangle-in-histogram/">84. Largest Rectangle in Histogram</a>
      *Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
