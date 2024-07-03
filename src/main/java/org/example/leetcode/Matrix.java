@@ -2,10 +2,7 @@ package org.example.leetcode;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * @author jialu.yxl
@@ -15,32 +12,124 @@ import java.util.Stack;
 public class Matrix {
 
     public static void main(String[] args) {
-        char[][] nums = new char[][]{
-                {'0','1','1','0','0','1','0','1','0','1'},
-                {'0','0','1','0','1','0','1','0','1','0'},
-                {'1','0','0','0','0','1','0','1','1','0'},
-                {'0','1','1','1','1','1','1','0','1','0'},
-                {'0','0','1','1','1','1','1','1','1','0'},
-                {'1','1','0','1','0','1','1','1','1','0'},
-                {'0','0','0','1','1','0','0','0','1','0'},
-                {'1','1','0','1','1','0','0','1','1','1'},
-                {'0','1','0','1','1','0','1','0','1','1'}}
-                ;
+        char[][] board = new char[][]
+                {
+                        {'.','.','9','7','4','8','.','.','.'},
+                        {'7','.','.','.','.','.','.','.','.'},
+                        {'.','2','.','1','.','9','.','.','.'},
+                        {'.','.','7','.','.','.','2','4','.'},
+                        {'.','6','4','.','1','.','5','9','.'},
+                        {'.','9','8','.','.','.','3','.','.'},
+                        {'.','.','.','8','.','3','.','2','.'},
+                        {'.','.','.','.','.','.','.','.','6'},
+                        {'.','.','.','2','7','5','9','.','.'}
+                };
 
-        char[][] board = new char[][] {
-                {'A','B','C','E'},
-                {'S','F','E','S'},
-                {'A','D','E','E'}
-        };
+        solveSudoku(board);
 
-        int[][] nums1 = new int[][]{
-                {1,2,3},
-                {4,5,6},
-                {7,8,9}
-        };
+    }
 
-        System.out.println(Arrays.deepToString(generateMatrix(3)));
+    /**
+     * <a href="https://leetcode.cn/problems/sudoku-solver/">37. Sudoku Solver</a>
+     * Write a program to solve a Sudoku puzzle by filling the empty cells.
+     *
+     * A sudoku solution must satisfy all of the following rules:
+     *
+     * Each of the digits 1-9 must occur exactly once in each row.
+     * Each of the digits 1-9 must occur exactly once in each column.
+     * Each of the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.
+     * The '.' character indicates empty cells.
+     * @param board board.length == 9
+     * board[i].length == 9
+     * board[i][j] is a digit or '.'.
+     * It is guaranteed that the input board has only one solution.
+     */
+    public static void solveSudoku(char[][] board) {
+        int[] rows = new int[9];
+        int[] cols = new int[9];
+        int[][] grids = new int[3][3];
+        int waitFillCnt = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                char c = board[i][j];
+                if (board[i][j] != '.') {
+                    solveSudokuFill(board, i, j, c, rows, cols, grids);
+                } else {
+                    waitFillCnt++;
+                }
+            }
+        }
 
+        solveSudokuDfs(board, rows, cols, grids, waitFillCnt);
+
+        System.out.println(Arrays.deepToString(board));
+    }
+
+    private static boolean solveSudokuDfs(char[][] board, int[] rows, int[] cols, int[][] grids, int waitFillCnt) {
+        if (waitFillCnt == 0) {
+            return true;
+        }
+
+        int[] nextFillNum = solveSudokuGetNextFillNum(board, rows, cols, grids);
+        int possibleAns = solveSudokuGetPossibleAns(rows, cols, grids, nextFillNum[0], nextFillNum[1]);
+        for (int i = 0; i < 9; i++) {
+            if ((possibleAns & (1 << i)) > 0) {
+                solveSudokuFill(board, nextFillNum[0], nextFillNum[1], (char) ('1' + i), rows, cols, grids);
+                if (solveSudokuDfs(board, rows, cols, grids, waitFillCnt - 1)) {
+                    return true;
+                }
+                solveSudokuRemove(board, nextFillNum[0], nextFillNum[1], (char) ('1' + i), rows, cols, grids);
+            }
+        }
+        return false;
+    }
+
+    private static void solveSudokuRemove(char[][] board, int row, int col, char c, int[] rows, int[] cols, int[][] grids) {
+        board[row][col] = '.';
+
+        rows[row] ^= 1 << (c - '1');
+        cols[col] ^= 1 << (c - '1');
+        grids[row / 3][col / 3] ^= 1 << (c - '1');
+    }
+
+    private static int[] solveSudokuGetNextFillNum(char[][] board, int[] rows, int[] cols, int[][] grids) {
+        int possibleAnsCount = 10;
+        int[] possibleAns = new int[2];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == '.') {
+                    int tmpPossibleAns = solveSudokuGetPossibleAns(rows, cols, grids, i, j);
+                    if (Integer.bitCount(tmpPossibleAns) < possibleAnsCount) {
+                        possibleAnsCount = Integer.bitCount(tmpPossibleAns);
+                        possibleAns[0] = i;
+                        possibleAns[1] = j;
+                        if (possibleAnsCount == 1) {
+                            return possibleAns;
+                        }
+                    }
+                }
+            }
+        }
+        return possibleAns;
+    }
+
+    private static int solveSudokuGetPossibleAns(int[] rows, int[] cols, int[][] grids, int i, int j) {
+        int num = 0;
+        num |= rows[i];
+        num |= cols[j];
+        num |= grids[i / 3][j / 3];
+
+        num = ((1 << 9) - 1) ^ num;
+
+        return num;
+    }
+
+    private static void solveSudokuFill(char[][] board, int i, int j, char c, int[] rows, int[] cols, int[][] grids) {
+        board[i][j] = c;
+
+        rows[i] |= 1 << (c - '1');
+        cols[j] |= 1 << (c - '1');
+        grids[i / 3][j / 3] |= 1 << (c - '1');
     }
 
     /**
