@@ -25,8 +25,79 @@ public class Matrix {
                         {'.','.','.','2','7','5','9','.','.'}
                 };
 
-        solveSudoku(board);
+        // solveSudoku(board);
 
+        int[][] matrix = new int[][]{
+                {1, 3, 5},
+                {6, 7, 12},
+                {11, 14, 14}
+        };
+
+        System.out.println(kthSmallest(matrix, 6));
+    }
+
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/">378. Kth Smallest Element in a Sorted Matrix</a>
+     * Given an n x n matrix where each of the rows and columns is sorted in ascending order, return the kth smallest element in the matrix.
+     * Note that it is the kth smallest element in the sorted order, not the kth distinct element.
+     * You must find a solution with a memory complexity better than O(n2).
+     * Example 1:
+     * Input: matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8
+     * Output: 13
+     * Explanation: The elements in the matrix are [1,5,9,10,11,12,13,13,15], and the 8th smallest number is 13
+     * Example 2:
+     * Input: matrix = [[-5]], k = 1
+     * Output: -5
+     * @param matrix n == matrix.length == matrix[i].length
+     * 1 <= n <= 300
+     * @param k 1 <= k <= n^2
+     * @return
+     */
+    public static int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        if (k == 1) {
+            return matrix[0][0];
+        }
+        if (k == n * n) {
+            return matrix[n - 1][n - 1];
+        }
+
+        Queue<MatrixEle> queue = new PriorityQueue<>(Comparator.comparingInt(t -> t.num));
+        queue.offer(new MatrixEle(matrix[0][0], 0 ,0));
+        matrix[0][0] = Integer.MIN_VALUE;
+
+        int index = 0;
+        while (!queue.isEmpty()) {
+            MatrixEle matrixEle = queue.poll();
+            index++;
+            if (index == k) {
+                return matrixEle.num;
+            }
+
+            if (matrixEle.i < n - 1 && matrix[matrixEle.i + 1][matrixEle.j] != Integer.MIN_VALUE) {
+                queue.offer(new MatrixEle(matrix[matrixEle.i + 1][matrixEle.j], matrixEle.i + 1, matrixEle.j));
+                matrix[matrixEle.i + 1][matrixEle.j] = Integer.MIN_VALUE;
+            }
+            if (matrixEle.j < n - 1 && matrix[matrixEle.i][matrixEle.j + 1] != Integer.MIN_VALUE) {
+                queue.offer(new MatrixEle(matrix[matrixEle.i][matrixEle.j + 1], matrixEle.i, matrixEle.j + 1));
+                matrix[matrixEle.i][matrixEle.j + 1] = Integer.MIN_VALUE;
+            }
+        }
+        return -1;
+    }
+
+    public static class MatrixEle {
+        private int num;
+        private int i;
+        private int j;
+
+        public MatrixEle(int num, int i, int j) {
+            this.num = num;
+            this.i = i;
+            this.j = j;
+        }
     }
 
     /**

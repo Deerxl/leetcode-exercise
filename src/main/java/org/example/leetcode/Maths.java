@@ -15,6 +15,77 @@ public class Maths {
     }
 
 
+    /**
+     * <a href="https://leetcode.cn/problems/integer-to-roman/">12. Integer to Roman</a>
+     * Seven different symbols represent Roman numerals with the following values:
+     * Symbol	Value
+     * I	1
+     * V	5
+     * X	10
+     * L	50
+     * C	100
+     * D	500
+     * M	1000
+     *
+     * Example 1:
+     * Input: num = 3749
+     * Output: "MMMDCCXLIX"
+     * Explanation:
+     * 3000 = MMM as 1000 (M) + 1000 (M) + 1000 (M)
+     *  700 = DCC as 500 (D) + 100 (C) + 100 (C)
+     *   40 = XL as 10 (X) less of 50 (L)
+     *    9 = IX as 1 (I) less of 10 (X)
+     * Note: 49 is not 1 (I) less of 50 (L) because the conversion is based on decimal places
+     * @param num 1 <= num <= 3999
+     * @return
+     */
+    public String intToRoman(int num) {
+        Map<Integer, String> map = new HashMap<>() {
+            {
+                put(1, "I");
+                put(4, "IV");
+                put(5, "V");
+                put(9, "IX");
+                put(10, "X");
+                put(40, "XL");
+                put(50, "L");
+                put(90, "XC");
+                put(100, "C");
+                put(400, "CD");
+                put(500, "D");
+                put(900, "CM");
+                put(1000, "M");
+            }
+        };
+        StringBuilder sb = new StringBuilder();
+
+        int div, tmp;
+        int base = 1000;
+        while (base > 0) {
+            div = num / base;
+            if (div == 9) {
+                tmp = base * div;
+                sb.append(map.get(tmp));
+            } else if (div >= 5) {
+                tmp = base * 5;
+                sb.append(map.get(tmp));
+                for (int i = 0; i < div - 5; i++) {
+                    sb.append(map.get(base));
+                }
+            } else if (div == 4) {
+                tmp = base * div;
+                sb.append(map.get(tmp));
+            } else if (div > 0) {
+                for (int i = 0; i < div; i++) {
+                    sb.append(map.get(base));
+                }
+            }
+            num = num % base;
+            base /= 10;
+        }
+
+        return sb.toString();
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/target-sum/">494. Target Sum</a>

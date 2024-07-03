@@ -6,6 +6,43 @@ package org.example.leetcode;
  */
 public class BinarySearch {
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/">LCR 172. 统计目标成绩的出现次数</a>
+     * 某班级考试成绩按非严格递增顺序记录于整数数组 scores，请返回目标成绩 target 的出现次数。
+     * 示例 1：
+     * 输入: scores = [2, 2, 3, 4, 4, 4, 5, 6, 6, 8], target = 4
+     * 输出: 3
+     * 示例 2：
+     * 输入: scores = [1, 2, 3, 5, 7, 9], target = 6
+     * 输出: 0
+     * @param scores 0 <= scores.length <= 10^5
+     * @param target
+     * @return
+     */
+    int countTargetResult = 0;
+    public int countTarget(int[] scores, int target) {
+        countTarget(scores, 0, scores.length - 1, target);
+        return countTargetResult;
+    }
+
+    private void countTarget(int[] scores, int start, int end, int target) {
+        if (start > end) {
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+        if (scores[mid] < target) {
+            countTarget(scores, mid + 1, end, target);
+        } else if (scores[mid] > target) {
+            countTarget(scores, start, mid - 1, target);
+        } else {
+            countTargetResult++;
+            countTarget(scores, start, mid - 1, target);
+            countTarget(scores, mid + 1, end, target);
+        }
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array/">153. 寻找旋转排序数组中的最小值</a>
      * 已知一个长度为 n 的数组，预先按照升序排列，经由 1 到 n 次 旋转 后，得到输入数组。例如，原数组 nums = [0,1,2,4,5,6,7] 在变化后可能得到：

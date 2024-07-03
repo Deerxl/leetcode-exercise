@@ -16,6 +16,67 @@ public class Tree {
         // deleteNode(root, 3);
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/count-complete-tree-nodes/">222. Count Complete Tree Nodes</a>
+     * Given the root of a complete binary tree, return the number of the nodes in the tree.
+     *
+     * According to Wikipedia, every level, except possibly the last, is completely filled in a complete binary tree, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+     *
+     * Design an algorithm that runs in less than O(n) time complexity.
+     * @param root The number of nodes in the tree is in the range [0, 5 * 104].
+     * 0 <= Node.val <= 5 * 104
+     * @return
+     */
+    public int countNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        root.val = 1;
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node.left != null) {
+                node.left.val = node.val * 2;
+                queue.add(node.left);
+            } else {
+                return node.val * 2 - 1;
+            }
+
+            if (node.right != null) {
+                node.right.val = node.val * 2 + 1;
+                queue.add(node.right);
+            } else {
+                return node.val * 2;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/same-tree/">100. Same Tree</a>
+     * Given the roots of two binary trees p and q, write a function to check if they are the same or not.
+     *
+     * Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+     * @param p
+     * @param q
+     * @return
+     */
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (q == null && p == null) {
+            return true;
+        }
+        if (q == null || p == null) {
+            return false;
+        }
+        if (p.val != q.val) {
+            return false;
+        }
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/er-cha-shu-zhong-he-wei-mou-yi-zhi-de-lu-jing-lcof/description/">LCR 153. 二叉树中和为目标值的路径</a>
      * 给你二叉树的根节点 root 和一个整数目标和 targetSum ，找出所有 从根节点到叶子节点 路径总和等于给定目标和的路径。
