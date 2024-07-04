@@ -10,7 +10,7 @@ import java.util.List;
 public class Dp {
 
     public static void main(String[] args) {
-        System.out.println(findNumberOfLIS(new int[] {1,3,5,4,7}));
+        System.out.println(numDistinct("rabbbit", "rabbit"));
 
         // System.out.println(maxProfit(2, new int[]{3,2,6,5,0,3}));
 
@@ -18,6 +18,50 @@ public class Dp {
 
 
 
+    /**
+     * <a href="https://leetcode.cn/problems/distinct-subsequences/description/">115. Distinct Subsequences</a>
+     * Given two strings s and t, return the number of distinct subsequences of s which equals t.
+     * The test cases are generated so that the answer fits on a 32-bit signed integer.
+     * Example 1:
+     * Input: s = "rabbbit", t = "rabbit"
+     * Output: 3
+     * @param s 1 <= s.length,t.length <= 1000
+     * @param t s and t consist of English letters.
+     * @return
+     */
+    public static int numDistinct(String s, String t) {
+        if (t.length() >= s.length()) {
+            if (t.equals(s)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        int[][] dp = new int[s.length() + 1][t.length() + 1];
+
+        for (int i = 0; i <= s.length(); i++) {
+            dp[i][0] = 1;
+        }
+
+        // 状态转移方程
+        // if s[i] = t[j], dp[i][j] = dp[i-1][j-1] + dp[i][j-1]
+        // else dp[i][j] = dp[i][j-1]
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = 0; j < t.length(); j++) {
+                if (j > i) {
+                    break;
+                }
+                if (s.charAt(i) == t.charAt(j)) {
+                    dp[i + 1][j + 1] = dp[i][j] + dp[i][j + 1];
+                } else {
+                    dp[i + 1][j + 1] = dp[i][j + 1];
+                }
+            }
+        }
+
+        return dp[s.length()][t.length()];
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/longest-palindromic-subsequence/">516. Longest Palindromic Subsequence</a>
