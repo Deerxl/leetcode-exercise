@@ -1,10 +1,48 @@
 package org.example.leetcode;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author jialu.yxl
  * @date 5/10/24 2:14 PM
  */
 public class SlidingWindow {
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/">LCR 167. 招式拆解 I</a>
+     * 某套连招动作记作序列 arr，其中 arr[i] 为第 i 个招式的名字。请返回 arr 中最多可以出连续不重复的多少个招式。
+     * 示例 1:
+     * 输入: arr = "dbascDdad"
+     * 输出: 6
+     * 解释: 因为连续且最长的招式序列是 "dbascD" 或 "bascDd"，所以其长度为 6。
+     * @param arr
+     * @return
+     */
+    public int dismantlingAction(String arr) {
+        int result = 0;
+
+        int l = 0, r = 0;
+        Set<Character> set = new HashSet<>();
+        while (r < arr.length()) {
+            if (set.contains(arr.charAt(r))) {
+                result = Math.max(result, r - l);
+                while (arr.charAt(l) != arr.charAt(r)) {
+                    set.remove(arr.charAt(l));
+                    l++;
+                }
+                set.remove(arr.charAt(l));
+                l++;
+            } else {
+                set.add(arr.charAt(r));
+                r++;
+            }
+        }
+        result = Math.max(result, r - l);
+
+        return result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/max-consecutive-ones-iii/">1004. Max Consecutive Ones III</a>

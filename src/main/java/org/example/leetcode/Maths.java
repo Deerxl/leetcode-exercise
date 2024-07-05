@@ -16,6 +16,28 @@ public class Maths {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/valid-anagram/">242. Valid Anagram</a>
+     * Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+     *
+     * An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+     * @param s 1 <= s.length, t.length <= 5 * 10^4
+     * @param t
+     * @return
+     */
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        char[] sArr = s.toCharArray();
+        char[] tArr = t.toCharArray();
+        Arrays.sort(sArr);
+        Arrays.sort(tArr);
+        return Arrays.equals(sArr, tArr);
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/integer-to-roman/">12. Integer to Roman</a>
      * Seven different symbols represent Roman numerals with the following values:
      * Symbol	Value
