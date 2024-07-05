@@ -15,6 +15,28 @@ public class StringAndArray {
         System.out.println(compress(new char[] {'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/reverse-words-in-a-string-iii/">557. Reverse Words in a String III</a>
+     * Given a string s, reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.
+     * Example 1:
+     * Input: s = "Let's take LeetCode contest"
+     * Output: "s'teL ekat edoCteeL tsetnoc"
+     * @param s 1 <= s.length <= 5 * 10^4 All the words in s are separated by a single space.
+     * @return
+     */
+    public String reverseWords(String s) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(s);
+        sb.reverse();
+        String[] split = sb.toString().split(" ");
+        sb = new StringBuilder();
+        for (int i = split.length - 1; i >= 0; i--) {
+            sb.append(split[i]).append(" ");
+        }
+        return sb.substring(0, sb.toString().length() - 1);
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/repeated-substring-pattern/">459. Repeated Substring Pattern</a>
      * Given a string s, check if it can be constructed by taking a substring of it and appending multiple copies of the substring together.
@@ -1213,7 +1235,7 @@ public class StringAndArray {
      * @param s
      * @return
      */
-    public String reverseWords(String s) {
+    public String reverseWords151(String s) {
         String[] split = s.split(" ");
         StringBuilder result = new StringBuilder();
         for (int i = split.length - 1; i >= 0; i--) {

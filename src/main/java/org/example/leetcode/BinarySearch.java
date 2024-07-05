@@ -8,6 +8,46 @@ public class BinarySearch {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array-ii/">154. Find Minimum in Rotated Sorted Array II</a>
+     * Example 1:
+     *
+     * Input: nums = [1,3,5]
+     * Output: 1
+     * Example 2:
+     *
+     * Input: nums = [2,2,2,0,1]
+     * Output: 0
+     * @param nums n == nums.length
+     * 1 <= n <= 5000
+     * -5000 <= nums[i] <= 5000
+     * nums is sorted and rotated between 1 and n times.
+     * @return
+     */
+    int findMinResult = Integer.MAX_VALUE;
+    public int findMin(int[] nums) {
+        findMin(nums, 0, nums.length - 1);
+        return findMinResult;
+    }
+
+    private void findMin(int[] nums, int start, int end) {
+        if (start > end) {
+            return;
+        }
+        if (start == end) {
+            findMinResult = nums[start];
+        }
+        int mid = (start + end) / 2;
+        if (nums[mid] > nums[end]) {
+            findMin(nums, mid + 1, end);
+        } else if (nums[mid] < nums[end]) {
+            findMin(nums, start, mid);
+        } else {
+            findMin(nums, start, end - 1);
+        }
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/">LCR 172. 统计目标成绩的出现次数</a>
      * 某班级考试成绩按非严格递增顺序记录于整数数组 scores，请返回目标成绩 target 的出现次数。
      * 示例 1：
@@ -54,24 +94,24 @@ public class BinarySearch {
      * @param nums
      * @return
      */
-    public int findMin(int[] nums) {
-        return findMin(nums, 0, nums.length - 1);
+    public int findMin153(int[] nums) {
+        return findMin153(nums, 0, nums.length - 1);
     }
 
-    private int findMin(int[] nums, int start, int end) {
+    private int findMin153(int[] nums, int start, int end) {
         if (start == end) {
             return nums[start];
         }
 
         int mid = start + (end - start) / 2;
         if (nums[mid] >= nums[start] && nums[mid] <= nums[end]) {
-            return findMin(nums, start, mid);
+            return findMin153(nums, start, mid);
         }
         if (nums[mid] >= nums[start] && nums[mid] >= nums[end]) {
-            return findMin(nums, mid + 1, end);
+            return findMin153(nums, mid + 1, end);
         }
         if (nums[mid] <= nums[start] && nums[mid] <= nums[end]) {
-            return findMin(nums, start, mid);
+            return findMin153(nums, start, mid);
         }
 
         return -1;

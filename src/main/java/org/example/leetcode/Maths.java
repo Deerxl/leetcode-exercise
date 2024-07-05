@@ -14,6 +14,72 @@ public class Maths {
         System.out.println(nthUglyNumber(10));
     }
 
+    /**
+     * <a href="https://leetcode.cn/problems/number-of-1-bits/description/">191. Number of 1 Bits</a>
+     * Write a function that takes the binary representation of a positive integer and returns the number of set bits it has (also known as the Hamming weight).
+     * Example 1:
+     * Input: n = 11
+     * Output: 3
+     * Explanation:
+     * The input binary string 1011 has a total of three set bits.
+     *
+     * @param n 1 <= n <= 2^31 - 1
+     * @return
+     */
+    public int hammingWeight(int n) {
+        int count = 0;
+        while (n > 0) {
+            if ((n & 1) == 1) {
+                count++;
+            }
+            n = n >> 1;
+        }
+        return count;
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/maximum-swap/description/">670. Maximum Swap</a>
+     * You are given an integer num. You can swap two digits at most once to get the maximum valued number.
+     * Return the maximum valued number you can get.
+     * Example 1:
+     * Input: num = 2736
+     * Output: 7236
+     * Explanation: Swap the number 2 and the number 7.
+     * @param num 0 <= num <= 10^8
+     * @return
+     */
+    public int maximumSwap(int num) {
+        String str = String.valueOf(num);
+        int i = 1;
+        for (; i < str.length(); i++) {
+            if (str.charAt(i) > str.charAt(i - 1)) {
+                break;
+            }
+        }
+
+        if (i == str.length()) {
+            return num;
+        }
+
+        int maxIndex = i;
+        int j = i;
+        for (; i < str.length(); i++) {
+            if (str.charAt(i) >= str.charAt(maxIndex)) {
+                maxIndex = i;
+            }
+        }
+
+        for (int k = 0; k < j; k++) {
+            if (str.charAt(k) < str.charAt(maxIndex)) {
+                String string = str.substring(0, k) + str.charAt(maxIndex) + str.substring(k + 1, maxIndex) + str.charAt(k) + str.substring(maxIndex + 1);
+                return Integer.parseInt(string);
+            }
+        }
+
+        return num;
+    }
+
 
     /**
      * <a href="https://leetcode.cn/problems/valid-anagram/">242. Valid Anagram</a>
