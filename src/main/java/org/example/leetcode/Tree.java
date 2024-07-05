@@ -18,6 +18,46 @@ public class Tree {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/">LCR 152. 验证二叉搜索树的后序遍历序列</a>
+     * 请实现一个函数来判断整数数组 postorder 是否为二叉搜索树的后序遍历结果。
+     * 输入: postorder = [4,6,5,9,8]
+     * 输出: true
+     * 输入: postorder = [4,9,6,5,8]
+     * 输出: false
+     * @param postorder 数组长度 <= 1000 postorder 中无重复数字
+     * @return
+     */
+    public boolean verifyTreeOrder(int[] postorder) {
+        if (postorder == null || postorder.length <= 1) {
+            return true;
+        }
+
+        return verifyTreeOrder(postorder, 0, postorder.length - 1);
+    }
+
+    private boolean verifyTreeOrder(int[] postorder, int start, int end) {
+        if (start >= end) {
+            return true;
+        }
+
+        int rootVal = postorder[end];
+        int i = start;
+        for (; i < end; i++) {
+            if (postorder[i] > rootVal) {
+                break;
+            }
+        }
+
+        for (int j = i; j < end; j++) {
+            if (postorder[j] < rootVal) {
+                return false;
+            }
+        }
+
+        return verifyTreeOrder(postorder, start, i - 1) && verifyTreeOrder(postorder, i, end - 1);
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/count-complete-tree-nodes/">222. Count Complete Tree Nodes</a>
      * Given the root of a complete binary tree, return the number of the nodes in the tree.
      *

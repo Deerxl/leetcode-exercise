@@ -10,11 +10,91 @@ import java.util.stream.Collectors;
 public class StringAndArray {
 
     public static void main(String[] args) {
-
-
+        System.out.println(missingNumber(new int[] {3,0,1}));
         System.out.println(compress(new char[] {'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}));
     }
 
+    /**
+     * <a href="https://leetcode.cn/problems/missing-number/">268. Missing Number</a>
+     * Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
+     * Example 1:
+     * Input: nums = [3,0,1]
+     * Output: 2
+     * Explanation: n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums.
+     * @param nums n == nums.length
+     * 1 <= n <= 10^4
+     * 0 <= nums[i] <= n
+     * All the numbers of nums are unique.
+     * @return
+     */
+    public static int missingNumber(int[] nums) {
+        boolean existZero = false;
+        boolean existMax = false;
+        for (int i = 0; i < nums.length; i++) {
+            int num = Math.abs(nums[i]);
+            if (num == nums.length) {
+                existMax = true;
+                continue;
+            }
+
+            if (num == 0) {
+                existZero = true;
+            }
+
+            if (nums[num] == 0) {
+                existZero = true;
+                nums[num] = num;
+            }
+            nums[num] = -Math.abs(nums[num]);
+        }
+        if (!existZero) {
+            return 0;
+        }
+        if (!existMax) {
+            return nums.length;
+        }
+
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] >= 0) {
+                return i;
+            }
+        }
+        return nums.length;
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/">167. Two Sum II - Input Array Is Sorted</a>
+     * Example 1:
+     * Input: numbers = [2,7,11,15], target = 9
+     * Output: [1,2]
+     * Explanation: The sum of 2 and 7 is 9. Therefore, index1 = 1, index2 = 2. We return [1, 2].
+     * Example 2:
+     * Input: numbers = [2,3,4], target = 6
+     * Output: [1,3]
+     * Explanation: The sum of 2 and 4 is 6. Therefore index1 = 1, index2 = 3. We return [1, 3].
+     * @param numbers 2 <= numbers.length <= 3 * 10^4 numbers is sorted in non-decreasing order.
+     * @param target -1000 <= target <= 1000
+     * @return
+     */
+    public int[] twoSum(int[] numbers, int target) {
+        int[] result = new int[2];
+
+        int i = 0, j = numbers.length - 1;
+        while (i < j) {
+            int sum = numbers[i] + numbers[j];
+            if (sum < target) {
+                i++;
+            } else if (sum > target) {
+                j--;
+            } else {
+                result[0] = i + 1;
+                result[1] = j + 1;
+                return result;
+            }
+        }
+
+        return result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/reverse-words-in-a-string-iii/">557. Reverse Words in a String III</a>
@@ -2359,7 +2439,7 @@ public class StringAndArray {
      * @param target
      * @return
      */
-    public int[] twoSum(int[] nums, int target) {
+    public int[] twoSum1(int[] nums, int target) {
         Map<Integer, Integer> map = new HashMap<>();
         int[] result = new int[2];
         for (int i = 0; i < nums.length; i++) {
