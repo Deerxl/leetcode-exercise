@@ -34,8 +34,44 @@ public class Dp {
     public boolean canPartition(int[] nums) {
         Arrays.sort(nums);
 
-        // todo
-        return false;
+        // 状态转移方程 dp[i][j]为从数组的 nums[0, i] 这个子区间内挑选一些正整数，使之和为j
+        // 不取当前数，则为i-1个数的和；取当前数，则看i-1的和为j - nums[i]
+        // dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i]]
+        // j == nums[i] true
+
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum % 2 != 0) {
+            return false;
+        }
+
+        boolean[][] dp = new boolean[nums.length][sum / 2 + 1];
+
+        if (nums[0] <= sum / 2) {
+            dp[0][nums[0]] = true;
+        }
+
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j <= sum / 2; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if (dp[i][j]) {
+                    continue;
+                }
+
+                if (j == nums[i]) {
+                    dp[i][j] = true;
+                    continue;
+                }
+
+                if (j - nums[i] >= 0) {
+                    dp[i][j] = dp[i - 1][j - nums[i]];
+                }
+            }
+        }
+
+        return dp[nums.length - 1][sum / 2];
     }
 
 
