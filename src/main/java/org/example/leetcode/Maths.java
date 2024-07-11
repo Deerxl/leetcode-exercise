@@ -9,9 +9,95 @@ import java.util.*;
 public class Maths {
 
     public static void main(String[] args) {
-        System.out.println(nextGreaterElement(12));
+        System.out.println(Integer.toBinaryString(10));
+        System.out.println(Integer.toBinaryString(-10));
+        // System.out.println(Arrays.toString(singleNumber(new int[]{43772400, 1674008457, 1779561093, 744132272, 1674008457, 448610617, 1779561093, 124075538, -1034600064, 49040018, 612881857, 390719949, -359290212, -812493625, 124732, -1361696369, 49040018, -145417756, -812493625, 2078552599, 1568689850, 865876872, 865876872, -1471385435, 1816352571, 1793963758, 2078552599, -1034600064, 1475115274, -119634980, 124732, 661111294, -1813882010, 1568689850, 448610617, 1347212898, -1293494866, 612881857, 661111294, -1361696369, 1816352571, -1813882010, -359290212, 1475115274, 1793963758, 1347212898, 43772400, -1471385435, 124075538, -1293494866, -119634980, 390719949})));
 
-        System.out.println(nthUglyNumber(10));
+        // System.out.println(nthUglyNumber(10));
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/single-number-iii/description/">260. Single Number III</a>
+     * Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once. You can return the answer in any order.
+     * You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.
+     * Example 1:
+     * Input: nums = [1,2,1,3,2,5]
+     * Output: [3,5]
+     * Explanation:  [5, 3] is also a valid answer.
+     * @param nums 2 <= nums.length <= 3 * 10^4 -2^31 <= nums[i] <= 2^31 - 1
+     * @return
+     */
+    public static int[] singleNumber(int[] nums) {
+        int eor = 0;
+        for (int i = 0; i < nums.length; i++) {
+            eor ^= nums[i];
+        }
+
+        int num = 1;
+        while (true) {
+            if ((num & eor) == num) {
+                break;
+            }
+            num = num << 1;
+        }
+
+        int n1 = 0, n2 = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if ((nums[i] & num) == 0) {
+                n1 ^= nums[i];
+            } else {
+                n2 ^= nums[i];
+            }
+        }
+
+        return new int[] {n1, n2};
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/integer-break/">343. Integer Break</a>
+     * Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
+     *
+     * Return the maximum product you can get.
+     * Example 1:
+     * Input: n = 2
+     * Output: 1
+     * Explanation: 2 = 1 + 1, 1 × 1 = 1.
+     * Example 2:
+     * Input: n = 10
+     * Output: 36
+     * Explanation: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36.
+     * @param n 2 <= n <= 58
+     * @return
+     */
+    public int integerBreak(int n) {
+        if (n < 7) {
+            int[] dp = new int[] {1,1,2,4,6,9};
+            return dp[n - 1];
+        }
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        dp[2] = 1;
+        dp[3] = 2;
+        dp[4] = 4;
+        dp[5] = 6;
+        dp[6] = 9;
+        for (int i = 7; i <= n; i++) {
+            int max = Integer.MIN_VALUE;
+            for (int j = 1; j <= i / 2; j++) {
+                int num1 = j;
+                int num2 = i - j;
+                if (num1 < 4) {
+                    max = Math.max(max, num1 * dp[num2]);
+                } else {
+                    max = Math.max(max, dp[num1] * dp[num2]);
+                }
+            }
+            dp[i] = max;
+        }
+
+        return dp[n];
     }
 
     /**
@@ -701,7 +787,7 @@ public class Maths {
      * @param nums
      * @return
      */
-    public int singleNumber(int[] nums) {
+    public int singleNumber136(int[] nums) {
         int num = nums[0];
         for (int i = 1; i < nums.length; i++) {
             num = num ^ nums[i];
