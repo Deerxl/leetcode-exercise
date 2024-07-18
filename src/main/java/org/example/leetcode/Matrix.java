@@ -37,6 +37,60 @@ public class Matrix {
     }
 
 
+    /**
+     *  <a href="https://leetcode.cn/problems/max-submatrix-lcci/">面试题 17.24. Max Submatrix LCCI</a>
+     *  Given an NxM matrix of positive and negative integers, write code to find the submatrix with the largest possible sum.
+     * Return an array [r1, c1, r2, c2], where r1, c1 are the row number and the column number of the submatrix's upper left corner respectively, and r2, c2 are the row number of and the column number of lower right corner. If there are more than one answers, return any one of them.
+     * Note: This problem is slightly different from the original one in the book.
+     * Example:
+     * Input:
+     * [
+     *    [-1,0],
+     *    [0,-1]
+     * ]
+     * Output: [0,1,0,1]
+     * @param matrix 1 <= matrix.length, matrix[0].length <= 200
+     * @return
+     */
+    public int[] getMaxMatrix(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        int[] dp = new int[n];
+        int sum = 0;
+        int maxSum = Integer.MIN_VALUE;
+
+        int resultRow1 = 0;
+        int resultCol1 = 0;
+        int[] result = new int[4];
+
+        for (int i = 0; i < m; i++) {
+            Arrays.fill(dp, 0);
+            for (int j = i; j < m; j++) {
+                sum = 0;
+                for (int k = 0; k < n; k++) {
+                    dp[k] += matrix[j][k];
+                    if (sum > 0) {
+                        sum += dp[k];
+                    } else {
+                        sum = dp[k];
+                        resultRow1 = i;
+                        resultCol1 = k;
+                    }
+
+                    if (sum > maxSum) {
+                        maxSum = sum;
+                        result[0] = resultRow1;
+                        result[1] = resultCol1;
+                        result[2] = j;
+                        result[3] = k;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/">378. Kth Smallest Element in a Sorted Matrix</a>
