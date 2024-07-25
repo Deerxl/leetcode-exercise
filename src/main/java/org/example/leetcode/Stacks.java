@@ -13,6 +13,62 @@ public class Stacks {
     }
 
 
+    /**
+     * <a href="https://leetcode.cn/problems/score-of-parentheses/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china">856. Score of Parentheses</a>
+     * Given a balanced parentheses string s, return the score of the string.
+     *
+     * The score of a balanced parentheses string is based on the following rule:
+     *
+     * "()" has score 1.
+     * AB has score A + B, where A and B are balanced parentheses strings.
+     * (A) has score 2 * A, where A is a balanced parentheses string.
+     *
+     *
+     * Example 1:
+     * Input: s = "()"
+     * Output: 1
+     * Example 2:
+     * Input: s = "(())"
+     * Output: 2
+     * @param s 2 <= s.length <= 50
+     * s consists of only '(' and ')'.
+     * s is a balanced parentheses string.
+     * @return
+     */
+    public int scoreOfParentheses(String s) {
+        int result = 0;
+
+        Stack<String> opStack = new Stack<>();
+        int i = 0;
+        while (i < s.length()) {
+            if (s.charAt(i) == '(') {
+                opStack.push("(");
+                i++;
+            } else if (s.charAt(i) == ')') {
+                if (opStack.peek().equals("(")) {
+                    opStack.pop();
+                    opStack.push("1");
+                    i++;
+                } else {
+                    int num = 0;
+                    while (!opStack.peek().equals("(")) {
+                        num += Integer.parseInt(opStack.pop());
+                    }
+                    opStack.pop();
+                    num *= 2;
+                    opStack.push(String.valueOf(num));
+                    i++;
+                }
+            }
+        }
+
+        while (!opStack.isEmpty()) {
+            int num = Integer.parseInt(opStack.pop());
+            result += num;
+        }
+
+        return result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/largest-rectangle-in-histogram/">84. Largest Rectangle in Histogram</a>
