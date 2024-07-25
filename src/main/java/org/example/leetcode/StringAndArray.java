@@ -14,6 +14,46 @@ public class StringAndArray {
         System.out.println(compress(new char[] {'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/combinations/">77. Combinations</a>
+     * Given two integers n and k, return all possible combinations of k numbers chosen from the range [1, n].
+     *
+     * You may return the answer in any order.
+     * Example 1:
+     *
+     * Input: n = 4, k = 2
+     * Output: [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
+     * Explanation: There are 4 choose 2 = 6 total combinations.
+     * Note that combinations are unordered, i.e., [1,2] and [2,1] are considered to be the same combination.
+     * @param n 1 <= n <= 20
+     * @param k 1 <= k <= n
+     * @return
+     */
+    List<List<Integer>> combineResult = new ArrayList<>();
+    public List<List<Integer>> combine(int n, int k) {
+
+        combine(1, n, k, new ArrayList<>());
+
+        return combineResult;
+    }
+
+    private void combine(int start, int end, int needCount, ArrayList<Integer> list) {
+        if (needCount == 0) {
+            combineResult.add(new ArrayList<>(list));
+        }
+
+        if (end - start + 1 < needCount) {
+            return;
+        }
+
+        for (int i = start; i <= end; i++) {
+            list.add(i);
+            combine(i + 1, end, needCount - 1, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/missing-number/">268. Missing Number</a>
      * Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.

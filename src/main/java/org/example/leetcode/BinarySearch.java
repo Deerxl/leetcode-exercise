@@ -7,6 +7,69 @@ package org.example.leetcode;
 public class BinarySearch {
 
 
+    public static void main(String[] args) {
+        System.out.println(splitArray(new int[] {10,5,13,4,8,4,5,11,14,9,16,10,20,8}, 8));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/split-array-largest-sum/description/">410. Split Array Largest Sum</a>
+     * Given an integer array nums and an integer k, split nums into k non-empty subarrays such that the largest sum of any subarray is minimized.
+     * Return the minimized largest sum of the split.
+     * A subarray is a contiguous part of the array.
+     * Example 1:
+     * Input: nums = [7,2,5,10,8], k = 2
+     * Output: 18
+     * Explanation: There are four ways to split nums into two subarrays.
+     * The best way is to split it into [7,2,5] and [10,8], where the largest sum among the two subarrays is only 18.
+     * Example 2:
+     * Input: nums = [1,2,3,4,5], k = 2
+     * Output: 9
+     * Explanation: There are four ways to split nums into two subarrays.
+     * The best way is to split it into [1,2,3] and [4,5], where the largest sum among the two subarrays is only 9.
+     * @param nums 1 <= nums.length <= 1000 0 <= nums[i] <= 10^6
+     * @param k 1 <= k <= min(50, nums.length)
+     * @return
+     */
+    public static int splitArray(int[] nums, int k) {
+        int sum = 0;
+        int maxNum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            maxNum = Math.max(maxNum, nums[i]);
+        }
+        if (k == 1 || nums.length <= 1) {
+            return sum;
+        }
+
+        int left = maxNum;
+        int right = sum;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            int splitCount = splitArrayCount(nums, mid);
+            if (splitCount > k) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+
+    private static int splitArrayCount(int[] nums, int maxSum) {
+        int splitCount = 1;
+
+        int tmpSum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (tmpSum + nums[i] > maxSum) {
+                splitCount++;
+                tmpSum = 0;
+            }
+            tmpSum += nums[i];
+        }
+
+        return splitCount;
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array-ii/">154. Find Minimum in Rotated Sorted Array II</a>
      * Example 1:
