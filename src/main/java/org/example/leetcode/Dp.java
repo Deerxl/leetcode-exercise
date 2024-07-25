@@ -16,6 +16,38 @@ public class Dp {
 
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iv/">188. Best Time to Buy and Sell Stock IV</a>
+     * You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.
+     *
+     * Find the maximum profit you can achieve. You may complete at most k transactions: i.e. you may buy at most k times and sell at most k times.
+     *
+     * Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+     * Example 1:
+     * Input: k = 2, prices = [2,4,1]
+     * Output: 2
+     * Explanation: Buy on day 1 (price = 2) and sell on day 2 (price = 4), profit = 4-2 = 2.
+     * @param k 1 <= k <= 100
+     * @param prices  1 <= prices.length <= 1000 0 <= prices[i] <= 1000
+     * @return
+     */
+    public int maxProfitIV(int k, int[] prices) {
+        int[] buy = new int[k + 1];
+        int[] sell = new int[k + 1];
+
+        Arrays.fill(buy, prices[0]);
+
+        for (int i = 1; i < prices.length; i++) {
+            for (int j = 1; j <= k; j++) {
+                buy[j] = Math.min(buy[j], prices[i] - sell[j - 1]);
+                sell[j] = Math.max(sell[j], prices[i] - buy[j]);
+            }
+        }
+
+        return sell[k];
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/partition-equal-subset-sum/description/">416. Partition Equal Subset Sum</a>
      * Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.
@@ -854,7 +886,7 @@ public class Dp {
      * @param prices
      * @return
      */
-    public static int maxProfit(int k, int[] prices) {
+    public static int maxProfit4(int k, int[] prices) {
         if (k == 0) {
             return 0;
         }
