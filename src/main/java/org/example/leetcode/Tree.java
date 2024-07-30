@@ -10,10 +10,55 @@ public class Tree {
 
     public static void main(String[] args) {
 
-        TreeNode root = TreeNode.buildTree(Arrays.asList(1,2,5,3,4,null,6));
-        flatten(root);
+        // TreeNode root = TreeNode.buildTree(Arrays.asList(4,1,null,2,null,3));
+        TreeNode root = new TreeNode(4);
+        root.left = new TreeNode(1);
+        root.left.left = new TreeNode(2);
+        root.left.left.left = new TreeNode(3);
+        System.out.println(rob(root));
         // System.out.println(postorderTraversal1(root));
         // deleteNode(root, 3);
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/house-robber-iii/">337. House Robber III</a>
+     * The thief has found himself a new place for his thievery again. There is only one entrance to this area, called root.
+     *
+     * Besides the root, each house has one and only one parent house. After a tour, the smart thief realized that all houses in this place form a binary tree. It will automatically contact the police if two directly-linked houses were broken into on the same night.
+     *
+     * Given the root of the binary tree, return the maximum amount of money the thief can rob without alerting the police.
+     * @param root The number of nodes in the tree is in the range [1, 10^4]. 0 <= Node.val <= 10^4
+     * @return
+     */
+    static Map<TreeNode, Integer> containMap;
+    static Map<TreeNode, Integer> notContainMap;
+    public static int rob(TreeNode root) {
+        containMap = new HashMap<>();
+        notContainMap = new HashMap<>();
+        robDfs(root);
+
+        return Math.max(containMap.get(root), notContainMap.get(root));
+    }
+
+    private static void robDfs(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        if (root.left == null && root.right == null) {
+            containMap.put(root, root.val);
+            notContainMap.put(root, 0);
+            return;
+        }
+
+        robDfs(root.left);
+        robDfs(root.right);
+
+        containMap.put(root, root.val + notContainMap.getOrDefault(root.left, 0) + notContainMap.getOrDefault(root.right, 0));
+        notContainMap.put(root,
+                Math.max(containMap.getOrDefault(root.left, 0), notContainMap.getOrDefault(root.left, 0))
+                + Math.max(containMap.getOrDefault(root.right, 0), notContainMap.getOrDefault(root.right, 0)));
     }
 
 
