@@ -11,13 +11,103 @@ public class Tree {
     public static void main(String[] args) {
 
         // TreeNode root = TreeNode.buildTree(Arrays.asList(4,1,null,2,null,3));
-        TreeNode root = new TreeNode(4);
+        TreeNode root = new TreeNode(0);
         root.left = new TreeNode(1);
-        root.left.left = new TreeNode(2);
-        root.left.left.left = new TreeNode(3);
-        System.out.println(rob(root));
+        root.left.left = new TreeNode(3);
+        root.left.right = new TreeNode(2);
+        System.out.println(distanceK(root, root.left.right, 1));
         // System.out.println(postorderTraversal1(root));
         // deleteNode(root, 3);
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/binary-tree-paths/description/">257. Binary Tree Paths</a>
+     * Given the root of a binary tree, return all root-to-leaf paths in any order.
+     *
+     * A leaf is a node with no children.
+     * Input: root = [1,2,3,null,5]
+     * Output: ["1->2->5","1->3"]
+     * @param root The number of nodes in the tree is in the range [1, 100].
+     * @return
+     */
+    List<String> binaryTreePathsResult = new ArrayList<>();
+    public List<String> binaryTreePaths(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        String str = String.valueOf(root.val);
+        binaryTreePaths(root, str);
+
+        return binaryTreePathsResult;
+    }
+
+    private void binaryTreePaths(TreeNode root, String str) {
+        if (root.left == null && root.right == null) {
+            binaryTreePathsResult.add(str);
+            return;
+        }
+
+        if (root.left != null) {
+            binaryTreePaths(root.left, str + "->" + root.left.val);
+        }
+
+        if (root.right != null) {
+            binaryTreePaths(root.right, str + "->" + root.right.val);
+        }
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/all-nodes-distance-k-in-binary-tree/">863. All Nodes Distance K in Binary Tree</a>
+     * Given the root of a binary tree, the value of a target node target, and an integer k, return an array of the values of all nodes that have a distance k from the target node.
+     *
+     * You can return the answer in any order.
+     * @param root  The number of nodes in the tree is in the range [1, 500]. 0 <= Node.val <= 500 All the values Node.val are unique.
+     * @param target target is the value of one of the nodes in the tree.
+     * @param k 0 <= k <= 1000
+     * @return
+     */
+    static List<Integer> distanceKResult = new ArrayList<>();
+    public static List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        List<TreeNode> paths = new ArrayList<>();
+        distanceK(root, target, k, paths);
+
+        return distanceKResult;
+    }
+
+    private static void distanceK(TreeNode root, TreeNode target, int k, List<TreeNode> paths) {
+        if (root == null) {
+            return;
+        }
+
+        if (root == target) {
+            if (k == 0) {
+                distanceKResult.add(root.val);
+                return;
+            } else {
+                distanceK(root.left, root.left, k - 1, new ArrayList<>());
+                distanceK(root.right, root.right, k - 1, new ArrayList<>());
+                paths.add(root);
+                for (int i = 0; i < paths.size() - 1; i++) {
+                    TreeNode node = paths.get(i);
+                    int len = paths.size() - i - 1;
+                    if (len > k) {
+                        continue;
+                    } else if (len == k) {
+                        distanceKResult.add(node.val);
+                    } else {
+                        if (node.left == paths.get(i + 1) && node.right != null) {
+                            distanceK(node.right, node.right, k - len - 1, new ArrayList<>());
+                        } else if (node.right == paths.get(i + 1) && node.left != null) {
+                            distanceK(node.left, node.left, k - len - 1, new ArrayList<>());
+                        }
+                    }
+                }
+            }
+        } else {
+            paths.add(root);
+            distanceK(root.left, target, k, new ArrayList<>(paths));
+            distanceK(root.right, target, k, new ArrayList<>(paths));
+        }
     }
 
 
