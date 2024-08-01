@@ -20,6 +20,28 @@ public class Tree {
         // deleteNode(root, 3);
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/">108. Convert Sorted Array to Binary Search Tree</a>
+     * Given an integer array nums where the elements are sorted in ascending order, convert it to a height-balanced binary search tree.
+     * @param nums 1 <= nums.length <= 10^4
+     * @return
+     */
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return sortedArrayToBST(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode sortedArrayToBST(int[] nums, int start, int end) {
+        if (start > end) {
+            return null;
+        }
+        int mid = start + (end - start) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = sortedArrayToBST(nums, start, mid - 1);
+        root.right = sortedArrayToBST(nums, mid + 1, end);
+        return root;
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/binary-tree-paths/description/">257. Binary Tree Paths</a>
      * Given the root of a binary tree, return all root-to-leaf paths in any order.
