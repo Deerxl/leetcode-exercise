@@ -10,8 +10,76 @@ import java.util.stream.Collectors;
 public class StringAndArray {
 
     public static void main(String[] args) {
-        System.out.println(missingNumber(new int[] {3,0,1}));
-        System.out.println(compress(new char[] {'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}));
+        System.out.println(checkInclusion("abc", "ccccbbbbaaaa"));
+        // System.out.println(compress(new char[] {'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}));
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/permutation-in-string/">567. Permutation in String</a>
+     * Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
+     *
+     * In other words, return true if one of s1's permutations is the substring of s2.
+     * Input: s1 = "ab", s2 = "eidbaooo"
+     * Output: true
+     * Explanation: s2 contains one permutation of s1 ("ba").
+     * @param s1 1 <= s1.length, s2.length <= 104
+     * @param s2
+     * @return
+     */
+    public static boolean checkInclusion(String s1, String s2) {
+        if (s2.contains(s1)) {
+            return true;
+        }
+        if (s2.length() < s1.length()) {
+            return false;
+        }
+
+        int[] initMap = new int[26];
+        Set<Character> set = new HashSet<>();
+        for (char c : s1.toCharArray()) {
+            initMap[c - 'a']++;
+            set.add(c);
+        }
+
+        int i = 0;
+        int totalChars = s1.length();
+        int tmpChars = 0;
+        while (i < s2.length()) {
+            char c = s2.charAt(i);
+            if (initMap[c - 'a'] > 0) {
+                if (s2.length() - i < totalChars) {
+                    return false;
+                }
+
+                int[] tmpArr = Arrays.copyOf(initMap, initMap.length);
+                int start = i;
+                tmpChars = 0;
+                while (start < s2.length()) {
+                    char tmpC = s2.charAt(start);
+                    if (tmpArr[tmpC - 'a'] <= 0) {
+                        if (!set.contains(tmpC)) {
+                            i = start + 1;
+                        } else {
+                            i++;
+                        }
+                        break;
+                    } else {
+                        tmpArr[tmpC - 'a']--;
+                        start++;
+                        tmpChars++;
+                        if (tmpChars == totalChars) {
+                            return true;
+                        }
+                    }
+                }
+
+
+            } else {
+                i++;
+            }
+        }
+        return false;
     }
 
 
