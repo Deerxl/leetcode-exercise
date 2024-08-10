@@ -1,6 +1,9 @@
 package org.example.leetcode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author jialu.yxl
@@ -13,7 +16,36 @@ public class Greedy {
     }
 
 
+    /**
+     * <a href="https://leetcode.cn/problems/non-overlapping-intervals/">435. Non-overlapping Intervals</a>
+     * Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.
+     * Example 1:
+     * Input: intervals = [[1,2],[2,3],[3,4],[1,3]]
+     * Output: 1
+     * Explanation: [1,3] can be removed and the rest of the intervals are non-overlapping.
+     * @param intervals 1 <= intervals.length <= 10^5
+     * @return
+     */
+    public int eraseOverlapIntervals(int[][] intervals) {
+        // 结束时间相同的，开始时间晚的优先级更高
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] t0, int[] t1) {
+                return t0[1] - t1[1];
+            }
+        });
 
+        int end = intervals[0][1];
+        int total = 1;
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] >= end) {
+                total++;
+                end = intervals[i][1];
+            }
+        }
+
+        return intervals.length - total;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/partition-labels/">763. Partition Labels</a>

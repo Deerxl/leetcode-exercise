@@ -38,6 +38,47 @@ public class Matrix {
     }
 
 
+    /**
+     * <a href="https://leetcode.cn/problems/diagonal-traverse-ii/">1424. Diagonal Traverse II</a>
+     * Given a 2D integer array nums, return all elements of nums in diagonal order as shown in the below images.
+     * @param nums 1 <= nums.length <= 105
+     * 1 <= nums[i].length <= 105
+     * 1 <= sum(nums[i].length) <= 105
+     * 1 <= nums[i][j] <= 105
+     * @return
+     */
+    public int[] findDiagonalOrder(List<List<Integer>> nums) {
+        int totalNum = 0;
+        int maxSum = 0;
+        int maxColNum = 0;
+        TreeMap<Integer, List<int[]>> map = new TreeMap<>();
+
+        for (int i = 0; i < nums.size(); i++) {
+            maxColNum = Math.max(maxColNum, nums.get(i).size());
+            maxSum = Math.max(maxSum, i + nums.get(i).size() - 1);
+            for (int j = 0; j < nums.get(i).size(); j++) {
+                totalNum++;
+                List<int[]> list = map.getOrDefault(i + j, new ArrayList<>());
+                list.add(new int[]{i, j});
+                map.put(i + j, list);
+            }
+        }
+
+        int[] result = new int[totalNum];
+        int index = 0;
+        for (Map.Entry<Integer, List<int[]>> entry : map.entrySet()) {
+            entry.getValue().sort(new Comparator<int[]>() {
+                @Override
+                public int compare(int[] t1, int[] t2) {
+                    return t2[0] - t1[0];
+                }
+            });
+            for (int[] dir : entry.getValue()) {
+                result[index++] = nums.get(dir[0]).get(dir[1]);
+            }
+        }
+        return result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/brick-wall/">554. Brick Wall</a>

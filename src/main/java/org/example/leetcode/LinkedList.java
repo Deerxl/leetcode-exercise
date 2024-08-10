@@ -26,6 +26,40 @@ public class LinkedList {
         System.out.println(partition(head, 3));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/">1171. Remove Zero Sum Consecutive Nodes from Linked List</a>
+     * Given the head of a linked list, we repeatedly delete consecutive sequences of nodes that sum to 0 until there are no such sequences.
+     * After doing so, return the head of the final linked list.  You may return any such answer.
+     * (Note that in the examples below, all sequences are serializations of ListNode objects.)
+     * @param head The given linked list will contain between 1 and 1000 nodes. -1000 <= node.val <= 1000
+     * @return
+     */
+    public ListNode removeZeroSumSublists(ListNode head) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        Map<Integer, ListNode> map = new HashMap<>();
+        int prefixSum = 0;
+        while (dummy != null) {
+            prefixSum += dummy.val;
+            map.put(prefixSum, dummy);
+            dummy = dummy.next;
+        }
+
+        dummy = new ListNode();
+        dummy.next = head;
+        ListNode pre = dummy;
+
+        prefixSum = 0;
+        while (dummy != null) {
+            prefixSum += dummy.val;
+            dummy.next = map.get(prefixSum).next;
+            dummy = dummy.next;
+        }
+
+        return pre.next;
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/partition-list/description/">86. Partition List</a>
      * Given the head of a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
