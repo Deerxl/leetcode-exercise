@@ -85,7 +85,6 @@ public class ReviewTopHot {
         mergeSort(nums, start, end, mid, mergeSortTmpArr);
     }
 
-    static int[] mergeSortTmpArr;
     private static void mergeSort(int[] nums, int start, int end, int mid, int[] mergeSortTmpArr) {
         int index = start;
         int i = start, j = mid + 1;
