@@ -12,6 +12,86 @@ import java.util.Set;
 public class BackTracing {
 
 
+    public static void main(String[] args) {
+        System.out.println(isAdditiveNumber("1203"));
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/additive-number/">306. Additive Number</a>
+     * An additive number is a string whose digits can form an additive sequence.
+     *
+     * A valid additive sequence should contain at least three numbers. Except for the first two numbers, each subsequent number in the sequence must be the sum of the preceding two.
+     *
+     * Given a string containing only digits, return true if it is an additive number or false otherwise.
+     *
+     * Note: Numbers in the additive sequence cannot have leading zeros, so sequence 1, 2, 03 or 1, 02, 3 is invalid.
+     * @param num 1 <= num.length <= 35
+     * num consists only of digits.
+     * @return
+     */
+    public static boolean isAdditiveNumber(String num) {
+        if (num.length() < 3) {
+            return false;
+        }
+
+        int totalLen = num.length();
+        char c = num.charAt(0);
+        if (c == '0') {
+            return isAdditiveNumber(num, 1, 0);
+        } else {
+            for (int len1 = 1; len1 <= totalLen / 2; len1++) {
+                long num1 = Long.parseLong(num.substring(0, len1));
+                if (isAdditiveNumber(num, len1, num1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean isAdditiveNumber(String num, int start, long num1) {
+        if (start >= num.length()) {
+            return false;
+        }
+        int totalLen = num.length() - start;
+        char c = num.charAt(start);
+        if (c == '0') {
+            return isAdditiveNumber(num, start + 1, num1, 0);
+        } else {
+            for (int len2 = 1; len2 <= totalLen / 2; len2++) {
+                if (start + len2 >= num.length()) {
+                    return false;
+                }
+                long num2 = Long.parseLong(num.substring(start, start + len2));
+                if (isAdditiveNumber(num, start + len2, num1, num2)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isAdditiveNumber(String num, int start, long num1, long num2) {
+        if (start >= num.length()) {
+            return false;
+        }
+        long sum = num1 + num2;
+        String sumStr = String.valueOf(sum);
+        if (start + sumStr.length() > num.length()) {
+            return false;
+        }
+        if (sumStr.equals(num.substring(start, start + sumStr.length()))) {
+            if (start + sumStr.length() >= num.length()) {
+                return true;
+            }
+            return isAdditiveNumber(num, start + sumStr.length(), num2, sum);
+        }
+
+        return false;
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/n-queens/">51. N-Queens</a>
      * Input: n = 4

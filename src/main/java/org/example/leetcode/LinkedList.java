@@ -28,6 +28,36 @@ public class LinkedList {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/kth-node-from-end-of-list-lcci/">面试题 02.02. Kth Node From End of List LCCI</a>
+     *  Implement an algorithm to find the kth to last element of a singly linked list. Return the value of the element.
+     *
+     * Note: This problem is slightly different from the original one in the book.
+     *
+     * Example:
+     *
+     * Input:  1->2->3->4->5 和 k = 2
+     * Output:  4
+     * @param head
+     * @param k
+     * @return
+     */
+    public int kthToLast(ListNode head, int k) {
+        int len = 0;
+        ListNode dummy = head;
+        while (dummy != null) {
+            len++;
+            dummy = dummy.next;
+        }
+
+        dummy = head;
+        for (int i = 0; i < len - k; i++) {
+            dummy = dummy.next;
+        }
+        return dummy.val;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/">1171. Remove Zero Sum Consecutive Nodes from Linked List</a>
      * Given the head of a linked list, we repeatedly delete consecutive sequences of nodes that sum to 0 until there are no such sequences.
      * After doing so, return the head of the final linked list.  You may return any such answer.
