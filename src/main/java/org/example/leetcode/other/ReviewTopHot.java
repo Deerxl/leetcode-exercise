@@ -1,7 +1,8 @@
 package org.example.leetcode.other;
 
-import java.util.Arrays;
-import java.util.Random;
+import org.example.leetcode.common.TreeNode;
+
+import java.util.*;
 
 /**
  * @author jialu.yxl
@@ -12,6 +13,30 @@ public class ReviewTopHot {
 
     public static void main(String[] args) {
         mergeSort(new int[] {5,3,5,3,1,2,3,5,7,8,9});
+    }
+
+
+    /**
+     * 树的中序遍历
+     * @param root
+     * @return
+     */
+    public static List<Integer> inorderTraversal(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        List<Integer> list = new ArrayList<>();
+
+        while (!stack.isEmpty() || root != null) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+
+            root = stack.pop();
+            list.add(root.val);
+            root = root.right;
+        }
+
+        return list;
     }
 
     /**
