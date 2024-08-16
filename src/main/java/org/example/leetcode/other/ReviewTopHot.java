@@ -1,8 +1,10 @@
 package org.example.leetcode.other;
 
+import org.example.leetcode.classification.SortArray;
 import org.example.leetcode.common.TreeNode;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author jialu.yxl
@@ -12,12 +14,102 @@ public class ReviewTopHot {
 
 
     public static void main(String[] args) {
-        mergeSort(new int[] {5,3,5,3,1,2,3,5,7,8,9});
+        System.out.println(permuteUnique(new int[] {1,2,2}));
+    }
+
+
+    /**
+     * 买卖股票
+     * @param prices 0 <= prices[i] <= 10^5
+     * @param k
+     * @return
+     */
+    public int maxProfit(int[] prices, int k) {
+        int[] buy = new int[k + 1];
+        int[] sell = new int[k + 1];
+
+        Arrays.fill(buy, prices[0]);
+        for (int i = 1; i < prices.length; i++) {
+            for (int j = 1; j <= k; j++) {
+                buy[j] = Math.min(buy[j], prices[i] - sell[j - 1]);
+                sell[j] = Math.max(sell[j], prices[i] - buy[j]);
+            }
+        }
+        return sell[k];
+    }
+
+
+    /**
+     * 含重复元素的全排列
+     * @param nums
+     * @return
+     */
+    static List<List<Integer>> permuteUniqueResult = new ArrayList<>();
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        permuteUnique(nums, 0);
+
+        return permuteUniqueResult;
+    }
+
+    private static void permuteUnique(int[] nums, int start) {
+        if (start == nums.length) {
+            permuteUniqueResult.add(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+            return;
+        }
+
+        Set<Integer> set = new HashSet<>();
+        for (int i = start; i < nums.length; i++) {
+            if (set.contains(nums[i])) {
+                continue;
+            }
+            set.add(nums[i]);
+
+            swap(nums, i, start);
+            permuteUnique(nums, start + 1);
+            swap(nums, start, i);
+        }
+    }
+
+    static void swap(int[] nums, int i, int j) {
+        SortArray.swap(nums, i, j);
+    }
+
+
+    /**
+     * 鸡蛋掉落题
+     * <a href="https://leetcode.cn/problems/super-egg-drop/">887. Super Egg Drop</a>
+     * You are given k identical eggs and you have access to a building with n floors labeled from 1 to n.
+     * @param k  1 <= k <= 100
+     * @param n 1 <= n <= 10^4
+     * @return Return the minimum number of moves that you need to determine with certainty what the value of f is.
+     */
+    public int superEggDrop(int k, int n) {
+        int t = 1;
+        while (superEggDropCalFloor(k, t) < n + 1) {
+            t++;
+        }
+        return t;
+    }
+
+    /**
+     *
+     * @param k 鸡蛋数量
+     * @param t 机会数量
+     * @return 计算出来的楼层
+     */
+    int superEggDropCalFloor(int k, int t) {
+        if (k == 1 || t == 1) {
+            return t + 1;
+        }
+
+        return superEggDropCalFloor(k - 1, t - 1) + superEggDropCalFloor(k, t - 1);
     }
 
 
     /**
      * 树的前序遍历
+     * https://leetcode.cn/problems/binary-tree-preorder-traversal/description/
      * @param root
      * @return
      */
