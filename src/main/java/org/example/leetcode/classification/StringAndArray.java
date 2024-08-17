@@ -16,6 +16,138 @@ public class StringAndArray {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/zi-fu-chuan-de-pai-lie-lcof/description/">LCR 157. 套餐内商品的排列顺序</a>
+     * 某店铺将用于组成套餐的商品记作字符串 goods，其中 goods[i] 表示对应商品。请返回该套餐内所含商品的 全部排列方式 。
+     *
+     * 返回结果 无顺序要求，但不能含有重复的元素。
+     * @param goods
+     * @return
+     */
+    List<String> goodsOrderResult;
+    boolean[] goodsOrderVisit;
+    public String[] goodsOrder(String goods) {
+        goodsOrderResult = new ArrayList<>();
+        goodsOrderVisit = new boolean[goods.length()];
+
+        char[] charArray = goods.toCharArray();
+        Arrays.sort(charArray);
+        goodsOrder(charArray, 0, goods.length(), new StringBuilder());
+        String[] result = new String[goodsOrderResult.size()];
+        goodsOrderResult.toArray(result);
+
+        return result;
+    }
+
+    private void goodsOrder(char[] charArray, int start, int length, StringBuilder stringBuilder) {
+        if (start == length) {
+            goodsOrderResult.add(stringBuilder.toString());
+            return;
+        }
+
+        for (int i = 0; i < length; i++) {
+            if (goodsOrderVisit[i] || (i > 0 && !goodsOrderVisit[i - 1] && charArray[i] == charArray[i - 1])) {
+                continue;
+            }
+
+            stringBuilder.append(charArray[i]);
+            goodsOrderVisit[i] = true;
+            goodsOrder(charArray, start + 1, length, stringBuilder);
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            goodsOrderVisit[i] = false;
+        }
+
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/roman-to-integer/">13. Roman to Integer</a>
+     * Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+     *
+     * Symbol       Value
+     * I             1
+     * V             5
+     * X             10
+     * L             50
+     * C             100
+     * D             500
+     * M             1000
+     * I can be placed before V (5) and X (10) to make 4 and 9.
+     * X can be placed before L (50) and C (100) to make 40 and 90.
+     * C can be placed before D (500) and M (1000) to make 400 and 900.
+     *
+     * Input: s = "LVIII"
+     * Output: 58
+     * Explanation: L = 50, V= 5, III = 3.
+     * @param s
+     * @return
+     */
+    public int romanToInt(String s) {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("I", 1);
+        map.put("IV", 4);
+        map.put("V", 5);
+        map.put("IX", 9);
+        map.put("X", 10);
+        map.put("XL", 40);
+        map.put("L", 50);
+        map.put("XC", 90);
+        map.put("C", 100);
+        map.put("CD", 400);
+        map.put("D", 500);
+        map.put("CM", 900);
+        map.put("M", 1000);
+
+        int i = 0;
+        int result = 0;
+        while (i < s.length()) {
+            char c = s.charAt(i);
+            if (i < s.length() - 1 && (c == 'I' || c == 'C' || c == 'X')) {
+                i++;
+                char c1 = s.charAt(i);
+                if (map.containsKey("" + c + c1)) {
+                    result += map.get("" + c + c1);
+                    i++;
+                } else {
+                    result += map.get("" + c);
+                }
+            } else {
+                result += map.getOrDefault(c + "", 0);
+                i++;
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/squares-of-a-sorted-array/">977. 有序数组的平方</a>
+     * 给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序
+     * 示例 1：
+     * 输入：nums = [-4,-1,0,3,10]
+     * 输出：[0,1,9,16,100]
+     * 解释：平方后，数组变为 [16,1,0,9,100]
+     * 排序后，数组变为 [0,1,9,16,100]
+     * @param nums
+     * @return
+     */
+    public int[] sortedSquares(int[] nums) {
+        int i = 0, j = nums.length - 1;
+        int[] result = new int[nums.length];
+        int index = nums.length - 1;
+        while (i <= j) {
+            if (nums[i] * nums[i] > nums[j] * nums[j]) {
+                result[index--] = nums[i] * nums[i];
+                i++;
+            } else {
+                result[index--] = nums[j] * nums[j];
+                j--;
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/permutation-in-string/">567. Permutation in String</a>
      * Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise.
      *
