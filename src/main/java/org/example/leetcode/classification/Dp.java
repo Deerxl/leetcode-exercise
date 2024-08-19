@@ -17,6 +17,40 @@ public class Dp {
     }
 
 
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/description/">698. Partition to K Equal Sum Subsets</a>
+     * Given an integer array nums and an integer k, return true if it is possible to divide this array into k non-empty subsets whose sums are all equal.
+     * Example 1:
+     *
+     * Input: nums = [4,3,2,3,5,2,1], k = 4
+     * Output: true
+     * Explanation: It is possible to divide it into 4 subsets (5), (1, 4), (2,3), (2,3) with equal sums.
+     * @param nums
+     * @param k
+     * @return
+     */
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        if (nums.length < k) {
+            return false;
+        }
+
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+
+        if (sum % k != 0) {
+            return false;
+        }
+
+
+        //todo
+        return false;
+    }
+
+
     /**
      * <a href="https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iv/">188. Best Time to Buy and Sell Stock IV</a>
      * You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.

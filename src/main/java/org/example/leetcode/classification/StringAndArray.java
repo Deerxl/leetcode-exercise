@@ -16,6 +16,60 @@ public class StringAndArray {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/partition-array-into-three-parts-with-equal-sum/">1013. 将数组分成和相等的三个部分</a>
+     * Given an array of integers arr, return true if we can partition the array into three non-empty parts with equal sums.
+     *
+     * Formally, we can partition the array if we can find indexes i + 1 < j with (arr[0] + arr[1] + ... + arr[i] == arr[i + 1] + arr[i + 2] + ... + arr[j - 1] == arr[j] + arr[j + 1] + ... + arr[arr.length - 1])
+     * Input: arr = [0,2,1,-6,6,-7,9,1,2,0,1]
+     * Output: true
+     * Explanation: 0 + 2 + 1 = -6 + 6 - 7 + 9 + 1 = 2 + 0 + 1
+     * @param arr
+     * @return
+     */
+    public boolean canThreePartsEqualSum(int[] arr) {
+        if (arr.length < 3) {
+            return false;
+        }
+
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+        if (sum % 3 != 0) {
+            return false;
+        }
+
+        int perSum = sum / 3;
+
+        int i = 0, sum1 = 0;
+        while (i < arr.length) {
+            sum1 += arr[i++];
+            if (sum1 == perSum) {
+                break;
+            }
+        }
+
+        sum1 = 0;
+        while (i < arr.length) {
+            sum1 += arr[i++];
+            if (sum1 == perSum) {
+                break;
+            }
+        }
+
+        sum1 = 0;
+        while (i < arr.length) {
+            sum1 += arr[i++];
+            if (sum1 == perSum) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/zi-fu-chuan-de-pai-lie-lcof/description/">LCR 157. 套餐内商品的排列顺序</a>
      * 某店铺将用于组成套餐的商品记作字符串 goods，其中 goods[i] 表示对应商品。请返回该套餐内所含商品的 全部排列方式 。
      *
