@@ -17,6 +17,53 @@ public class Greedy {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters/description/">1081. Smallest Subsequence of Distinct Characters</a>
+     * Given a string s, return the lexicographically smallest
+     * subsequence
+     *  of s that contains all the distinct characters of s exactly once.
+     * Example 1:
+     *
+     * Input: s = "bcabc"
+     * Output: "abc"
+     * @param s 1 <= s.length <= 1000
+     * @return
+     */
+    public String smallestSubsequence(String s) {
+        if (s.length() <= 1) {
+            return s;
+        }
+
+        int[] nums = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            nums[s.charAt(i) - 'a']++;
+        }
+        boolean[] visited = new boolean[26];
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (!visited[c - 'a']) {
+                while (sb.length() > 0 && sb.charAt(sb.length() - 1) > c) {
+                    if (nums[sb.charAt(sb.length() - 1) - 'a'] > 0) {
+                        visited[sb.charAt(sb.length() - 1) - 'a'] = false;
+                        sb.deleteCharAt(sb.length() - 1);
+                    } else {
+                        break;
+                    }
+                }
+                sb.append(c);
+                visited[c - 'a'] = true;
+            }
+
+            nums[c - 'a']--;
+        }
+
+        return sb.toString();
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/non-overlapping-intervals/">435. Non-overlapping Intervals</a>
      * Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.
      * Example 1:
