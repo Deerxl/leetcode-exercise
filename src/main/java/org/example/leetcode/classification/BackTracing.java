@@ -1,9 +1,6 @@
 package org.example.leetcode.classification;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author jialu.yxl
@@ -16,6 +13,69 @@ public class BackTracing {
         System.out.println(isAdditiveNumber("1203"));
     }
 
+
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/description/">698. Partition to K Equal Sum Subsets</a>
+     * Given an integer array nums and an integer k, return true if it is possible to divide this array into k non-empty subsets whose sums are all equal.
+     * Example 1:
+     *
+     * Input: nums = [4,3,2,3,5,2,1], k = 4
+     * Output: true
+     * Explanation: It is possible to divide it into 4 subsets (5), (1, 4), (2,3), (2,3) with equal sums.
+     * @param nums
+     * @param k
+     * @return
+     */
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        if (nums.length < k) {
+            return false;
+        }
+
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+
+        if (sum % k != 0) {
+            return false;
+        }
+
+        Arrays.sort(nums);
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int tmp = nums[r];
+            nums[r] = nums[l];
+            nums[l] = tmp;
+            l++;
+            r--;
+        }
+
+        return canPartitionKSubsets(nums, k, 0, new int[k], sum / k);
+    }
+
+    private boolean canPartitionKSubsets(int[] nums, int k, int start, int[] buckets, int target) {
+        if (start == nums.length) {
+            return true;
+        }
+
+        for (int i = 0; i < k; i++) {
+            if (i > 0 && buckets[i] == buckets[i - 1]) {
+                continue;
+            }
+            if (buckets[i] + nums[start] > target) {
+                continue;
+            }
+            buckets[i] += nums[start];
+            if (canPartitionKSubsets(nums, k, start + 1, buckets, target)) {
+                return true;
+            }
+            buckets[i] -= nums[start];
+        }
+
+        return false;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/additive-number/">306. Additive Number</a>
