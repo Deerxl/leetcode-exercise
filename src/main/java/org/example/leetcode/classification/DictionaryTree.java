@@ -1,9 +1,6 @@
 package org.example.leetcode.classification;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author jialu.yxl
@@ -11,9 +8,20 @@ import java.util.List;
  */
 public class DictionaryTree {
 
-    // public static void main(String[] args) {
-    //     System.out.println(findKthNumber(100, 50));
-    // }
+    public static void main(String[] args) {
+        Queue<String> queue = new PriorityQueue<>(Comparator.reverseOrder());
+
+        String[] strings = {"mobile", "mouse", "moneypot", "monitor", "mousepad"};
+        for (String s : strings) {
+            queue.offer(s);
+        }
+        while (!queue.isEmpty()) {
+            System.out.printf(queue.poll() + " ");
+        }
+
+
+        System.out.println(suggestedProducts(strings, "mouse"));
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/">LCR 164. 破解闯关密码</a>
@@ -91,18 +99,87 @@ public class DictionaryTree {
     }
 
     /**
+     * <a href="https://leetcode.cn/problems/search-suggestions-system/">1268. Search Suggestions System</a>
      * 给你一个产品数组 products 和一个字符串 searchWord ，products  数组中每个产品都是一个字符串。
      * 请你设计一个推荐系统，在依次输入单词 searchWord 的每一个字母后，推荐 products 数组中前缀与 searchWord 相同的最多三个产品。如果前缀相同的可推荐产品超过三个，请按字典序返回最小的三个。
      * 请你以二维列表的形式，返回在输入 searchWord 每个字母后相应的推荐产品的列表。
-     * @param products
-     * @param searchWord
+     * @param products 1 <= products.length <= 1000  1 <= products[i].length <= 3000
+     * @param searchWord 1 <= searchWord.length <= 1000
      * @return
      */
-    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
-        List<List<String>> result = new ArrayList<>();
+    public static List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        Arrays.sort(products);
+
+        Trie trie = new Trie();
+        for (String product : products) {
+            trie.insert(product);
+        }
+
+        return trie.searchWords(searchWord);
+    }
+
+    private static final int suggestedProductsCount = 3;
+    public static class Trie {
+        private Trie[] children;
+        private boolean isEnd;
+        private Queue<String> queue;
+
+        public Trie() {
+            children = new Trie[26];
+            isEnd = false;
+            queue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
+        }
+
+        public void insert(String word) {
+            Trie trie = this;
+            for (int i = 0; i < word.length(); i++) {
+                char c = word.charAt(i);
+                if (trie.children[c - 'a'] == null) {
+                    trie.children[c - 'a'] = new Trie();
+                }
+                trie = trie.children[c - 'a'];
+                trie.queue.offer(word);
+                if (trie.queue.size() > suggestedProductsCount) {
+                    trie.queue.poll();
+                }
+            }
+            trie.isEnd = true;
+        }
+
+        public Trie startsWithTrie(String prefix) {
+            Trie trie = this;
+            for (int i = 0; i < prefix.length(); i++) {
+                char c = prefix.charAt(i);
+                if (trie.children[c - 'a'] == null) {
+                    return null;
+                }
+                trie = trie.children[c - 'a'];
+            }
+            return trie;
+        }
+
+        public List<List<String>> searchWords(String searchWord) {
+            List<List<String>> result = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < searchWord.length(); i++) {
+                char c = searchWord.charAt(i);
+                stringBuilder.append(c);
+                List<String> tmpResult = new ArrayList<>();
+                Trie trie = this.startsWithTrie(stringBuilder.toString());
+                if (trie == null) {
+                    result.add(tmpResult);
+                    continue;
+                }
+
+                while (!trie.queue.isEmpty()) {
+                    tmpResult.add(trie.queue.poll());
+                }
+                Collections.reverse(tmpResult);
+                result.add(tmpResult);
+            }
 
 
-
-        return result;
+            return result;
+        }
     }
 }
