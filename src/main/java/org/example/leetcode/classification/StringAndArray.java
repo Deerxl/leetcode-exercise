@@ -16,6 +16,102 @@ public class StringAndArray {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/sub-sort-lcci/">面试题 16.16. Sub Sort LCCI</a>
+     * Given an array of integers, write a method to find indices m and n such that if you sorted elements m through n, the entire array would be sorted. Minimize n - m (that is, find the smallest such sequence).
+     *
+     * Return [m,n]. If there are no such m and n (e.g. the array is already sorted), return [-1, -1].
+     *
+     * Example:
+     *
+     * Input:  [1,2,4,7,10,11,7,12,6,7,16,18,19]
+     * Output:  [3,9]
+     * @param array 0 <= len(array) <= 1000000
+     * @return
+     */
+    public int[] subSortMethod2(int[] array) {
+        if (array == null || array.length <= 1) {
+            return new int[] {-1, -1};
+        }
+
+        int first = -1, last = -1;
+        int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+        int len = array.length;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] < max) {
+                last = i;
+            } else {
+                max = Math.max(max, array[i]);
+            }
+
+            if (array[len - i - 1] > min) {
+                first = len - i - 1;
+            } else {
+                min = Math.min(min, array[len - i - 1]);
+            }
+        }
+
+        return new int[] {first, last};
+    }
+
+    int[] subSortResult = new int[] {Integer.MAX_VALUE, Integer.MIN_VALUE};
+    public int[] subSort(int[] array) {
+        if (array == null || array.length <= 1) {
+            return new int[] {-1, -1};
+        }
+
+        subSortMergeSort(array, 0, array.length - 1, new int[array.length]);
+
+        if (subSortResult[0] == Integer.MAX_VALUE || subSortResult[1] == Integer.MIN_VALUE) {
+            subSortResult[0] = -1;
+            subSortResult[1] = -1;
+        }
+        return subSortResult;
+    }
+
+    private void subSortMergeSort(int[] array, int start, int end, int[] tmpArr) {
+        if (start >= end) {
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+        subSortMergeSort(array, start, mid, tmpArr);
+        subSortMergeSort(array, mid + 1, end, tmpArr);
+
+        if (array[mid] > array[mid + 1]) {
+            subSortMergeSortMerge(array, start, mid, end, tmpArr);
+        }
+    }
+
+    private void subSortMergeSortMerge(int[] array, int start, int mid, int end, int[] tmpArr) {
+        int i = start, j = mid + 1;
+        int index = start;
+        while (i <= mid && j <= end) {
+            if (array[i] <= array[j]) {
+                tmpArr[index++] = array[i++];
+            } else {
+                if (i < subSortResult[0]) {
+                    subSortResult[0] = i;
+                }
+                if (j > subSortResult[1]) {
+                    subSortResult[1] = j;
+                }
+                tmpArr[index++] = array[j++];
+            }
+        }
+
+        while (i <= mid) {
+            tmpArr[index++] = array[i++];
+        }
+
+        while (j <= end) {
+            tmpArr[index++] = array[j++];
+        }
+
+        System.arraycopy(tmpArr, start, array, start, end - start + 1);
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/partition-array-into-three-parts-with-equal-sum/">1013. 将数组分成和相等的三个部分</a>
      * Given an array of integers arr, return true if we can partition the array into three non-empty parts with equal sums.
      *
