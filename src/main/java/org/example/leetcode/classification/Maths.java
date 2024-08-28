@@ -9,13 +9,59 @@ import java.util.*;
 public class Maths {
 
     public static void main(String[] args) {
-        System.out.println(Integer.toBinaryString(10));
-        System.out.println(Integer.toBinaryString(-10));
-        // System.out.println(Arrays.toString(singleNumber(new int[]{43772400, 1674008457, 1779561093, 744132272, 1674008457, 448610617, 1779561093, 124075538, -1034600064, 49040018, 612881857, 390719949, -359290212, -812493625, 124732, -1361696369, 49040018, -145417756, -812493625, 2078552599, 1568689850, 865876872, 865876872, -1471385435, 1816352571, 1793963758, 2078552599, -1034600064, 1475115274, -119634980, 124732, 661111294, -1813882010, 1568689850, 448610617, 1347212898, -1293494866, 612881857, 661111294, -1361696369, 1816352571, -1813882010, -359290212, 1475115274, 1793963758, 1347212898, 43772400, -1471385435, 124075538, -1293494866, -119634980, 390719949})));
-
-        // System.out.println(nthUglyNumber(10));
+        System.out.println(fractionToDecimal(1, 333));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/fraction-to-recurring-decimal/">166. Fraction to Recurring Decimal</a>
+     * Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.
+     * If the fractional part is repeating, enclose the repeating part in parentheses.
+     * If multiple answers are possible, return any of them.
+     * It is guaranteed that the length of the answer string is less than 104 for all the given inputs.
+     *
+     *  Example 1:
+     * Input: numerator = 1, denominator = 2
+     * Output: "0.5"
+     * Example 3:
+     * Input: numerator = 4, denominator = 333
+     * Output: "0.(012)"
+     * @param numerator -2^31 <= numerator, denominator <= 2^31 - 1
+     * @param denominator denominator != 0
+     * @return
+     */
+    public static String fractionToDecimal(int numerator, int denominator) {
+        long a = numerator, b = denominator;
+        if (a % b == 0) {
+            return String.valueOf(a / b);
+        }
+        StringBuilder sb = new StringBuilder();
+        if (a * b < 0) {
+            sb.append("-");
+        }
+        a = Math.abs(a);
+        b = Math.abs(b);
+
+        sb.append(a / b).append(".");
+
+        a = a % b;
+
+        Map<Long, Integer> map = new HashMap<>();
+        while (a != 0) {
+            map.put(a, sb.length());
+
+            a *= 10;
+            sb.append(a / b);
+
+            a = a % b;
+
+            if (map.containsKey(a)) {
+                return sb.substring(0, map.get(a)) + "(" + sb.substring(map.get(a)) + ")";
+            }
+        }
+
+        return sb.toString();
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/single-number-iii/description/">260. Single Number III</a>
