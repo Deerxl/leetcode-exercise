@@ -10,6 +10,53 @@ import java.util.Set;
 public class SlidingWindow {
 
 
+    public static void main(String[] args) {
+        System.out.println(maxSumTwoNoOverlap(new int[] {1,0,3}, 1, 2));
+    }
+
+    /**
+     * <a href="https://leetcode.cn/problems/maximum-sum-of-two-non-overlapping-subarrays/">1031. Maximum Sum of Two Non-Overlapping Subarrays</a>
+     * Given an integer array nums and two integers firstLen and secondLen, return the maximum sum of elements in two non-overlapping subarrays with lengths firstLen and secondLen.
+     * The array with length firstLen could occur before or after the array with length secondLen, but they have to be non-overlapping.
+     * A subarray is a contiguous part of an array.
+     * Example 1:
+     * Input: nums = [0,6,5,2,2,5,1,9,4], firstLen = 1, secondLen = 2
+     * Output: 20
+     * Explanation: One choice of subarrays is [9] with length 1, and [6,5] with length 2.
+     * @param nums 0 <= nums[i] <= 1000
+     * @param firstLen 1 <= firstLen, secondLen <= 1000
+     * 2 <= firstLen + secondLen <= 1000
+     * firstLen + secondLen <= nums.length <= 1000
+     * @param secondLen
+     * @return
+     */
+    public static int maxSumTwoNoOverlap(int[] nums, int firstLen, int secondLen) {
+        // 采用滚动数组（dp）+ 滑动窗口实现
+        return Math.max(maxSumTwoNoOverlapFunc(nums, firstLen, secondLen),
+                maxSumTwoNoOverlapFunc(nums, secondLen, firstLen));
+    }
+
+    private static int maxSumTwoNoOverlapFunc(int[] nums, int firstLen, int secondLen) {
+        int lSum = 0, rSum = 0;
+        for (int i = 0; i < firstLen; i++) {
+            lSum += nums[i];
+        }
+        for (int i = firstLen; i < secondLen + firstLen; i++) {
+            rSum += nums[i];
+        }
+
+        int maxLSum = lSum;
+        int result = maxLSum + rSum;
+        for (int i = firstLen + secondLen, j = firstLen; i < nums.length; i++, j++) {
+            lSum += nums[j] - nums[j - firstLen];
+            maxLSum = Math.max(maxLSum, lSum);
+            rSum += nums[i] - nums[i - secondLen];
+            result = Math.max(result, maxLSum + rSum);
+        }
+
+        return result;
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/">LCR 167. 招式拆解 I</a>
      * 某套连招动作记作序列 arr，其中 arr[i] 为第 i 个招式的名字。请返回 arr 中最多可以出连续不重复的多少个招式。
