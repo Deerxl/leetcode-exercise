@@ -1,10 +1,59 @@
 package org.example.leetcode.classification;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author jialu.yxl
  * @date 8/10/24 3:09 PM
  */
 public class TwoPoints {
+
+
+    public static void main(String[] args) {
+        System.out.println(lengthOfLongestSubstringKDistinct("eqgkcwGFvjjmxutystqdfhuMblWbylgjxsxgnoh", 16));
+    }
+
+    /**
+     * <a href="https://www.lintcode.com/problem/386/?showListFe=true&page=8&ordering=id&pageSize=50">386 · 最多有k个不同字符的最长子字符串</a>
+     * <a href="https://leetcode.cn/problems/longest-substring-with-at-most-k-distinct-characters/description/">340. 至多包含 K 个不同字符的最长子字符串</a>
+     * 给定字符串S，找到最多有k个不同字符的最长子串T。
+     * 输入: S = "eceba" 并且 k = 3
+     * 输出: 4
+     * 解释: T = "eceb"
+     * @param s
+     * @param k
+     * @return
+     */
+    public static int lengthOfLongestSubstringKDistinct(String s, int k) {
+        if (s == null || s.isEmpty() || k <= 0) {
+            return 0;
+        }
+        if (k >= s.length()) {
+            return s.length();
+        }
+
+        int result = 0;
+        Map<Character, Integer> map = new HashMap<>();
+
+        int i = 0, j = 0;
+        while (j < s.length()) {
+            char c = s.charAt(j);
+            map.put(c, j);
+            j++;
+            if (map.size() > k) {
+                int delIndex = Collections.min(map.values());
+                map.remove(s.charAt(delIndex));
+                i = delIndex + 1;
+            }
+
+            result = Math.max(result, j - i);
+        }
+
+        return result;
+    }
+
 
 
     /**
