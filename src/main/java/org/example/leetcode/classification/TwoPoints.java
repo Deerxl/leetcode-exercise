@@ -12,7 +12,43 @@ public class TwoPoints {
 
 
     public static void main(String[] args) {
-        System.out.println(lengthOfLongestSubstringKDistinct("eqgkcwGFvjjmxutystqdfhuMblWbylgjxsxgnoh", 16));
+        System.out.println(lengthOfLongestSubstringTwoDistinct("eceba"));
+    }
+
+    /**
+     * <a href="https://www.lintcode.com/problem/928/">928 · 最多有两个不同字符的最长子串</a>
+     * <a href="https://leetcode.cn/problems/longest-substring-with-at-most-two-distinct-characters/description/">159. 至多包含两个不同字符的最长子串</a>
+     * 给定一个字符串，找出最长子串T的长度，它最多包含2个不同的字符。
+     * 输入: “eceba”
+     * 输出: 3
+     * @param s
+     * @return
+     */
+    public static int lengthOfLongestSubstringTwoDistinct(String s) {
+        if (s.length() < 3) {
+            return s.length();
+        }
+
+        Map<Character, Integer> map = new HashMap<>();
+        int i = 0, j = 0;
+        int result = 0;
+        while (j < s.length()) {
+            char c = s.charAt(j);
+            map.put(c, j);
+            j++;
+
+            if (map.size() > 2) {
+                int delIndex = Collections.min(map.values());
+                map.remove(s.charAt(delIndex));
+                i = delIndex + 1;
+            }
+            result = Math.max(result, j - i);
+        }
+
+        result = Math.max(result, j - i);
+
+
+        return result;
     }
 
     /**
