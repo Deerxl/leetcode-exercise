@@ -17,6 +17,38 @@ public class Greedy {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/increasing-triplet-subsequence/description/">334. Increasing Triplet Subsequence</a>
+     * Given an integer array nums, return true if there exists a triple of indices (i, j, k) such that i < j < k and nums[i] < nums[j] < nums[k]. If no such indices exists, return false.
+     * Example 1:
+     * Input: nums = [1,2,3,4,5]
+     * Output: true
+     * Explanation: Any triplet where i < j < k is valid.
+     * @param nums 1 <= nums.length <= 5 * 10^5 -2^31 <= nums[i] <= 2^31 - 1
+     * @return
+     */
+    public boolean increasingTriplet(int[] nums) {
+        if (nums == null || nums.length < 3) {
+            return false;
+        }
+
+        int first = nums[0];
+        int second = Integer.MAX_VALUE;
+        for (int i = 1; i < nums.length; i++) {
+            int num = nums[i];
+            if (num > second) {
+                return true;
+            } else if (num > first) {
+                second = num;
+            } else {
+                first = num;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/smallest-subsequence-of-distinct-characters/description/">1081. Smallest Subsequence of Distinct Characters</a>
      * Given a string s, return the lexicographically smallest
      * subsequence
