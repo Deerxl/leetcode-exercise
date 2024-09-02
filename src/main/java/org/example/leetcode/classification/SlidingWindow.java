@@ -1,7 +1,6 @@
 package org.example.leetcode.classification;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author jialu.yxl
@@ -12,6 +11,53 @@ public class SlidingWindow {
 
     public static void main(String[] args) {
         System.out.println(maxSumTwoNoOverlap(new int[] {1,0,3}, 1, 2));
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/find-all-anagrams-in-a-string/">438. Find All Anagrams in a String</a>
+     * Given two strings s and p, return an array of all the start indices of p's anagrams in s. You may return the answer in any order.
+     * An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+     * Example 1:
+     * Input: s = "cbaebabacd", p = "abc"
+     * Output: [0,6]
+     * Explanation:
+     * The substring with start index = 0 is "cba", which is an anagram of "abc".
+     * The substring with start index = 6 is "bac", which is an anagram of "abc".
+     * @param s  1 <= s.length, p.length <= 3 * 10^4
+     * @param p s and p consist of lowercase English letters.
+     * @return
+     */
+    public List<Integer> findAnagrams(String s, String p) {
+        if (p.length() > s.length()) {
+            return new ArrayList<>();
+        }
+
+        int len = p.length();
+        int[] pArr = new int[26];
+        for (int i = 0; i < len; i++) {
+            pArr[p.charAt(i) - 'a']++;
+        }
+
+        int[] sArr = new int[26];
+        for (int i = 0; i < len; i++) {
+            sArr[s.charAt(i) - 'a']++;
+        }
+
+        List<Integer> result = new ArrayList<>();
+        if (Arrays.equals(sArr, pArr)) {
+            result.add(0);
+        }
+
+        for (int i = len; i < s.length(); i++) {
+            sArr[s.charAt(i) - 'a']++;
+            sArr[s.charAt(i - len) - 'a']--;
+            if (Arrays.equals(sArr, pArr)) {
+                result.add(i - len + 1);
+            }
+        }
+
+        return result;
     }
 
     /**
