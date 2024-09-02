@@ -19,16 +19,65 @@ public class LinkedList {
         // root.right = new Node(5);
         // treeToDoublyList(root);
 
-        ListNode head = new ListNode(1);
-        head.next = new ListNode(4);
-        head.next.next = new ListNode(3);
-        head.next.next.next = new ListNode(2);
-        head.next.next.next.next = new ListNode(5);
-        head.next.next.next.next.next = new ListNode(2);
+        Node node1 = new Node(7);
+        node1.random = null;
+        Node node2 = new Node(13);
+        node1.next = node2;
+        node2.random = node1;
+        Node node3 = new Node(11);
+        node2.next = node3;
+        Node node4 = new Node(10);
+        node3.next = node4;
+        node4.random = node3;
+        Node node5 = new Node(1);
+        node4.next = node5;
+        node5.random = node1;
 
-        System.out.println(partition(head, 3));
+        System.out.println(copyRandomList(node1));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/fu-za-lian-biao-de-fu-zhi-lcof/">LCR 154. 复杂链表的复制</a>
+     * 请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
+     * 输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+     * 输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]
+     * @param head Node.random 为空（null）或指向链表中的节点。 节点数目不超过 1000 。
+     * @return
+     */
+    public static Node copyRandomList(Node head) {
+        if (head == null) {
+            return null;
+        }
+
+        Node dummy = head;
+        while (dummy != null) {
+            Node next = new Node(dummy.val);
+            next.next = dummy.next;
+            dummy.next = next;
+            dummy = next.next;
+        }
+
+        dummy = head;
+        while (dummy != null) {
+            Node next = dummy.next;
+            if (dummy.random != null) {
+                next.random = dummy.random.next;
+            }
+            dummy = dummy.next.next;
+        }
+
+        Node copyHead = head.next;
+        while (head != null) {
+            Node next = head.next;
+            if (head.next != null) {
+                head.next = next.next;
+            }
+            head = next;
+        }
+
+        return copyHead;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/kth-node-from-end-of-list-lcci/">面试题 02.02. Kth Node From End of List LCCI</a>
@@ -375,7 +424,7 @@ public class LinkedList {
      * @param head
      * @return
      */
-    public Node copyRandomList(Node head) {
+    public Node copyRandomList138(Node head) {
         if (head == null) {
             return null;
         }
