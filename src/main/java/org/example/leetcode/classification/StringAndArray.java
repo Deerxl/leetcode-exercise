@@ -16,6 +16,53 @@ public class StringAndArray {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/">LCR 165. 解密数字</a>
+     * 现有一串神秘的密文 ciphertext，经调查，密文的特点和规则如下：
+     * 密文由非负整数组成
+     * 数字 0-25 分别对应字母 a-z
+     * 请根据上述规则将密文 ciphertext 解密为字母，并返回共有多少种解密结果。
+     * 输入: ciphertext = 216612
+     * 输出: 6
+     * 解释: 216612 解密后有 6 种不同的形式，分别是 "cbggbc"，"vggbc"，"vggm"，"cbggm"，"cqgbc" 和 "cqgm"
+     * @param ciphertext 0 <= ciphertext < 2^31
+     * @return
+     */
+    int crackNumberResult = 0;
+    public int crackNumber(int ciphertext) {
+        if (ciphertext < 10) {
+            return 1;
+        }
+        String text = String.valueOf(ciphertext);
+        crackNumber(text, 0);
+        return crackNumberResult;
+    }
+
+    private void crackNumber(String text, int start) {
+        if (start >= text.length() - 1) {
+            crackNumberResult++;
+            return;
+        }
+
+        crackNumber(text, start + 1);
+
+        char c1 = text.charAt(start);
+        if (c1 == '0' || c1 > '2' || start + 1 >= text.length()) {
+            return;
+        }
+
+        if (c1 == '1') {
+            crackNumber(text, start + 2);
+            return;
+        }
+
+        char c2 = text.charAt(start + 1);
+        if (c2 <= '5') {
+            crackNumber(text, start + 2);
+        }
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/sub-sort-lcci/">面试题 16.16. Sub Sort LCCI</a>
      * Given an array of integers, write a method to find indices m and n such that if you sorted elements m through n, the entire array would be sorted. Minimize n - m (that is, find the smallest such sequence).
      *
