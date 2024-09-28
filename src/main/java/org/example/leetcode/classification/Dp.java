@@ -17,6 +17,44 @@ public class Dp {
     }
 
 
+    /**
+     * <a href="https://leetcode.cn/problems/minimum-insertion-steps-to-make-a-string-palindrome/">1312. Minimum Insertion Steps to Make a String Palindrome</a>
+     * Given a string s. In one step you can insert any character at any index of the string.
+     * Return the minimum number of steps to make s palindrome.
+     * A Palindrome String is one that reads the same backward as well as forward.
+     * Example 2:
+     *
+     * Input: s = "mbadm"
+     * Output: 2
+     * Explanation: String can be "mbdadbm" or "mdbabdm".
+     * @param s 1 <= s.length <= 500
+     * @return
+     */
+    public int minInsertions(String s) {
+        if (s.length() <= 1) {
+            return 0;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = s.length() - 1; i >= 0; i--) {
+            sb.append(s.charAt(i));
+        }
+        String s2 = sb.toString();
+        if (s.equals(s2)) {
+            return 0;
+        }
+
+        int[][] dp = new int[s.length() + 1][s.length() + 1];
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = 0; j < s.length(); j++) {
+                dp[i + 1][j + 1] = Math.max(dp[i + 1][j], dp[i][j + 1]);
+                if (s.charAt(i) == s2.charAt(j)) {
+                    dp[i + 1][j + 1] = Math.max(dp[i][j] + 1, dp[i + 1][j + 1]);
+                }
+            }
+        }
+        return s.length() - dp[s.length()][s.length()];
+    }
 
 
     /**
