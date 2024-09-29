@@ -38,6 +38,32 @@ public class LinkedList {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/middle-of-the-linked-list/">876. Middle of the Linked List</a>
+     * Given the head of a singly linked list, return the middle node of the linked list.
+     * If there are two middle nodes, return the second middle node.
+     * @param head
+     * @return
+     */
+    public ListNode middleNode(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null) {
+            slow = slow.next;
+            fast = fast.next;
+            if (fast.next != null) {
+                fast = fast.next;
+            } else {
+                break;
+            }
+        }
+        return slow;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/fu-za-lian-biao-de-fu-zhi-lcof/">LCR 154. 复杂链表的复制</a>
      * 请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
      * 输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
