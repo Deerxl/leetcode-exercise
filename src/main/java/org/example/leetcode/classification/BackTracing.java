@@ -10,9 +10,68 @@ public class BackTracing {
 
 
     public static void main(String[] args) {
-        System.out.println(isAdditiveNumber("1203"));
+        System.out.println(partition("cbbbcc"));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/palindrome-partitioning/">131. Palindrome Partitioning</a>
+     * Given a string s, partition s such that every substring of the partition is a palindrome.
+     * Return all possible palindrome partitioning of s.
+     * Example 1:
+     * Input: s = "aab"
+     * Output: [["a","a","b"],["aa","b"]]
+     * @param s 1 <= s.length <= 16
+     * @return
+     */
+    public static List<List<String>> partition(String s) {
+
+        palindromePartitionLen = s.length();
+        palindromePartitionDp = new boolean[palindromePartitionLen][palindromePartitionLen];
+
+        for (int i = 0; i < palindromePartitionLen; i++) {
+            Arrays.fill(palindromePartitionDp[i], true);
+        }
+
+
+        // dp[i][j] s[i...j]是否为回文
+        //          = true, i >= j
+        //          = s[i] == s[j] && dp[i + 1][j - 1], otherwise
+        for (int i = palindromePartitionLen - 1; i >= 0; i--) {
+            for (int j = 0; j < palindromePartitionLen; j++) {
+                if (i < j) {
+                    palindromePartitionDp[i][j] = s.charAt(i) == s.charAt(j) && i < palindromePartitionLen - 1 && palindromePartitionDp[i + 1][j - 1];
+                }
+            }
+        }
+
+        palindromePartitionResult = new ArrayList<>();
+        palindromePartitionTmpResultList = new ArrayList<>();
+
+        partition(s, 0);
+
+        return palindromePartitionResult;
+    }
+
+    static boolean[][] palindromePartitionDp;
+    static int palindromePartitionLen;
+    static List<String> palindromePartitionTmpResultList;
+    static List<List<String>> palindromePartitionResult;
+
+    private static void partition(String s, int i) {
+        if (i == palindromePartitionLen) {
+            palindromePartitionResult.add(new ArrayList<>(palindromePartitionTmpResultList));
+            return;
+        }
+
+        for (int j = i; j < palindromePartitionLen; j++) {
+            if (palindromePartitionDp[i][j]) {
+                palindromePartitionTmpResultList.add(s.substring(i, j + 1));
+                partition(s, j + 1);
+                palindromePartitionTmpResultList.remove(palindromePartitionTmpResultList.size() - 1);
+            }
+        }
+    }
 
 
 
