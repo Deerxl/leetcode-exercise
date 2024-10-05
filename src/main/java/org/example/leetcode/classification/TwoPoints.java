@@ -15,6 +15,33 @@ public class TwoPoints {
         System.out.println(lengthOfLongestSubstringTwoDistinct("eceba"));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/palindromic-substrings/description/">647. Palindromic Substrings</a>
+     * Given a string s, return the number of palindromic substrings in it.
+     * A string is a palindrome when it reads the same backward as forward.
+     * A substring is a contiguous sequence of characters within the string.
+     * Example 2:
+     * Input: s = "aaa"
+     * Output: 6
+     * Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+     * @param s 1 <= s.length <= 1000
+     * @return
+     */
+    public static int countSubstrings(String s) {
+        int len = s.length();
+        int result = 0;
+        for (int i = 0; i < len * 2 - 1; i++) {
+            int l = i / 2, r = i / 2 + i % 2;
+            while (l >= 0 && r < len && s.charAt(l) == s.charAt(r)) {
+                l--;
+                r++;
+                result++;
+            }
+        }
+        return result;
+    }
+
     /**
      * <a href="https://www.lintcode.com/problem/928/">928 · 最多有两个不同字符的最长子串</a>
      * <a href="https://leetcode.cn/problems/longest-substring-with-at-most-two-distinct-characters/description/">159. 至多包含两个不同字符的最长子串</a>

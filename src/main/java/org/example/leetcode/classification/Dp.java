@@ -10,11 +10,54 @@ import java.util.List;
 public class Dp {
 
     public static void main(String[] args) {
-        System.out.println(numDistinct("rabbbit", "rabbit"));
+        System.out.println(countSubstrings("abbab"));
 
-        // System.out.println(maxProfit(2, new int[]{3,2,6,5,0,3}));
+
 
     }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/palindromic-substrings/description/">647. Palindromic Substrings</a>
+     * Given a string s, return the number of palindromic substrings in it.
+     * A string is a palindrome when it reads the same backward as forward.
+     * A substring is a contiguous sequence of characters within the string.
+     * Example 2:
+     * Input: s = "aaa"
+     * Output: 6
+     * Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+     * @param s 1 <= s.length <= 1000
+     * @return
+     */
+    public static int countSubstrings(String s) {
+        int len = s.length();
+        boolean[][] dp = new boolean[len][len];
+        int result = 0;
+
+        for (int i = 0; i < len; i++) {
+            Arrays.fill(dp[i], true);
+        }
+
+        // dp[i][j]: true, i >= j; dp[i + 1][j - 1] && s[i] == s[j], otherwise
+        for (int i = len - 2; i >= 0; i--) {
+            for (int j = 1; j < len; j++) {
+                if (i < j) {
+                    dp[i][j] = dp[i + 1][j - 1] && s.charAt(i) == s.charAt(j);
+                }
+            }
+        }
+
+        for (int i = 0; i < len; i++) {
+            for (int j = len - 1; j >= i; j--) {
+                if (dp[i][j]) {
+                    result++;
+                }
+            }
+        }
+
+        return result;
+    }
+
 
 
     /**
