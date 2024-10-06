@@ -1,5 +1,7 @@
 package org.example.leetcode.classification;
 
+import org.example.leetcode.common.MountainArray;
+
 /**
  * @author jialu.yxl
  * @date 02/02/2023 14:51
@@ -9,6 +11,86 @@ public class BinarySearch {
 
     public static void main(String[] args) {
         System.out.println(splitArray(new int[] {10,5,13,4,8,4,5,11,14,9,16,10,20,8}, 8));
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/find-in-mountain-array/">1095. Find in Mountain Array</a>
+     * (This problem is an interactive problem.)
+     *
+     * You may recall that an array arr is a mountain array if and only if:
+     *
+     * arr.length >= 3
+     * There exists some i with 0 < i < arr.length - 1 such that:
+     * arr[0] < arr[1] < ... < arr[i - 1] < arr[i]
+     * arr[i] > arr[i + 1] > ... > arr[arr.length - 1]
+     * Given a mountain array mountainArr, return the minimum index such that mountainArr.get(index) == target. If such an index does not exist, return -1.
+     *
+     * You cannot access the mountain array directly. You may only access the array using a MountainArray interface:
+     *
+     * MountainArray.get(k) returns the element of the array at index k (0-indexed).
+     * MountainArray.length() returns the length of the array.
+     * Submissions making more than 100 calls to MountainArray.get will be judged Wrong Answer. Also, any solutions that attempt to circumvent the judge will result in disqualification.
+     *
+     * Input: array = [1,2,3,4,5,3,1], target = 3
+     * Output: 2
+     * Explanation: 3 exists in the array, at index=2 and index=5. Return the minimum index, which is 2.
+     * @param target 0 <= target <= 10^9
+     * @param mountainArr 3 <= mountain_arr.length() <= 10^4  0 <= mountain_arr.get(index) <= 10^9
+     * @return
+     */
+    public int findInMountainArray(int target, MountainArray mountainArr) {
+        int len = mountainArr.length();
+        int l = 0, r = len - 1;
+        int mid;
+        while (l < r) {
+            mid = l + (r - l) / 2;
+            if (mountainArr.get(mid) <= mountainArr.get(mid + 1)) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        int peakIndex = l;
+        int result = -1;
+        result = findInMountainArrayBinarySearch(target, mountainArr, len, peakIndex, true);
+        if (result == -1) {
+            result = findInMountainArrayBinarySearch(target, mountainArr, len, peakIndex, false);
+        }
+        return result;
+    }
+
+    private int findInMountainArrayBinarySearch(int target, MountainArray mountainArr, int len, int peakIndex, boolean searchLeft) {
+        if (searchLeft) {
+            int l = 0, r = peakIndex;
+            int mid;
+            while (l <= r) {
+                mid = l + (r - l) / 2;
+                int i = mountainArr.get(mid);
+                if (i == target) {
+                    return mid;
+                } else if (i < target) {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+        } else {
+            int l = peakIndex, r = len - 1;
+            int mid;
+            while (l <= r) {
+                mid = l + (r - l) / 2;
+                int i = mountainArr.get(mid);
+                if (i == target) {
+                    return mid;
+                } else if (i < target) {
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            }
+        }
+        return -1;
     }
 
     /**
