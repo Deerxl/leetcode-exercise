@@ -14,6 +14,31 @@ public class Maths {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/power-of-three/">326. Power of Three</a>
+     * Given an integer n, return true if it is a power of three. Otherwise, return false.
+     *
+     * An integer n is a power of three, if there exists an integer x such that n == 3x.
+     * @param n -2^31 <= n <= 2^31 - 1
+     * @return
+     */
+    public boolean isPowerOfThree(int n) {
+        if (n == 1) {
+            return true;
+        }
+
+        if (n <= 0 || n % 3 != 0) {
+            return false;
+        }
+
+        while (n % 3 == 0) {
+            n /= 3;
+        }
+
+        return n == 1;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/fraction-to-recurring-decimal/">166. Fraction to Recurring Decimal</a>
      * Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.
      * If the fractional part is repeating, enclose the repeating part in parentheses.
