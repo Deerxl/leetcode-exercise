@@ -13,6 +13,50 @@ public class Maths {
     }
 
 
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/jian-sheng-zi-ii-lcof/">LCR 132. 砍竹子 II</a>
+     * 现需要将一根长为正整数 bamboo_len 的竹子砍为若干段，每段长度均为 正整数。请返回每段竹子长度的 最大乘积 是多少。
+     *
+     * 答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。
+     * @param bamboo_len 2 <= bamboo_len <= 1000
+     * @return
+     */
+    public int cuttingBamboo(int bamboo_len) {
+        if (bamboo_len <= 3) {
+            return bamboo_len - 1;
+        }
+
+        int p = 1000000007;
+
+        int a = bamboo_len / 3, b = bamboo_len % 3;
+
+        long res = 1;
+        switch (b) {
+            case 0:
+                for (int i = 0; i < a; i++) {
+                    res = (res * 3) % p;
+                }
+                break;
+            case 1:
+                for (int i = 0; i < a - 1; i++) {
+                    res = (res * 3) % p;
+                }
+                res = (res * 4) % p;
+                break;
+            case 2:
+                for (int i = 0; i < a; i++) {
+                    res = (res * 3) % p;
+                }
+                res = (res * 2) % p;
+                break;
+        }
+
+        return (int) res;
+    }
+
+
     /**
      * <a href="https://leetcode.cn/problems/power-of-three/">326. Power of Three</a>
      * Given an integer n, return true if it is a power of three. Otherwise, return false.
