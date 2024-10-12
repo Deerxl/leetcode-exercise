@@ -10,10 +10,42 @@ import java.util.List;
 public class Dp {
 
     public static void main(String[] args) {
-        System.out.println(countSubstrings("abbab"));
+        System.out.println(cuttingBamboo(44));
 
 
 
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/jian-sheng-zi-lcof/description/">LCR 131. 砍竹子 I</a>
+     * 现需要将一根长为正整数 bamboo_len 的竹子砍为若干段，每段长度均为正整数。请返回每段竹子长度的最大乘积是多少。
+     * 示例 1：
+     * 输入: bamboo_len = 12
+     * 输出: 81
+     * @param bamboo_len 2 <= bamboo_len <= 58
+     * @return
+     */
+    public static int cuttingBamboo(int bamboo_len) {
+        int[] arr = new int[] {0, 1, 1, 2, 4, 6, 9, 12};
+        if (bamboo_len <= 7) {
+            return arr[bamboo_len];
+        }
+
+        int[] dp = new int[bamboo_len + 1];
+
+        System.arraycopy(arr, 0, dp, 0, 8);
+        dp[2] = 2;
+        dp[3] = 3;
+
+        for (int i = 8; i <= bamboo_len; i++) {
+            dp[i] = dp[i - 1];
+            for (int j = i - 1; j >= i / 2; j--) {
+                dp[i] = Math.max(dp[i], dp[j] * dp[i - j]);
+            }
+        }
+
+        return dp[bamboo_len];
     }
 
 
