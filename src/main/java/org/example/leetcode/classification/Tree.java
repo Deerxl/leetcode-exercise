@@ -24,6 +24,45 @@ public class Tree {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-postorder-traversal/">889. 根据前序和后序遍历构造二叉树</a>
+     * 给定两个整数数组，preorder 和 postorder ，其中 preorder 是一个具有 无重复 值的二叉树的前序遍历，postorder 是同一棵树的后序遍历，重构并返回二叉树。
+     * 如果存在多个答案，您可以返回其中 任何 一个。
+     * @param preorder 1 <= preorder.length <= 30 保证 preorder 和 postorder 是同一棵二叉树的前序遍历和后序遍历
+     * @param postorder postorder.length == preorder.length
+     * @return
+     */
+    public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
+
+        return constructFromPrePost(preorder, 0, preorder.length - 1,
+                postorder, 0, postorder.length - 1);
+    }
+
+    private TreeNode constructFromPrePost(int[] preorder, int preStart, int preEnd, int[] postorder, int postStart, int postEnd) {
+        if (preStart > preEnd) {
+            return null;
+        }
+
+        TreeNode root = new TreeNode(preorder[preStart]);
+        if (preStart == preEnd) {
+            return root;
+        }
+
+        int leftChildVal = preorder[preStart + 1];
+        int leftCount = 0;
+        for (int i = postStart; i <= postEnd; i++) {
+            leftCount++;
+            if (postorder[i] == leftChildVal) {
+                break;
+            }
+        }
+
+        root.left = constructFromPrePost(preorder, preStart + 1, preStart + leftCount, postorder, postStart, postStart + leftCount - 1);
+        root.right = constructFromPrePost(preorder, preStart + leftCount + 1, preEnd, postorder, postStart + leftCount, postEnd - 1);
+
+        return root;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/">235. Lowest Common Ancestor of a Binary Search Tree</a>
      * Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST.
      *
