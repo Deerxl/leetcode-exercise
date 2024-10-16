@@ -20,6 +20,45 @@ public class InterviewQuestions {
         System.out.println(isDeadLock(pairs));
     }
 
+
+    /**
+     * tiktok-2024/10/16 会议室问题，求最小的会议室数量
+     * @param intervals
+     * @return
+     */
+    public static int minMeetingRooms(int[][] intervals) {
+        if (intervals.length == 1) {
+            return 1;
+        }
+
+        int[][] pairs = Arrays.stream(intervals)
+                .sorted(new Comparator<int[]>() {
+                    @Override
+                    public int compare(int[] o1, int[] o2) {
+                        return o1[0] - o2[0];
+                    }
+                })
+                .toArray(int[][]::new);
+
+        int result = 1;
+        Queue<Integer> endTimeQueue = new PriorityQueue<>();
+        endTimeQueue.offer(pairs[0][1]);
+
+        for (int i = 1; i < pairs.length; i++) {
+            int startTime = pairs[i][0];
+            int endTime = pairs[i][1];
+
+            if (endTimeQueue.peek() < startTime) {
+                endTimeQueue.poll();
+            } else {
+                result++;
+            }
+            endTimeQueue.offer(endTime);
+        }
+
+        return result;
+    }
+
     /**
      * tiktok-2024/10/09
      * 给定一个二维数组，每个数组里有两个元素，例如['A', 'B']表示A依赖于B，判定是否会造成死锁
