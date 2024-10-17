@@ -16,6 +16,38 @@ public class StringAndArray {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/merge-intervals/description/?envType=study-plan-v2&envId=top-100-liked">56. Merge Intervals</a>
+     * Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+     * @param intervals 1 <= intervals.length <= 104 intervals[i].length == 2 0 <= starti <= endi <= 104
+     * @return
+     */
+    public int[][] merge_1017(int[][] intervals) {
+        if (intervals.length == 1) {
+            return intervals;
+        }
+
+        List<int[]> intervalList = Arrays.stream(intervals)
+                .sorted(Comparator.comparingInt(o -> o[0]))
+                .collect(Collectors.toList());
+
+        List<int[]> resultList = new ArrayList<>();
+        resultList.add(intervalList.get(0));
+
+        for (int i = 1; i < intervalList.size(); i++) {
+            int[] pair = intervalList.get(i);
+            if (pair[0] <= resultList.get(resultList.size() - 1)[1]) {
+                if (pair[1] > resultList.get(resultList.size() - 1)[1]) {
+                    resultList.get(resultList.size() - 1)[1] = pair[1];
+                }
+            } else {
+                resultList.add(pair);
+            }
+        }
+
+        return resultList.toArray(new int[resultList.size()][]);
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/maximum-subarray/?envType=study-plan-v2&envId=top-100-liked">53. Maximum Subarray</a>
      * Given an integer array nums, find the subarray with the largest sum, and return its sum.
      * @param nums 1 <= nums.length <= 105 -104 <= nums[i] <= 104
