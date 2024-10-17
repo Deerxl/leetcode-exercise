@@ -17,6 +17,37 @@ public class TwoPoints {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/trapping-rain-water/?envType=study-plan-v2&envId=top-100-liked">42. Trapping Rain Water</a>
+     * @param height n == height.length 1 <= n <= 2 * 104 0 <= height[i] <= 105
+     * @return
+     */
+    public int trap(int[] height) {
+        if (height.length <= 2) {
+            return 0;
+        }
+
+        int[] left = new int[height.length];
+        int[] right = new int[height.length];
+
+        left[0] = height[0];
+        for (int i = 1; i < height.length; i++) {
+            left[i] = Math.max(left[i - 1], height[i]);
+        }
+
+        right[height.length - 1] = height[height.length - 1];
+        for (int i = height.length - 2; i >= 0; i--) {
+            right[i] = Math.max(right[i + 1], height[i]);
+        }
+
+        int result = 0;
+        for (int i = 1; i < height.length - 1; i++) {
+            result += Math.min(left[i], right[i]) - height[i];
+        }
+
+        return result;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/palindromic-substrings/description/">647. Palindromic Substrings</a>
      * Given a string s, return the number of palindromic substrings in it.
      * A string is a palindrome when it reads the same backward as forward.
