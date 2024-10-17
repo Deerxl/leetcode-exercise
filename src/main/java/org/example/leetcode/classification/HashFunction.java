@@ -13,6 +13,36 @@ public class HashFunction {
         System.out.println(findRepeatedDnaSequences("AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&envId=top-100-liked">49. Group Anagrams</a>
+     * Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+     * Example 1:
+     *
+     * Input: strs = ["eat","tea","tan","ate","nat","bat"]
+     *
+     * Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+     * @param strs strs[i] consists of lowercase English letters.
+     * @return
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] charArray = str.toCharArray();
+            Arrays.sort(charArray);
+            String key = Arrays.toString(charArray);
+            if (map.containsKey(key)) {
+                map.getOrDefault(key, new ArrayList<>()).add(str);
+            } else {
+                List<String> list = new ArrayList<>();
+                list.add(str);
+                map.put(key, list);
+            }
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
     /**
      * <a href="https://leetcode.cn/problems/repeated-dna-sequences/">187. Repeated DNA Sequences</a>
      * The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.
