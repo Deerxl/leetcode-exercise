@@ -24,6 +24,25 @@ public class Tree {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/maximum-subarray/?envType=study-plan-v2&envId=top-100-liked">53. Maximum Subarray</a>
+     * Given an integer array nums, find the subarray with the largest sum, and return its sum.
+     * @param nums 1 <= nums.length <= 105 -104 <= nums[i] <= 104
+     * @return
+     */
+    public int maxSubArray(int[] nums) {
+        int curSum = nums[0];
+        int maxSum = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            curSum = Math.max(curSum + nums[i], nums[i]);
+            maxSum = Math.max(maxSum, curSum);
+        }
+
+        return maxSum;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-postorder-traversal/">889. 根据前序和后序遍历构造二叉树</a>
      * 给定两个整数数组，preorder 和 postorder ，其中 preorder 是一个具有 无重复 值的二叉树的前序遍历，postorder 是同一棵树的后序遍历，重构并返回二叉树。
      * 如果存在多个答案，您可以返回其中 任何 一个。
