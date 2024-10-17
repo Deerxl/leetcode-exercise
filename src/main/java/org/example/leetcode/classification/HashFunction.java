@@ -10,9 +10,43 @@ public class HashFunction {
 
 
     public static void main(String[] args) {
-        System.out.println(findRepeatedDnaSequences("AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"));
+        System.out.println(longestConsecutive(new int[] {100,4,200,1,3,2}));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/longest-consecutive-sequence/?envType=study-plan-v2&envId=top-100-liked">128. Longest Consecutive Sequence</a>
+     * @param nums 0 <= nums.length <= 10^5
+     * @return
+     */
+    public static int longestConsecutive(int[] nums) {
+        if (nums.length <= 1) {
+            return nums.length;
+        }
+
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
+        }
+
+
+        int result = 1;
+        int tmpResult = 0;
+        for (int num : set) {
+            // 没有比num更小的值，就说明连续序列从num开始
+            if (!set.contains(num - 1)) {
+                int curNum = num;
+                while (set.contains(curNum)) {
+                    tmpResult++;
+                    curNum++;
+                }
+                result = Math.max(result, tmpResult);
+                tmpResult = 0;
+            }
+        }
+
+        return result;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/group-anagrams/description/?envType=study-plan-v2&envId=top-100-liked">49. Group Anagrams</a>
