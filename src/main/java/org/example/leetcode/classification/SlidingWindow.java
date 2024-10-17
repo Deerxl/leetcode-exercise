@@ -33,27 +33,27 @@ public class SlidingWindow {
             return new ArrayList<>();
         }
 
-        int len = p.length();
         int[] pArr = new int[26];
-        for (int i = 0; i < len; i++) {
-            pArr[p.charAt(i) - 'a']++;
+        for (char c : p.toCharArray()) {
+            pArr[c - 'a']++;
         }
 
         int[] sArr = new int[26];
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < p.length(); i++) {
             sArr[s.charAt(i) - 'a']++;
         }
 
         List<Integer> result = new ArrayList<>();
-        if (Arrays.equals(sArr, pArr)) {
+        if (Arrays.equals(pArr, sArr)) {
             result.add(0);
         }
 
-        for (int i = len; i < s.length(); i++) {
-            sArr[s.charAt(i) - 'a']++;
-            sArr[s.charAt(i - len) - 'a']--;
+        for (int i = 1; i <= s.length() - p.length(); i++) {
+            sArr[s.charAt(i - 1) - 'a']--;
+            sArr[s.charAt(i + p.length() - 1) - 'a']++;
+
             if (Arrays.equals(sArr, pArr)) {
-                result.add(i - len + 1);
+                result.add(i);
             }
         }
 
