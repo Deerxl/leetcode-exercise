@@ -13,7 +13,23 @@ public class Maths {
     }
 
 
+    /**
+     * <a href="https://leetcode.cn/problems/rotate-array/?envType=study-plan-v2&envId=top-100-liked">189. Rotate Array</a>
+     * Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+     * @param nums 1 <= nums.length <= 105 -231 <= nums[i] <= 231 - 1
+     * @param k 0 <= k <= 105
+     */
+    public void rotate(int[] nums, int k) {
+        int mod = k % nums.length;
+        if (mod == 0) {
+            return;
+        }
 
+        int[] tmpArr = new int[nums.length];
+        System.arraycopy(nums, nums.length - mod, tmpArr, 0, mod);
+        System.arraycopy(nums, 0, tmpArr, mod, nums.length - mod);
+        System.arraycopy(tmpArr, 0, nums, 0, nums.length);
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/jian-sheng-zi-ii-lcof/">LCR 132. 砍竹子 II</a>
