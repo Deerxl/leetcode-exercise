@@ -16,6 +16,24 @@ public class StringAndArray {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/maximum-subarray/?envType=study-plan-v2&envId=top-100-liked">53. Maximum Subarray</a>
+     * Given an integer array nums, find the subarray with the largest sum, and return its sum.
+     * @param nums 1 <= nums.length <= 105 -104 <= nums[i] <= 104
+     * @return
+     */
+    public int maxSubArray53(int[] nums) {
+        int curSum = nums[0];
+        int maxSum = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            curSum = Math.max(curSum + nums[i], nums[i]);
+            maxSum = Math.max(maxSum, curSum);
+        }
+
+        return maxSum;
+    }
+
+    /**
      * <a href="https://leetcode.cn/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/">LCR 165. 解密数字</a>
      * 现有一串神秘的密文 ciphertext，经调查，密文的特点和规则如下：
      * 密文由非负整数组成
