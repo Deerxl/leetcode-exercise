@@ -15,6 +15,42 @@ public class SlidingWindow {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/sliding-window-maximum/description/?envType=study-plan-v2&envId=top-100-liked">239. Sliding Window Maximum</a>
+     * Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+     * Output: [3,3,5,5,6,7]
+     * @param nums 1 <= nums.length <= 105 -104 <= nums[i] <= 104
+     * @param k 1 <= k <= nums.length
+     * @return
+     */
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (k == 1) {
+            return nums;
+        }
+
+        Queue<int[]> queue = new PriorityQueue<>((o1, o2) -> o2[0] == o1[0] ? o1[1] - o2[1] : o2[0] - o1[0]);
+
+        for (int i = 0; i < k; i++) {
+            queue.offer(new int[] {nums[i], i});
+        }
+
+        int[] result = new int[nums.length - k + 1];
+        result[0] = queue.peek()[0];
+
+        for (int i = 1; i < nums.length - k + 1; i++) {
+            queue.offer(new int[] {nums[i + k - 1], i + k - 1});
+
+            while (queue.peek()[1] < i) {
+                queue.poll();
+            }
+
+            result[i] = queue.peek()[0];
+        }
+
+        return result;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/find-all-anagrams-in-a-string/">438. Find All Anagrams in a String</a>
      * Given two strings s and p, return an array of all the start indices of p's anagrams in s. You may return the answer in any order.
      * An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
