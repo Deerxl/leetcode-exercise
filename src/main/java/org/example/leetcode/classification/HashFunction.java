@@ -15,6 +15,72 @@ public class HashFunction {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/minimum-window-substring/?envType=study-plan-v2&envId=top-100-liked">76. Minimum Window Substring</a>
+     * Input: s = "ADOBECODEBANC", t = "ABC"
+     * Output: "BANC"
+     * Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
+     * @param s m == s.length n == t.length
+     * @param t 1 <= m, n <= 105 s and t consist of uppercase and lowercase English letters.
+     * @return
+     */
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length()) {
+            return "";
+        }
+
+        if (s.contains(t)) {
+            return t;
+        }
+
+        Map<Character, Integer> tMap = new HashMap<>();
+        Map<Character, Integer> sMap = new HashMap<>();
+
+        for (int i = 0; i < t.length(); i++) {
+            tMap.put(t.charAt(i), tMap.getOrDefault(t.charAt(i), 0) + 1);
+            sMap.put(s.charAt(i), sMap.getOrDefault(s.charAt(i), 0) + 1);
+        }
+
+        if (checkSMapContainTMap(sMap, tMap)) {
+            return s.substring(0, t.length());
+        }
+
+        int l = 0;
+        int resultLen = Integer.MAX_VALUE;
+        String result = "";
+        for (int i = t.length(); i < s.length(); i++) {
+            char c = s.charAt(i);
+            sMap.put(s.charAt(i), sMap.getOrDefault(s.charAt(i), 0) + 1);
+
+            if (!tMap.containsKey(c)) {
+                continue;
+            }
+
+            while (checkSMapContainTMap(sMap, tMap)) {
+                if (i - l + 1 < resultLen) {
+                    resultLen = i - l + 1;
+                    result = s.substring(l, i + 1);
+                }
+
+                sMap.put(s.charAt(l), sMap.get(s.charAt(l)) - 1);
+                l++;
+            }
+        }
+
+        return result;
+    }
+
+    private boolean checkSMapContainTMap(Map<Character, Integer> sMap, Map<Character, Integer> tMap) {
+        for (Map.Entry<Character, Integer> entry : tMap.entrySet()) {
+            if (sMap.getOrDefault(entry.getKey(), 0) < entry.getValue()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/longest-consecutive-sequence/?envType=study-plan-v2&envId=top-100-liked">128. Longest Consecutive Sequence</a>
      * @param nums 0 <= nums.length <= 10^5
      * @return
