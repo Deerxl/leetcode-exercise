@@ -24,6 +24,46 @@ public class Tree {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/path-sum-iii/?envType=study-plan-v2&envId=top-100-liked">437. Path Sum III</a>
+     * Given the root of a binary tree and an integer targetSum, return the number of paths where the sum of the values along the path equals targetSum.
+     *
+     * The path does not need to start or end at the root or a leaf, but it must go downwards (i.e., traveling only from parent nodes to child nodes).
+     * @param root The number of nodes in the tree is in the range [0, 1000]. -109 <= Node.val <= 109
+     * @param targetSum -1000 <= targetSum <= 1000
+     * @return
+     */
+    public int pathSum3(TreeNode root, int targetSum) {
+        if (root == null) {
+            return 0;
+        }
+
+        int result = pathSum3Dfs(root, targetSum);
+        result += pathSum3(root.left, targetSum);
+        result += pathSum3(root.right, targetSum);
+
+        return result;
+    }
+
+    private int pathSum3Dfs(TreeNode root, long targetSum) {
+        if (root == null) {
+            return 0 ;
+        }
+
+        int result = 0;
+        if (root.val == targetSum) {
+            result++;
+        }
+
+        result += pathSum3Dfs(root.left, targetSum - root.val);
+        result += pathSum3Dfs(root.right, targetSum - root.val);
+
+        return result;
+    }
+
+
+
+
+    /**
      * <a href="https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-postorder-traversal/">889. 根据前序和后序遍历构造二叉树</a>
      * 给定两个整数数组，preorder 和 postorder ，其中 preorder 是一个具有 无重复 值的二叉树的前序遍历，postorder 是同一棵树的后序遍历，重构并返回二叉树。
      * 如果存在多个答案，您可以返回其中 任何 一个。
