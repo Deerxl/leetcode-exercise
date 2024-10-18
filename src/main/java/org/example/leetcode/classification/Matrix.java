@@ -39,6 +39,96 @@ public class Matrix {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/set-matrix-zeroes/?envType=study-plan-v2&envId=top-100-liked">73. Set Matrix Zeroes</a>
+     * Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+     *
+     * You must do it in place.
+     * @param matrix m == matrix.length
+     * n == matrix[0].length
+     * 1 <= m, n <= 200
+     * -231 <= matrix[i][j] <= 231 - 1
+     */
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        boolean[] rowZeroArr = new boolean[m];
+        boolean[] colZeroArr = new boolean[n];
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    rowZeroArr[i] = true;
+                    colZeroArr[j] = true;
+                }
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (rowZeroArr[i] || colZeroArr[j]) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+
+
+    public void setZeroes_o1(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        boolean firstRowContainZero = false;
+        boolean firstColContainZero = false;
+
+        // 用两个字段判断首行、首列是否含0
+        for (int i = 0; i < m; i++) {
+            if (matrix[i][0] == 0) {
+                firstColContainZero = true;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (matrix[0][i] == 0) {
+                firstRowContainZero = true;
+            }
+        }
+
+        // 将首行、首列当作两个数组，存储当前行、列是否需要置为0
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+            }
+        }
+
+        // 开始写0
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[0][j] == 0 || matrix[i][0] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+
+        // 最后处理首行/首列的0
+        if (firstRowContainZero) {
+            for (int i = 0; i < n; i++) {
+                matrix[0][i] = 0;
+            }
+        }
+
+        if (firstColContainZero) {
+            for (int i = 0; i < m; i++) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/diagonal-traverse-ii/">1424. Diagonal Traverse II</a>
      * Given a 2D integer array nums, return all elements of nums in diagonal order as shown in the below images.
      * @param nums 1 <= nums.length <= 105
