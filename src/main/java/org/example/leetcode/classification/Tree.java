@@ -37,7 +37,10 @@ public class Tree {
             return 0;
         }
 
+        // 包含root
         int result = pathSum3Dfs(root, targetSum);
+
+        // 不包含root，左右子树递归
         result += pathSum3(root.left, targetSum);
         result += pathSum3(root.right, targetSum);
 
