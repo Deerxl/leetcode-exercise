@@ -38,6 +38,31 @@ public class LinkedList {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/reverse-linked-list/?envType=study-plan-v2&envId=top-100-liked">206. Reverse Linked List</a>
+     * @param head  The number of nodes in the list is the range [0, 5000].
+     * @return
+     */
+    public ListNode reverseList_1018(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode tail = head;
+        ListNode next = head.next;
+        tail.next = null;
+
+        while (next != null) {
+            ListNode curNode = next;
+            next = next.next;
+            curNode.next = tail;
+            tail = curNode;
+        }
+
+        return tail;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/middle-of-the-linked-list/">876. Middle of the Linked List</a>
      * Given the head of a singly linked list, return the middle node of the linked list.
      * If there are two middle nodes, return the second middle node.
