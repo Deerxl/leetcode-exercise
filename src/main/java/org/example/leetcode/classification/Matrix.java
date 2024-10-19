@@ -39,6 +39,87 @@ public class Matrix {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/rotting-oranges/?envType=study-plan-v2&envId=top-100-liked">994. Rotting Oranges</a>
+     * You are given an m x n grid where each cell can have one of three values:
+     *
+     * 0 representing an empty cell,
+     * 1 representing a fresh orange, or
+     * 2 representing a rotten orange.
+     * Every minute, any fresh orange that is 4-directionally adjacent to a rotten orange becomes rotten.
+     *
+     * Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return -1.
+     * @param grid m == grid.length
+     * n == grid[i].length
+     * 1 <= m, n <= 10
+     * grid[i][j] is 0, 1, or 2.
+     * @return
+     */
+    public int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        Queue<int[]> rotQueue = new ArrayDeque<>();
+        boolean hasOrigin = false;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 2) {
+                    rotQueue.offer(new int[]{i, j});
+                } else if (grid[i][j] == 1) {
+                    hasOrigin = true;
+                }
+            }
+        }
+        
+        if (rotQueue.isEmpty()) {
+            return hasOrigin ? -1 : 0;
+        }
+        
+        int curRoundCount = rotQueue.size();
+        int nextRoundCount = 0;
+        boolean changed = false;
+        int[][] dirs = new int[][] {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        int nextRow, nextCol;
+        int result = 0;
+        while (!rotQueue.isEmpty()) {
+            for (int i = 0; i < curRoundCount; i++) {
+                int[] rotCoordinate = rotQueue.poll();
+
+                for (int[] dir : dirs) {
+                    nextRow = rotCoordinate[0] + dir[0];
+                    nextCol = rotCoordinate[1] + dir[1];
+
+                    if (nextRow >= 0 && nextRow < m && nextCol >= 0 && nextCol < n && grid[nextRow][nextCol] == 1) {
+                        changed = true;
+                        grid[nextRow][nextCol] = 2;
+                        rotQueue.offer(new int[]{nextRow, nextCol});
+                        nextRoundCount++;
+                    }
+                }
+            }
+
+            if (changed) {
+                result++;
+                changed = false;
+                curRoundCount = nextRoundCount;
+                nextRoundCount = 0;
+            } else {
+                break;
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    return -1;
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
      * <a href="https://leetcode.cn/problems/set-matrix-zeroes/?envType=study-plan-v2&envId=top-100-liked">73. Set Matrix Zeroes</a>
      * Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
      *
