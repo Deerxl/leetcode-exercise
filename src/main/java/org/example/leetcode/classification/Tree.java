@@ -24,6 +24,42 @@ public class Tree {
 
 
     /**
+     * <a href="https://leetcode.cn/problems/binary-tree-maximum-path-sum/">124. Binary Tree Maximum Path Sum</a>
+     * Given the root of a binary tree, return the maximum path sum of any non-empty path.
+     * @param root The number of nodes in the tree is in the range [1, 3 * 104].
+     * @return
+     */
+    public int maxPathSum_1019(TreeNode root) {
+        maxPathSumResult = root.val;
+
+        maxPathSumDfs(root);
+
+        return maxPathSumResult;
+    }
+
+    int maxPathSumResult;
+
+    private int maxPathSumDfs(TreeNode root) {
+        maxPathSumResult = Math.max(root.val, maxPathSumResult);
+
+        int left = 0, right = 0;
+        if (root.left != null) {
+            left = maxPathSumDfs(root.left);
+        }
+        if (root.right != null) {
+            right = maxPathSumDfs(root.right);
+        }
+
+        int result = Math.max(Math.max(left, right) + root.val, root.val);
+        maxPathSumResult = Math.max(maxPathSumResult, Math.max(result, left + right + root.val));
+
+        return result;
+    }
+
+
+
+
+    /**
      * <a href="https://leetcode.cn/problems/path-sum-iii/?envType=study-plan-v2&envId=top-100-liked">437. Path Sum III</a>
      * Given the root of a binary tree and an integer targetSum, return the number of paths where the sum of the values along the path equals targetSum.
      *
