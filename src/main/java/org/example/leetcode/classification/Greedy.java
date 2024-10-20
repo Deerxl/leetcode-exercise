@@ -1,9 +1,6 @@
 package org.example.leetcode.classification;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author jialu.yxl
@@ -13,6 +10,46 @@ public class Greedy {
 
     public static void main(String[] args) {
         System.out.println(canCompleteCircuit(new int[] {5,1,2,3,4}, new int[] {4,4,1,5,1}));
+    }
+
+
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/course-schedule-iii/">630. Course Schedule III</a>
+     * There are n different online courses numbered from 1 to n. You are given an array courses where courses[i] = [durationi, lastDayi] indicate that the ith course should be taken continuously for durationi days and must be finished before or on lastDayi.
+     *
+     * You will start on the 1st day and you cannot take two or more courses simultaneously.
+     *
+     * Return the maximum number of courses that you can take.
+     * @param courses 1 <= courses.length <= 104
+     * 1 <= durationi, lastDayi <= 104
+     * @return
+     */
+    public int scheduleCourse(int[][] courses) {
+        // 对于两门课，c1 (d1, l1), c2 (d2, l2), l1 < l2, 则先学习c1是最优的
+        Arrays.sort(courses, Comparator.comparingInt(o -> o[1]));
+
+        PriorityQueue<Integer> queue = new PriorityQueue<>((o1, o2) -> o2 - o1);
+        int totalTime = 0;
+        for (int[] course : courses) {
+            int curDuration = course[0];
+            int curEndTime = course[1];
+
+            // 满足条件，则放入队列
+            if (totalTime + curDuration <= curEndTime) {
+                queue.offer(curDuration);
+                totalTime += curDuration;
+            } else if (!queue.isEmpty() && queue.peek() > curDuration) {
+                // 不满足条件，则把最长的课退掉，加入当前的课
+                int time = queue.poll();
+                totalTime -= time;
+                totalTime += curDuration;
+                queue.offer(curDuration);
+            }
+        }
+
+        return queue.size();
     }
 
 
