@@ -10,9 +10,67 @@ public class BackTracing {
 
 
     public static void main(String[] args) {
-        System.out.println(partition("cbbbcc"));
+
+        List<List<Integer>> lists = permuteUnique(new int[]{1, 2, 3});
+        System.out.println(lists.size());
+        System.out.println(lists);
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/permutations-ii/description/">47. Permutations II</a>
+     * Given a collection of numbers, nums, that might contain duplicates, return all possible unique permutations in any order.
+     * Example 1:
+     *
+     * Input: nums = [1,1,2]
+     * Output:
+     * [[1,1,2],
+     *  [1,2,1],
+     *  [2,1,1]]
+     * @param nums 1 <= nums.length <= 8
+     * -10 <= nums[i] <= 10
+     * @return
+     */
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+
+        permuteUniqueResult = new ArrayList<>();
+        permuteUniqueList = new ArrayList<>();
+
+        for (int num : nums) {
+            permuteUniqueList.add(num);
+        }
+        permuteUnique(0, nums.length - 1);
+
+        return permuteUniqueResult;
+    }
+
+    static List<Integer> permuteUniqueList;
+    static List<List<Integer>> permuteUniqueResult;
+    static void permuteUnique(int start, int end) {
+        if (start == end) {
+            permuteUniqueResult.add(new ArrayList<>(permuteUniqueList));
+            return;
+        }
+
+        Set<Integer> set = new HashSet<>();
+        for (int i = start; i <= end; i++) {
+            if (set.contains(permuteUniqueList.get(i))) {
+                continue;
+            }
+
+            set.add(permuteUniqueList.get(i));
+            swap(permuteUniqueList, i, start);
+            permuteUnique(start + 1, end);
+            swap(permuteUniqueList, i, start);
+        }
+    }
+
+    static void swap(List<Integer> list, int i, int j) {
+        int temp = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, temp);
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/palindrome-partitioning/">131. Palindrome Partitioning</a>
