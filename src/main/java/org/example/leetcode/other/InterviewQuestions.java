@@ -1,5 +1,8 @@
 package org.example.leetcode.other;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.*;
 
 /**
@@ -16,6 +19,69 @@ public class InterviewQuestions {
         };
 
         System.out.println(maxPoints(points));
+    }
+
+    /**
+     * 滴滴-2024-11-07 二面
+     * D代表司机，O代表订单，最后一列代表分数，求最优解。
+     * D1 -> O1、O2、O3  2
+     * D1 -> O1、O2         1.5
+     * D1 -> O1                1
+     * D2 -> O2、O3        1.2
+     * D2 -> O3               0.8
+     * D2 -> O2               0.7
+     */
+    @Setter
+    @Getter
+    public static class DeliveryDO {
+        private Integer driverId;
+
+        private List<Integer> jobIdList;
+
+        private Double score;
+
+        public DeliveryDO(Integer driverId, List<Integer> jobIdList, Double score) {
+            this.driverId = driverId;
+            this.jobIdList = jobIdList;
+            this.score = score;
+        }
+    }
+
+    public static double getMaxScore(List<DeliveryDO> deliveryDOList, int totalJobCount) {
+
+        getMaxScoreDfs(deliveryDOList, 0, totalJobCount, new HashSet<>(), 0);
+
+        return maxScore;
+    }
+
+    static double maxScore = 0;
+    private static void getMaxScoreDfs(List<DeliveryDO> deliveryDOList,
+                                       int startIndex,
+                                       int totalJobCount,
+                                       Set<Integer> jobIdSet,
+                                       double curScore) {
+        if (startIndex >= deliveryDOList.size() || jobIdSet.size() == totalJobCount) {
+            if (curScore > maxScore) {
+                maxScore = curScore;
+            }
+            return;
+        }
+
+        for (int i = startIndex; i < deliveryDOList.size(); i++) {
+            DeliveryDO deliveryDO = deliveryDOList.get(i);
+            List<Integer> curJobList = deliveryDO.getJobIdList();
+            if (curJobList.stream().anyMatch(jobIdSet::contains)) {
+                continue;
+            }
+
+            jobIdSet.addAll(deliveryDO.getJobIdList());
+            curScore += deliveryDO.getScore();
+
+            getMaxScoreDfs(deliveryDOList, i + 1, totalJobCount, jobIdSet, curScore);
+
+            deliveryDO.getJobIdList().forEach(jobIdSet::remove);
+            curScore -= deliveryDO.getScore();
+        }
     }
 
     /**
