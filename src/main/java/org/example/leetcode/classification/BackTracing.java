@@ -11,11 +11,103 @@ public class BackTracing {
 
     public static void main(String[] args) {
 
-        List<List<Integer>> lists = permuteUnique(new int[]{1, 2, 3});
-        System.out.println(lists.size());
-        System.out.println(lists);
+        System.out.println(removeInvalidParentheses(")(f"));
     }
 
+
+    /**
+     * <a href="https://leetcode.cn/problems/remove-invalid-parentheses/">301. Remove Invalid Parentheses</a>
+     * Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
+     *
+     * Example 1:
+     *
+     * Input: s = "()())()"
+     * Output: ["(())()","()()()"]
+     * @param s 1 <= s.length <= 25 s consists of lowercase English letters and parentheses '(' and ')'.
+     * @return Return a list of unique strings that are valid with the minimum number of removals. You may return the answer in any order.
+     */
+    public static List<String> removeInvalidParentheses(String s) {
+        int len = s.length();
+        int lRemoveCount = 0;
+        int rRemoveCount = 0;
+
+        for (int i = 0; i < len; i++) {
+            if (s.charAt(i) == '(') {
+                lRemoveCount++;
+            } else if (s.charAt(i) == ')') {
+                if (lRemoveCount == 0) {
+                    rRemoveCount++;
+                } else {
+                    lRemoveCount--;
+                }
+            }
+        }
+
+        removeInvalidParenthesesResult = new ArrayList<>();
+
+        removeInvalidParentheses(s, 0, lRemoveCount, rRemoveCount);
+
+        if (removeInvalidParenthesesResult.isEmpty()) {
+            removeInvalidParenthesesResult.add("");
+        }
+
+        return removeInvalidParenthesesResult;
+    }
+
+    static List<String> removeInvalidParenthesesResult;
+
+    private static void removeInvalidParentheses(String s, int startIndex, int lRemoveCount, int rRemoveCount) {
+        if (lRemoveCount == 0 && rRemoveCount == 0) {
+            if (checkValidParentheses(s)) {
+                removeInvalidParenthesesResult.add(s);
+            }
+        }
+
+        for (int i = startIndex; i < s.length(); i++) {
+            if (i != startIndex && s.charAt(i) == s.charAt(i - 1)) {
+                continue;
+            }
+
+            if (lRemoveCount + rRemoveCount > s.length() - i) {
+                break;
+            }
+
+            if (s.charAt(i) == '(' && lRemoveCount > 0) {
+                lRemoveCount--;
+
+                String tmpStr = s.substring(0, i) + s.substring(i + 1);
+                removeInvalidParentheses(tmpStr, i , lRemoveCount, rRemoveCount);
+
+                lRemoveCount++;
+            }
+
+            if (s.charAt(i) == ')' && lRemoveCount >= 0) {
+                rRemoveCount--;
+
+                String tmpStr = s.substring(0, i) + s.substring(i + 1);
+                removeInvalidParentheses(tmpStr, i, lRemoveCount, rRemoveCount);
+
+                rRemoveCount++;
+            }
+        }
+    }
+
+    private static boolean checkValidParentheses(String s) {
+        int count = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                count++;
+            } else if (s.charAt(i) == ')') {
+                count--;
+                if (count < 0) {
+                    return false;
+                }
+            }
+        }
+
+        return count == 0;
+    }
 
     /**
      * <a href="https://leetcode.cn/problems/permutations-ii/description/">47. Permutations II</a>
