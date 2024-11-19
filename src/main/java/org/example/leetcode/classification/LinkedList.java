@@ -19,21 +19,71 @@ public class LinkedList {
         // root.right = new Node(5);
         // treeToDoublyList(root);
 
-        Node node1 = new Node(7);
-        node1.random = null;
-        Node node2 = new Node(13);
-        node1.next = node2;
-        node2.random = node1;
-        Node node3 = new Node(11);
-        node2.next = node3;
-        Node node4 = new Node(10);
-        node3.next = node4;
-        node4.random = node3;
-        Node node5 = new Node(1);
-        node4.next = node5;
-        node5.random = node1;
+        // Node node1 = new Node(7);
+        // node1.random = null;
+        // Node node2 = new Node(13);
+        // node1.next = node2;
+        // node2.random = node1;
+        // Node node3 = new Node(11);
+        // node2.next = node3;
+        // Node node4 = new Node(10);
+        // node3.next = node4;
+        // node4.random = node3;
+        // Node node5 = new Node(1);
+        // node4.next = node5;
+        // node5.random = node1;
+        //
+        // System.out.println(copyRandomList(node1));
 
-        System.out.println(copyRandomList(node1));
+        ListNode head = new ListNode(1);
+        head.next = new ListNode(2);
+        head.next.next = new ListNode(3);
+        head.next.next.next = new ListNode(4);
+        head.next.next.next.next = new ListNode(5);
+
+        reverseBetween_1119(head, 2, 4);
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/reverse-linked-list-ii/description/">92. Reverse Linked List II</a>
+     * Given the head of a singly linked list and two integers left and right where left <= right, reverse the nodes of the list from position left to position right, and return the reversed list.
+     * @param head
+     * @param left
+     * @param right
+     * @return
+     */
+    public static ListNode reverseBetween_1119(ListNode head, int left, int right) {
+        if (right <= left || head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode pre = new ListNode();
+        pre.next = head;
+
+        ListNode dummy = pre;
+        for (int i = 1; i < left; i++) {
+            dummy = dummy.next;
+        }
+
+        ListNode curHead = reverseBetween_1119(dummy.next, right - left + 1);
+        dummy.next = curHead;
+
+        return pre.next;
+    }
+
+    private static ListNode reverseBetween_1119(ListNode head, int count) {
+        ListNode dummy = head;
+        ListNode tail = dummy;
+        ListNode next = dummy.next;
+        for (int i = 0; i < count - 1; i++) {
+            tail.next = next.next;
+            next.next = dummy;
+            dummy = next;
+            next = tail.next;
+        }
+
+        return dummy;
     }
 
 
