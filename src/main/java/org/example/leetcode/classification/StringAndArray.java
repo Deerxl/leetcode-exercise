@@ -10,8 +10,58 @@ import java.util.stream.Collectors;
 public class StringAndArray {
 
     public static void main(String[] args) {
-        System.out.println(checkInclusion("abc", "ccccbbbbaaaa"));
-        // System.out.println(compress(new char[] {'a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}));
+        System.out.println(-1 % 3);
+        System.out.println(-2 % 3);
+        System.out.println(-3 % 3);
+        System.out.println();
+
+        System.out.println(canArrange(new int[] {3,8,7,2}, 10));
+    }
+
+
+    /**
+     * <a href="https://leetcode.cn/problems/check-if-array-pairs-are-divisible-by-k/description/">1497. Check If Array Pairs Are Divisible by k</a>
+     * Given an array of integers arr of even length n and an integer k.
+     * We want to divide the array into exactly n / 2 pairs such that the sum of each pair is divisible by k.
+     * Return true If you can find a way to do that or false otherwise.
+     * Example 1:
+     * Input: arr = [1,2,3,4,5,10,6,7,8,9], k = 5
+     * Output: true
+     * Explanation: Pairs are (1,9),(2,8),(3,7),(4,6) and (5,10).
+     * @param arr -109 <= arr[i] <= 109
+     * @param k 1 <= k <= 105
+     * @return
+     */
+    public static boolean canArrange(int[] arr, int k) {
+        if (arr == null || arr.length == 0 || arr.length % 2 != 0) {
+            return false;
+        }
+
+        if (k == 1) {
+            return true;
+        }
+
+        int[] modArr = new int[k];
+        for (int num : arr) {
+            int mod = (num % k + k) % k;
+            modArr[mod]++;
+        }
+
+        if (modArr[0] % 2 != 0) {
+            return false;
+        }
+
+        if (k % 2 == 0 && modArr[k / 2] % 2 != 0) {
+            return false;
+        }
+
+        for (int i = 1; i < k; i++) {
+            if (modArr[i] != modArr[k - i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
