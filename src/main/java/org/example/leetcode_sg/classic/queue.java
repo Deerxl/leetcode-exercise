@@ -2,7 +2,7 @@ package org.example.leetcode_sg.classic;
 
 import java.util.*;
 
-public class query {
+public class queue {
 
 
     public static void main(String[] args) {
