@@ -33,7 +33,7 @@ public class ShuffleAnArray {
 
     public int[] shuffle() {
         for (int i = 0; i < shuffles.length; i++) {
-            int index = random.nextInt(i, shuffles.length);
+            int index = random.nextInt(shuffles.length - 1) + i;
             int tmp = shuffles[i];
             shuffles[i] = shuffles[index];
             shuffles[index] = tmp;
