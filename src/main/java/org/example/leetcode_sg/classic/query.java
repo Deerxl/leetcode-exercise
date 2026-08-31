@@ -4,6 +4,44 @@ import java.util.*;
 
 public class query {
 
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(topKFrequent(new int[]{1, 1, 1, 2, 2, 3}, 2)));
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/top-k-frequent-elements/">347. Top K Frequent Elements</a>
+     *
+     * @param nums Given an integer array nums
+     * @param k    an integer k,
+     * @return return the k most frequent elements. You may return the answer in any order.
+     */
+    public static int[] topKFrequent(int[] nums, int k) {
+        if (k >= nums.length) {
+            return nums;
+        }
+
+        Map<Integer, Integer> maps = new HashMap<>();
+        for (int i : nums) {
+            maps.put(i, maps.getOrDefault(i, 0) + 1);
+        }
+
+        Queue<int[]> queue = new PriorityQueue<>((o1, o2) -> o1[1] - o2[1]);
+        for (Map.Entry<Integer, Integer> entry : maps.entrySet()) {
+            queue.offer(new int[]{entry.getKey(), entry.getValue()});
+            if (queue.size() > k) {
+                queue.poll();
+            }
+        }
+        int[] result = new int[k];
+        int count = 0;
+        while (!queue.isEmpty()) {
+            result[count] = queue.poll()[0];
+            count++;
+        }
+        return result;
+    }
+
     /**
      * <a href="https://leetcode.com/problems/meeting-rooms-iii/">2402. Meeting Rooms III</a>
      *
