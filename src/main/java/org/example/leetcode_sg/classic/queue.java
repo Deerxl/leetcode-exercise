@@ -1,5 +1,7 @@
 package org.example.leetcode_sg.classic;
 
+import org.example.leetcode.common.ListNode;
+
 import java.util.*;
 
 public class queue {
@@ -7,6 +9,39 @@ public class queue {
 
     public static void main(String[] args) {
         System.out.println(Arrays.toString(topKFrequent(new int[]{1, 1, 1, 2, 2, 3}, 2)));
+    }
+
+
+    /**
+     * <a href="https://leetcode.com/problems/merge-k-sorted-lists/description/">23. Merge k Sorted Lists</a>
+     * @param lists
+     * @return
+     */
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        if (lists.length == 1) {
+            return lists[0];
+        }
+        ListNode result = new ListNode();
+        ListNode dummy = result;
+        Queue<ListNode> queue = new PriorityQueue<>(Comparator.comparingInt(o -> o.val));
+        for (ListNode node : lists) {
+            if (node != null) {
+                queue.offer(node);
+            }
+        }
+        while (!queue.isEmpty()) {
+            ListNode node = queue.poll();
+            dummy.next = new ListNode(node.val);
+            dummy = dummy.next;
+            if (node.next != null) {
+                queue.offer(node.next);
+            }
+        }
+
+        return result.next;
     }
 
     /**
