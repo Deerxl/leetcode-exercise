@@ -7,6 +7,68 @@ import java.util.*;
 public class arrays {
 
     public static void main(String[] args) {
+        int[] nums = new int[]{2,3,1,1,4};
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/jump-game-ii/?envType=study-plan-v2&envId=top-interview-150">45. Jump Game II</a>
+     * @param nums
+     * @return
+     */
+    public int jump(int[] nums) {
+        if (nums.length <= 2) {
+            return nums.length - 1;
+        }
+        int steps = 0;
+        int maxReachIndex = nums[0];
+        int curMaxReachIndex = nums[0];
+        int i = 0;
+        while (i < nums.length - 1) {
+            steps++;
+            curMaxReachIndex = maxReachIndex;
+            if (curMaxReachIndex >= nums.length - 1) {
+                break;
+            }
+            for (int j = i + 1; j <= curMaxReachIndex; j++) {
+                maxReachIndex = Math.max(nums[j] + j, maxReachIndex);
+            }
+            i = curMaxReachIndex;
+        }
+        return steps;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/jump-game/?envType=study-plan-v2&envId=top-interview-150">55. Jump Game</a>
+     * @param nums
+     * @return
+     */
+    public boolean canJump(int[] nums) {
+        int i = 0;
+        int maxReachIndex = nums[0];
+        while (i <= maxReachIndex && i < nums.length) {
+            maxReachIndex = Math.max(maxReachIndex, nums[i] + i);
+            i++;
+        }
+        return i >= nums.length;
+    }
+
+
+    /**
+     * <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/?envType=study-plan-v2&envId=top-interview-150">122. Best Time to Buy and Sell Stock II</a>
+     * @param prices
+     * @return
+     */
+    public int maxProfit2(int[] prices) {
+        if (prices.length <= 1) {
+            return 0;
+        }
+        int result = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1]) {
+                result += prices[i] - prices[i - 1];
+            }
+        }
+        return result;
     }
 
     /**
