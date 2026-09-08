@@ -11,6 +11,26 @@ public class arrays {
     }
 
     /**
+     * <a href="https://leetcode.com/problems/h-index/solutions/4928640/python-2-approaches-sorting-counting-sum-h8le/?envType=study-plan-v2&envId=top-interview-150">274. H-Index</a>
+     * @param citations
+     * @return
+     */
+    public int hIndex(int[] citations) {
+        int result = 0;
+        int curIndex = 0;
+        Arrays.sort(citations);
+        for (int i = 0; i < citations.length; i++) {
+            curIndex = Math.min(citations[i], citations.length - i);
+            result = Math.max(result, curIndex);
+            if (result >= citations.length - i) {
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * <a href="https://leetcode.com/problems/jump-game-ii/?envType=study-plan-v2&envId=top-interview-150">45. Jump Game II</a>
      * @param nums
      * @return
