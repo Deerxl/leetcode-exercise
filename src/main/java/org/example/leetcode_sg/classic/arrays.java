@@ -11,7 +11,91 @@ public class arrays {
         System.out.println(Arrays.toString(productExceptSelf(nums)));
     }
 
+    /**
+     * <a href="https://leetcode.com/problems/trapping-rain-water/description/?envType=study-plan-v2&envId=top-interview-150">42. Trapping Rain Water</a>
+     * @param height
+     * @return
+     */
+    public int trap(int[] height) {
+        if (height.length <= 2) {
+            return 0;
+        }
+        int[] left = new int[height.length];
+        left[0] = height[0];
+        for (int i = 1; i < height.length; i++) {
+            left[i] = Math.max(left[i - 1], height[i]);
+        }
+        int[] right = new int[height.length];
+        right[height.length - 1] = height[height.length - 1];
+        for (int i = height.length - 2; i >= 0; i--) {
+            right[i] = Math.max(right[i + 1], height[i]);
+        }
 
+        int result = 0;
+        for (int i = 0; i < height.length; i++) {
+            result += Math.min(left[i], right[i]) - height[i];
+        }
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/candy/description/?envType=study-plan-v2&envId=top-interview-150">135. Candy</a>
+     * @param ratings
+     * @return
+     */
+    public int candy(int[] ratings) {
+        int result = 0;
+        int[] candies = new int[ratings.length];
+        Arrays.fill(candies, 1);
+        for (int i = 1; i < ratings.length; i++) {
+            if (ratings[i] > ratings[i - 1] && candies[i] <= candies[i - 1]) {
+                candies[i] = candies[i - 1] + 1;
+            }
+        }
+        for (int i = ratings.length - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1] && candies[i] <= candies[i + 1]) {
+                candies[i] = candies[i + 1] + 1;
+            }
+        }
+
+        for (int val : candies) {
+            result += val;
+        }
+
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/gas-station/?envType=study-plan-v2&envId=top-interview-150">134. Gas Station</a>
+     *
+     * @param gas
+     * @param cost
+     * @return
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int remain = 0;
+        int index = 0;
+        int sum = 0;
+        boolean find = false;
+        for (int i = 0; i < gas.length; i++) {
+            remain = remain - cost[i] + gas[i];
+            if (sum + gas[i] - cost[i] >= 0) {
+                if (!find) {
+                    index = i;
+                    find = true;
+                }
+                sum += gas[i] - cost[i];
+            } else {
+                sum = 0;
+                find = false;
+            }
+        }
+        if (remain < 0) {
+            return -1;
+        }
+
+        return index;
+    }
 
 
     /**
