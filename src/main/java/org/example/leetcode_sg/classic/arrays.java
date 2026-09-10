@@ -7,8 +7,41 @@ import java.util.*;
 public class arrays {
 
     public static void main(String[] args) {
-        int[] nums = new int[]{2,3,1,1,4};
+        int[] nums = new int[]{-1,-1,0,-3,-3};
+        System.out.println(Arrays.toString(productExceptSelf(nums)));
     }
+
+
+
+
+    /**
+     * <a href="https://leetcode.com/problems/product-of-array-except-self/description/?envType=study-plan-v2&envId=top-interview-150">238. Product of Array Except Self</a>
+     * @param nums
+     * @return
+     */
+    public static int[] productExceptSelf(int[] nums) {
+        int zeroCount = 0;
+        int mulTotalExceptZero = 1;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                zeroCount++;
+            } else {
+                mulTotalExceptZero *= nums[i];
+            }
+        }
+
+        int[] result = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0 && zeroCount == 1) {
+                result[i] = mulTotalExceptZero;
+            } else if (zeroCount == 0) {
+                result[i] = mulTotalExceptZero / nums[i];
+            }
+        }
+
+        return result;
+    }
+
 
     /**
      * <a href="https://leetcode.com/problems/h-index/solutions/4928640/python-2-approaches-sorting-counting-sum-h8le/?envType=study-plan-v2&envId=top-interview-150">274. H-Index</a>
