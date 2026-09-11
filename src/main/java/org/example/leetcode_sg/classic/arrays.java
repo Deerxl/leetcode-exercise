@@ -1,6 +1,7 @@
 package org.example.leetcode_sg.classic;
 
 import org.example.leetcode_sg.common.Interval;
+import org.testng.collections.Maps;
 
 import java.util.*;
 
@@ -9,6 +10,41 @@ public class arrays {
     public static void main(String[] args) {
         int[] nums = new int[]{-1,-1,0,-3,-3};
         System.out.println(Arrays.toString(productExceptSelf(nums)));
+    }
+
+
+
+
+    /**
+     * <a href="https://leetcode.com/problems/roman-to-integer/description/?envType=study-plan-v2&envId=top-interview-150">13. Roman to Integer</a>
+     * @param s
+     * @return
+     */
+    public int romanToInt(String s) {
+        Map<Character, Integer> map = new HashMap<>() {
+            {
+                put('I', 1);
+                put('V', 5);
+                put('X', 10);
+                put('L', 50);
+                put('C', 100);
+                put('D', 500);
+                put('M', 1000);
+            }
+        };
+        int i = 0;
+        int result = 0;
+        while (i < s.length()) {
+            char c = s.charAt(i);
+            if (i < s.length() - 1 && map.get(c) < map.get(s.charAt(i + 1))) {
+                result -= map.get(c);
+            } else {
+                result += map.get(c);
+            }
+
+            i++;
+        }
+        return result;
     }
 
     /**
