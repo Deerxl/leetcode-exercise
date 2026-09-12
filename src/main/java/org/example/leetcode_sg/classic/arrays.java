@@ -13,6 +13,176 @@ public class arrays {
     }
 
     /**
+     * <a href="https://leetcode.com/problems/text-justification/description/?envType=study-plan-v2&envId=top-interview-150">68. Text Justification</a>
+     * @param words
+     * @param maxWidth
+     * @return
+     */
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> result = new ArrayList<>();
+        int curWordsLength = 0, avgSpaceLen = 0, modSpaceLen = 0, curSpaceLen = 0;
+        List<String> curWords = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            curWordsLength += word.length();
+            curWords.add(word);
+            if (i == words.length - 1 || curWordsLength + curWords.size() + words[i + 1].length() > maxWidth) {
+                StringBuilder sb = new StringBuilder();
+                if (curWords.size() == 1) {
+                    sb.append(curWords.get(0));
+                    for (int j = 0; j < maxWidth - curWords.get(0).length(); j++) {
+                        sb.append(" ");
+                    }
+                } else {
+                    avgSpaceLen = (maxWidth - curWordsLength) / (curWords.size() - 1);
+                    modSpaceLen = (maxWidth - curWordsLength) % (curWords.size() - 1);
+
+                    for (int j = 0; j < curWords.size(); j++) {
+                        sb.append(curWords.get(j));
+                        if (i == words.length - 1) {
+                            if (j < curWords.size() - 1) {
+                                sb.append(" ");
+                            } else {
+                                curSpaceLen = maxWidth - curWordsLength - curWords.size() + 1;
+                                for (int k = 0; k < curSpaceLen; k++) {
+                                    sb.append(" ");
+                                }
+                            }
+                        } else {
+                            if (j < curWords.size() - 1) {
+                                curSpaceLen = avgSpaceLen + (modSpaceLen-- > 0 ? 1 : 0);
+                                for (int k = 0; k < curSpaceLen; k++) {
+                                    sb.append(" ");
+                                }
+                            }
+                        }
+                    }
+                }
+                result.add(sb.toString());
+                curWordsLength = 0;
+                curWords.clear();
+            }
+        }
+
+
+        return result;
+    }
+
+
+    /**
+     * <a href="https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/description/?envType=study-plan-v2&envId=top-interview-150">28. Find the Index of the First Occurrence in a String</a>
+     * @param haystack
+     * @param needle
+     * @return
+     */
+    public int strStr(String haystack, String needle) {
+        // if (!haystack.contains(needle)) {
+        //     return -1;
+        // }
+
+        return haystack.indexOf(needle);
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/zigzag-conversion/description/?envType=study-plan-v2&envId=top-interview-150">6. Zigzag Conversion</a>
+     * @param s
+     * @param numRows
+     * @return
+     */
+    public String convert(String s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+        int batchNumCount = 2 * numRows - 2;
+        int batchColCount = numRows - 1;
+        Map<Integer, StringBuilder> map = new HashMap<>();
+        for (int i = 0; i < numRows; i++) {
+            map.put(i, new StringBuilder());
+        }
+        int index = 0, curRow = 0;
+        for (int i = 0; i <= s.length() / batchNumCount; i++) {
+            index = i * batchNumCount;
+            for (curRow = 0; curRow < numRows && index < s.length(); curRow++) {
+                map.put(curRow, map.get(curRow).append(s.charAt(index)));
+                index++;
+            }
+            for (curRow = numRows - 2; curRow > 0 && index < s.length(); curRow--) {
+                map.put(curRow, map.get(curRow).append(s.charAt(index)));
+                index++;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            sb.append(map.get(i));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/reverse-words-in-a-string/?envType=study-plan-v2&envId=top-interview-150">151. Reverse Words in a String</a>
+     * @param s
+     * @return
+     */
+    public String reverseWords(String s) {
+        StringBuilder sb = new StringBuilder();
+        int i = s.length() - 1;
+        while (i >= 0) {
+            char c = s.charAt(i);
+            if (c == ' ') {
+                i--;
+                continue;
+            }
+            int j = i - 1;
+            while (j >= 0 && s.charAt(j) != ' ') {
+                j--;
+            }
+            sb.append(s.substring(j + 1, i + 1)).append(' ');
+            i = j - 1;
+        }
+        String result = sb.toString();
+        return result.substring(0, result.length() - 1);
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/longest-common-prefix/?envType=study-plan-v2&envId=top-interview-150">14. Longest Common Prefix</a>
+     * @param strs
+     * @return
+     */
+    public String longestCommonPrefix(String[] strs) {
+        StringBuilder result = new StringBuilder();
+        boolean same = true;
+        for (int i = 0; i < strs[0].length(); i++) {
+            char c = strs[0].charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                if (i >= strs[j].length() || strs[j].charAt(i) != c) {
+                    same = false;
+                    break;
+                }
+            }
+            if (!same) {
+                break;
+            }
+            result.append(c);
+        }
+        return result.toString();
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/length-of-last-word/description/?envType=study-plan-v2&envId=top-interview-150">58. Length of Last Word</a>
+     * @param s
+     * @return
+     */
+    public int lengthOfLastWord(String s) {
+        s = s.trim();
+        if (s.length() < 3) {
+            return s.length();
+        }
+        String[] arr = s.split(" ");
+        return arr[arr.length - 1].length();
+    }
+
+    /**
      * <a href="https://leetcode.com/problems/integer-to-roman/?envType=study-plan-v2&envId=top-interview-150">12. Integer to Roman</a>
      *
      * @param num
