@@ -12,7 +12,30 @@ public class arrays {
         System.out.println(Arrays.toString(productExceptSelf(nums)));
     }
 
+    /**
+     * <a href="https://leetcode.com/problems/integer-to-roman/?envType=study-plan-v2&envId=top-interview-150">12. Integer to Roman</a>
+     *
+     * @param num
+     * @return
+     *
+     * time & space complexity: O(1)
+     */
+    public String intToRoman(int num) {
+        String[] symbols = new String[]{"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        int[] numbers = new int[]{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        int index = 0;
+        StringBuilder sb = new StringBuilder();
 
+        while (index < numbers.length && num > 0) {
+            while (num >= numbers[index]) {
+                sb.append(symbols[index]);
+                num -= numbers[index];
+            }
+            index++;
+        }
+
+        return sb.toString();
+    }
 
 
     /**
