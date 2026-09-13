@@ -1,11 +1,10 @@
 package org.example.leetcode_sg.classic;
 
 import org.example.leetcode_sg.common.Interval;
-import org.testng.collections.Maps;
 
 import java.util.*;
 
-public class arrays {
+public class StringAndArray {
 
     public static void main(String[] args) {
         int[] nums = new int[]{-1,-1,0,-3,-3};

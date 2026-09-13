@@ -4,7 +4,7 @@ import org.example.leetcode.common.ListNode;
 
 import java.util.*;
 
-public class queue {
+public class QueueQuestions {
 
 
     public static void main(String[] args) {

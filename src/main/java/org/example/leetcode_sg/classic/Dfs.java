@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class dfs {
+public class Dfs {
 
     public static void main(String[] args) {
         // System.out.println(mostBooked(3, new int[][]{{3, 7},{12, 19},{16, 17},{1, 17},{5, 6}}));
