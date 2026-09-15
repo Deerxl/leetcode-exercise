@@ -4,6 +4,82 @@ import java.util.*;
 
 public class SlidingWindows {
 
+    public static void main(String[] args) {
+        String s = "acbbaca";
+        String t = "aba";
+        System.out.println("minWindow: " + minWindow(s, t));
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/minimum-window-substring/?envType=study-plan-v2&envId=top-interview-150">76. Minimum Window Substring</a>
+     * Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".
+     *
+     * The testcases will be generated such that the answer is unique.
+     * @param s m == s.length
+     * n == t.length
+     * 1 <= m, n <= 105
+     * s and t consist of uppercase and lowercase English letters.
+     * @param t
+     * @return
+     */
+    public static String minWindow(String s, String t) {
+        if (t.length() > s.length()) {
+            return "";
+        }
+        if (s.contains(t)) {
+            return t;
+        }
+        int left = 0;
+        int minLen = Integer.MAX_VALUE;
+        String result = "";
+        Map<Character, Integer> expectedMap = new HashMap<>();
+        Map<Character, Integer> windowMap = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            expectedMap.put(c, expectedMap.getOrDefault(c, 0) + 1);
+        }
+
+        int requiredCount = expectedMap.size();
+        int formedCount = 0;
+
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            if (expectedMap.containsKey(c)) {
+                int count = windowMap.getOrDefault(c, 0) + 1;
+                windowMap.put(c, count);
+                if (count == expectedMap.get(c)) {
+                    formedCount++;
+                }
+            }
+
+            while (formedCount == requiredCount) {
+                int curLen = right - left + 1;
+                if (curLen < minLen) {
+                    minLen = curLen;
+                    result = s.substring(left, right + 1);
+                }
+
+                char firstC = s.charAt(left);
+                left++;
+
+                if (windowMap.containsKey(firstC)) {
+                    int firstCVal = windowMap.get(firstC) - 1;
+                    if (firstCVal == 0) {
+                        windowMap.remove(firstC);
+                    } else {
+                        windowMap.put(firstC, firstCVal);
+                    }
+
+                    if (firstCVal < expectedMap.get(firstC)) {
+                        formedCount--;
+                    }
+                }
+            }
+        }
+
+
+        return result;
+    }
+
 
     /**
      * <a href="https://leetcode.com/problems/substring-with-concatenation-of-all-words/?envType=study-plan-v2&envId=top-interview-150">30. Substring with Concatenation of All Words</a>
