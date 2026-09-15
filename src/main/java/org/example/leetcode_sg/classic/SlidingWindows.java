@@ -1,4 +1,4 @@
-package org.example.leetcode_sg;
+package org.example.leetcode_sg.classic;
 
 import java.util.*;
 
