@@ -6,6 +6,61 @@ import java.util.List;
 
 public class MatrixProblems {
 
+    /**
+     * <a href="https://leetcode.com/problems/game-of-life/?envType=study-plan-v2&envId=top-interview-150">289. Game of Life</a>
+     * @param board
+     */
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int val = board[i][j];
+                int neighbourLives = getNeighbourLives(board, i, j, m, n);
+                if (val == 1) {
+                    if (neighbourLives < 2 || neighbourLives > 3) {
+                        board[i][j] = 1;
+                    } else if (neighbourLives == 2 || neighbourLives == 3) {
+                        board[i][j] = 3;
+                    }
+                } else if (val == 0) {
+                    if (neighbourLives == 3) {
+                        board[i][j] = 2;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = board[i][j] >> 1;
+            }
+        }
+    }
+
+    int getNeighbourLives(int[][] board, int i, int j, int m, int n) {
+        int lives = 0;
+        int[][] dirs = new int[][]{{0, 1}, {1, 0}, {-1, 0}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+        for (int[] dir : dirs) {
+            int newI = i + dir[0];
+            int newJ = j + dir[1];
+
+            if (newI < 0 || newI >= m || newJ < 0 || newJ >= n) {
+                continue;
+            }
+
+            if ((newI <= i && newJ <= j) || newI < i) {
+                if (board[newI][newJ] == 1 || board[newI][newJ] == 3) {
+                    lives += 1;
+                }
+            } else {
+                if (board[newI][newJ] == 1) {
+                    lives += 1;
+                }
+            }
+        }
+        return lives;
+    }
 
     /**
      * <a href="https://leetcode.com/problems/set-matrix-zeroes/?envType=study-plan-v2&envId=top-interview-150">73. Set Matrix Zeroes</a>
