@@ -6,6 +6,31 @@ import java.util.List;
 
 public class TwoPointers {
 
+    /**
+     * <a href="https://leetcode.com/problems/happy-number/?envType=study-plan-v2&envId=top-interview-150">202. Happy Number</a>
+     * @param n
+     * @return
+     */
+    public boolean isHappy(int n) {
+        int slow = n, fast = n;
+        do {
+            slow = square(slow);
+            fast = square(square(fast));
+        } while (slow != fast);
+
+        return slow == 1;
+    }
+
+    int square(int n) {
+        int sum = 0;
+        while (n > 0) {
+            int div = n / 10;
+            int mod = n % 10;
+            sum += mod * mod;
+            n = div;
+        }
+        return sum;
+    }
 
     /**
      * <a href="https://leetcode.com/problems/3sum/?envType=study-plan-v2&envId=top-interview-150">15. 3Sum</a>
