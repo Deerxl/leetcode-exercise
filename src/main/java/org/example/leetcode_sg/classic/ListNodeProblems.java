@@ -3,8 +3,209 @@ package org.example.leetcode_sg.classic;
 import org.example.leetcode_sg.common.ListNode;
 import org.example.leetcode_sg.common.Node;
 
+import java.util.List;
+
 public class ListNodeProblems {
 
+    public static void main(String[] args) {
+        ListNode head = new ListNode(2);
+        head.next = new ListNode(1);
+        partition(head, 2);
+    }
+
+
+    /**
+     * <a href="https://leetcode.com/problems/partition-list/?envType=study-plan-v2&envId=top-interview-150">86. Partition List</a>
+     * @param head
+     * @param x
+     * @return
+     */
+    public static ListNode partition(ListNode head, int x) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode pre = new ListNode();
+        pre.next = head;
+
+        ListNode greaterPre = new ListNode();
+        boolean findGreatPre = false;
+        ListNode lessPre = new ListNode();
+        ListNode lessTail = null;
+        ListNode tmp = pre;
+        while (tmp.next != null) {
+            if (tmp.next.val >= x) {
+                if (!findGreatPre) {
+                    findGreatPre = true;
+                    greaterPre.next = tmp.next;
+                }
+                tmp = tmp.next;
+            } else {
+                if (lessTail == null) {
+                    lessTail = tmp.next;
+                    lessPre.next = lessTail;
+                    tmp.next = tmp.next.next;
+                    lessTail.next = null;
+                } else {
+                    lessTail.next = tmp.next;
+                    lessTail = lessTail.next;
+                    tmp.next = tmp.next.next;
+                    lessTail.next = null;
+                }
+            }
+        }
+
+        if (lessTail != null) {
+            pre.next = lessPre.next;
+            lessTail.next = greaterPre.next;
+        }
+        return pre.next;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/rotate-list/?envType=study-plan-v2&envId=top-interview-150">61. Rotate List</a>
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode tmp = head;
+        int count = 0;
+        while (tmp != null) {
+            count++;
+            tmp = tmp.next;
+        }
+        k = k % count;
+        if (k == 0) {
+            return head;
+        }
+
+        ListNode pre = new ListNode();
+        pre.next = head;
+        tmp = pre;
+
+        for (int i = 0; i < count - k; i++) {
+            tmp = tmp.next;
+        }
+        ListNode copyHead = head;
+        pre.next = tmp.next;
+        tmp.next = null;
+        tmp = pre.next;
+        while (tmp.next != null) {
+            tmp = tmp.next;
+        }
+        tmp.next = copyHead;
+
+        return pre.next;
+
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/description/?envType=study-plan-v2&envId=top-interview-150">82. Remove Duplicates from Sorted List II</a>
+     * @param head
+     * @return
+     */
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode pre = new ListNode();
+        pre.next = head;
+        ListNode preCopy = pre;
+        ListNode cur = head;
+        int curVal = cur.val;
+        while (cur != null && cur.next != null) {
+            curVal = cur.val;
+            if (curVal == cur.next.val) {
+                do {
+                    cur = cur.next;
+                } while (cur != null && cur.val == curVal);
+                preCopy.next = cur;
+                cur = preCopy.next;
+            } else {
+                preCopy = preCopy.next;
+                cur = preCopy.next;
+            }
+        }
+
+        return pre.next;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/?envType=study-plan-v2&envId=top-interview-150">19. Remove Nth Node From End of List</a>
+     * @param head
+     * @param n
+     * @return
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode copyHead = head;
+        int count = 0;
+        while (copyHead != null) {
+            count++;
+            copyHead = copyHead.next;
+        }
+        ListNode pre = new ListNode();
+        pre.next = head;
+        copyHead = pre;
+        for (int i = 0; i < count - n; i++) {
+            copyHead = copyHead.next;
+        }
+        copyHead.next = copyHead.next.next;
+        return pre.next;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/reverse-nodes-in-k-group/description/?envType=study-plan-v2&envId=top-interview-150">25. Reverse Nodes in k-Group</a>
+     * @param head
+     * @param k
+     * @return
+     */
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (k == 1) {
+            return head;
+        }
+
+        ListNode pre = new ListNode();
+        pre.next = head;
+        ListNode dummy = pre;
+
+        while (pre.next != null) {
+            ListNode tmpNode = pre;
+            boolean canReverse = true;
+            for (int i = 0; i < k; i++) {
+                tmpNode = tmpNode.next;
+                if (tmpNode == null) {
+                    canReverse = false;
+                    break;
+                }
+            }
+            if (!canReverse) {
+                break;
+            }
+
+            ListNode post = tmpNode.next;
+            tmpNode.next = null;
+
+            ListNode tail = pre.next;
+            ListNode tailNext;
+            ListNode tailPost;
+            for (int i = 1; i < k; i++) {
+                tailNext = tail.next;
+                tailPost = tailNext.next;
+                tail.next = tailPost;
+                tailNext.next = pre.next;
+                pre.next = tailNext;
+            }
+            pre = tail;
+            pre.next = post;
+        }
+
+        return dummy.next;
+    }
 
     /**
      * <a href="https://leetcode.com/problems/reverse-linked-list-ii/submissions/2170962098/?envType=study-plan-v2&envId=top-interview-150">92. Reverse Linked List II</a>
