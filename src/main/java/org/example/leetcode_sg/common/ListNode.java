@@ -6,8 +6,6 @@ public class ListNode {
 
 
     public ListNode() {
-        val = 0;
-        next = null;
     }
 
     public ListNode(int x) {

@@ -5,6 +5,41 @@ import org.example.leetcode_sg.common.Node;
 
 public class ListNodeProblems {
 
+
+    /**
+     * <a href="https://leetcode.com/problems/reverse-linked-list-ii/submissions/2170962098/?envType=study-plan-v2&envId=top-interview-150">92. Reverse Linked List II</a>
+     * @param head
+     * @param left
+     * @param right
+     * @return
+     */
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if (left >= right || head == null) {
+            return head;
+        }
+
+        ListNode pre = new ListNode();
+        pre.next = head;
+        ListNode dummyHead = pre;
+        for (int i = 1; i < left; i++) {
+            pre = pre.next;
+        }
+        ListNode tail = pre.next;
+        ListNode curFirst = tail;
+        ListNode tailNext;
+        ListNode post;
+        for (int i = 0; i < right - left; i++) {
+            tailNext = tail.next;
+            post = tailNext.next;
+            tail.next = post;
+            tailNext.next = curFirst;
+            curFirst = tailNext;
+        }
+        pre.next = curFirst;
+
+        return dummyHead.next;
+    }
+
     /**
      * <a href="https://leetcode.com/problems/copy-list-with-random-pointer/?envType=study-plan-v2&envId=top-interview-150">138. Copy List with Random Pointer</a>
      * @param head
