@@ -2,8 +2,99 @@ package org.example.leetcode_sg.classic;
 
 import org.example.leetcode_sg.common.TreeNode;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 public class Trees {
 
+
+    /**
+     * <a href="https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/?envType=study-plan-v2&envId=top-interview-150">117. Populating Next Right Pointers in Each Node II</a>
+     * @param root
+     * @return
+     */
+    public Node connect(Node root) {
+        if (root == null) {
+            return null;
+        }
+        Queue<Node> levelNodes = new ArrayDeque<>();
+        levelNodes.offer(root);
+        while (!levelNodes.isEmpty()) {
+            int curLevelCount = levelNodes.size();
+            for (int i = 0; i < curLevelCount; i++) {
+                Node node = levelNodes.poll();
+                if (i < curLevelCount - 1) {
+                    node.next = levelNodes.peek();
+                }
+                if (node.left != null) {
+                    levelNodes.offer(node.left);
+                }
+                if (node.right != null) {
+                    levelNodes.offer(node.right);
+                }
+            }
+        }
+        return root;
+    }
+
+    static class Node {
+        public int val;
+        public Node left;
+        public Node right;
+        public Node next;
+
+        public Node() {
+        }
+
+        public Node(int _val) {
+            val = _val;
+        }
+
+        public Node(int _val, Node _left, Node _right, Node _next) {
+            val = _val;
+            left = _left;
+            right = _right;
+            next = _next;
+        }
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/?envType=study-plan-v2&envId=top-interview-150">106. Construct Binary Tree from Inorder and Postorder Traversal</a>
+     * @param inorder
+     * @param postorder
+     * @return
+     */
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return buildTreeFromInAndPostOrder(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
+    }
+
+    public TreeNode buildTreeFromInAndPostOrder(int[] inorder, int inStart, int inEnd, int[] postorder, int postStart, int postEnd) {
+        if (inEnd < inStart || postEnd < postStart) {
+            return null;
+        }
+        int rootVal = postorder[postEnd];
+        TreeNode root = new TreeNode(rootVal);
+        int inOrderLeftEndIndex = inStart;
+        while (inOrderLeftEndIndex <= inEnd && inorder[inOrderLeftEndIndex] != rootVal) {
+            inOrderLeftEndIndex++;
+        }
+        inOrderLeftEndIndex--;
+        int leftLen = inOrderLeftEndIndex - inStart + 1;
+
+        if (leftLen <= 0) {
+            root.left = null;
+        } else {
+            root.left = buildTreeFromInAndPostOrder(inorder, inStart, inOrderLeftEndIndex, postorder, postStart, postStart + leftLen - 1);
+        }
+
+        int inOrderRightStart = inOrderLeftEndIndex + 2;
+        if (inOrderRightStart > inEnd) {
+            root.right = null;
+        } else {
+            root.right = buildTreeFromInAndPostOrder(inorder, inOrderRightStart, inEnd, postorder, postStart + leftLen, postEnd - 1);
+        }
+        return root;
+    }
 
     /**
      * <a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/?envType=study-plan-v2&envId=top-interview-150">105. Construct Binary Tree from Preorder and Inorder Traversal</a>
@@ -11,7 +102,7 @@ public class Trees {
      * @param inorder
      * @return
      */
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
+    public TreeNode buildTreeFromPreAndInOrder(int[] preorder, int[] inorder) {
         return buildTreeFromPreAndInOrder(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
     }
 
