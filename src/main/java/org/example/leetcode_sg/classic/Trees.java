@@ -9,6 +9,28 @@ public class Trees {
 
 
     /**
+     * <a href="https://leetcode.com/problems/flatten-binary-tree-to-linked-list/?envType=study-plan-v2&envId=top-interview-150">114. Flatten Binary Tree to Linked List</a>
+     * @param root
+     */
+    public void flatten(TreeNode root) {
+        TreeNode tmp = root;
+        while (tmp != null) {
+            if (tmp.left != null) {
+                TreeNode rightHead = tmp.right;
+                TreeNode leftTail = tmp.left;
+                while (leftTail.right != null) {
+                    leftTail = leftTail.right;
+                }
+                tmp.right = tmp.left;
+                tmp.left = null;
+                leftTail.right = rightHead;
+
+            }
+            tmp = tmp.right;
+        }
+    }
+
+    /**
      * <a href="https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/?envType=study-plan-v2&envId=top-interview-150">117. Populating Next Right Pointers in Each Node II</a>
      * @param root
      * @return
