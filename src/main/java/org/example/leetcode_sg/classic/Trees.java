@@ -9,6 +9,53 @@ public class Trees {
 
 
     /**
+     * <a href="https://leetcode.com/problems/sum-root-to-leaf-numbers/?envType=study-plan-v2&envId=top-interview-150">129. Sum Root to Leaf Numbers</a>
+     * @param root
+     * @return
+     */
+    public int sumNumbers(TreeNode root) {
+        return sumNumbers(root, 0);
+    }
+
+    int sumNumbers(TreeNode root, int curSum) {
+        if (root == null) {
+            return curSum;
+        }
+        if (root.left == null && root.right == null) {
+            return curSum * 10 + root.val;
+        }
+        if (root.left == null) {
+            return sumNumbers(root.right, curSum * 10 + root.val);
+        }
+        if (root.right == null) {
+            return sumNumbers(root.left, curSum * 10 + root.val);
+        }
+        return sumNumbers(root.left, curSum * 10 + root.val) + sumNumbers(root.right, curSum * 10 + root.val);
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/path-sum/?envType=study-plan-v2&envId=top-interview-150">112. Path Sum</a>
+     * @param root
+     * @param targetSum
+     * @return
+     */
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return false;
+        }
+        if (root.left == null && root.right == null) {
+            return root.val == targetSum;
+        }
+        if (root.left == null) {
+            return hasPathSum(root.right, targetSum - root.val);
+        }
+        if (root.right == null) {
+            return hasPathSum(root.left, targetSum - root.val);
+        }
+        return hasPathSum(root.right, targetSum - root.val) || hasPathSum(root.left, targetSum - root.val);
+    }
+
+    /**
      * <a href="https://leetcode.com/problems/flatten-binary-tree-to-linked-list/?envType=study-plan-v2&envId=top-interview-150">114. Flatten Binary Tree to Linked List</a>
      * @param root
      */
