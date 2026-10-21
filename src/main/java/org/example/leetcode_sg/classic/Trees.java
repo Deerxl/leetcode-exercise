@@ -9,6 +9,49 @@ public class Trees {
 
 
     /**
+     * <a href="https://leetcode.com/problems/binary-tree-maximum-path-sum/?envType=study-plan-v2&envId=top-interview-150">124. Binary Tree Maximum Path Sum</a>
+     *
+     * A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. Note that the path does not need to pass through the root.
+     *
+     * The path sum of a path is the sum of the node's values in the path.
+     *
+     * Given the root of a binary tree, return the maximum path sum of any non-empty path.
+     * @param root
+     * @return
+     */
+    public int maxPathSum(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return root.val;
+        }
+        maxPathSumSingleNode(root);
+        return maxPathSum;
+    }
+
+    int maxPathSum = Integer.MIN_VALUE;
+
+    public int maxPathSumSingleNode(TreeNode root) {
+        if (root.left == null && root.right == null) {
+            maxPathSum = Math.max(maxPathSum, root.val);
+            return root.val;
+        }
+        int leftNodeMax = 0, rightNodeMax = 0;
+        if (root.left != null) {
+            leftNodeMax = maxPathSumSingleNode(root.left);
+        }
+        if (root.right != null) {
+            rightNodeMax = maxPathSumSingleNode(root.right);
+        }
+        int rootNodeMax = Math.max(root.val, root.val + Math.max(leftNodeMax, rightNodeMax));
+        maxPathSum = Math.max(maxPathSum, Math.max(rootNodeMax, leftNodeMax + rightNodeMax + root.val));
+        return rootNodeMax;
+    }
+
+
+
+    /**
      * <a href="https://leetcode.com/problems/sum-root-to-leaf-numbers/?envType=study-plan-v2&envId=top-interview-150">129. Sum Root to Leaf Numbers</a>
      * @param root
      * @return
