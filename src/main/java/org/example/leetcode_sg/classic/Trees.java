@@ -2,12 +2,213 @@ package org.example.leetcode_sg.classic;
 
 import org.example.leetcode_sg.common.TreeNode;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.*;
 
 public class Trees {
 
 
+    /**
+     * <a href="https://leetcode.com/problems/minimum-absolute-difference-in-bst/?envType=study-plan-v2&envId=top-interview-150">530. Minimum Absolute Difference in BST</a>
+     * Given the root of a Binary Search Tree (BST), return the minimum absolute difference between the values of any two different nodes in the tree.
+     * @param root The number of nodes in the tree is in the range [2, 104].
+     * @return
+     */
+    public int getMinimumDifference(TreeNode root) {
+        List<Integer> inOrder = new ArrayList<>();
+        inOrder(root, inOrder);
+        int minDiff = Integer.MAX_VALUE;
+        for (int i = 0; i < inOrder.size() - 1; i++) {
+            minDiff = Math.min(minDiff, inOrder.get(i + 1) - inOrder.get(i));
+            if (minDiff == 1) {
+                return 1;
+            }
+        }
+        return minDiff;
+    }
+
+    public void inOrder(TreeNode root, List<Integer> inOrderList) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left, inOrderList);
+        inOrderList.add(root.val);
+        inOrder(root.right, inOrderList);
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/description/?envType=study-plan-v2&envId=top-interview-150">103. Binary Tree Zigzag Level Order Traversal</a>
+     * @param root
+     * @return
+     */
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int levelSize = 1;
+        boolean reverse = false;
+        while (!queue.isEmpty()) {
+            levelSize = queue.size();
+            List<Integer> levelNodeVal = new ArrayList<>();
+            for (int i = 0; i < levelSize; i++) {
+                if (reverse) {
+                    TreeNode node = queue.pollLast();
+                    levelNodeVal.add(node.val);
+                    if (node.right != null) {
+                        queue.addFirst(node.right);
+                    }
+                    if (node.left != null) {
+                        queue.addFirst(node.left);
+                    }
+                } else {
+                    TreeNode node = queue.pollFirst();
+                    levelNodeVal.add(node.val);
+                    if (node.left != null) {
+                        queue.addLast(node.left);
+                    }
+                    if (node.right != null) {
+                        queue.addLast(node.right);
+                    }
+                }
+            }
+            reverse = !reverse;
+            result.add(levelNodeVal);
+        }
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/binary-tree-level-order-traversal/?envType=study-plan-v2&envId=top-interview-150">102. Binary Tree Level Order Traversal</a>
+     * @param root
+     * @return
+     */
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        int currentSize = 0, nextSize = 1;
+        while (!queue.isEmpty()) {
+            currentSize = nextSize;
+            nextSize = 0;
+            List<Integer> levelNodes = new ArrayList<>();
+            for (int i = 0; i < currentSize; i++) {
+                TreeNode node = queue.poll();
+                levelNodes.add(node.val);
+                if (node.left != null) {
+                    queue.offer(node.left);
+                    nextSize++;
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                    nextSize++;
+                }
+            }
+            result.add(levelNodes);
+        }
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/average-of-levels-in-binary-tree/?envType=study-plan-v2&envId=top-interview-150">637. Average of Levels in Binary Tree</a>
+     * @param root
+     * @return
+     */
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        int currentLevelSize = 0, nextLevelSize = 1;
+        while (!queue.isEmpty()) {
+            currentLevelSize = nextLevelSize;
+            nextLevelSize = 0;
+            long sum = 0;
+            for (int i = 0; i < currentLevelSize; i++) {
+                TreeNode node = queue.poll();
+                sum += node.val;
+                if (node.left != null) {
+                    nextLevelSize++;
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    nextLevelSize++;
+                    queue.offer(node.right);
+                }
+            }
+            result.add((double) sum / currentLevelSize);
+        }
+
+        return result;
+    }
+
+
+    /**
+     * <a href="https://leetcode.com/problems/binary-tree-right-side-view/?envType=study-plan-v2&envId=top-interview-150">199. Binary Tree Right Side View</a>
+     * @param root
+     * @return
+     */
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        int currentLevelSize = 0, nextLevelSize = 1;
+        while (!queue.isEmpty()) {
+            currentLevelSize = nextLevelSize;
+            nextLevelSize = 0;
+            for (int i = 0; i < currentLevelSize; i++) {
+                TreeNode node = queue.poll();
+                if (i == currentLevelSize - 1) {
+                    result.add(node.val);
+                }
+                if (node.left != null) {
+                    queue.offer(node.left);
+                    nextLevelSize += 1;
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                    nextLevelSize += 1;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/?envType=study-plan-v2&envId=top-interview-150">236. Lowest Common Ancestor of a Binary Tree</a>
+     * @param root All Node.val are unique.
+     * p != q
+     * p and q will exist in the tree.
+     * @param p
+     * @param q
+     * @return
+     */
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || p == root || q == root) {
+            return root;
+        }
+
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left != null && right != null) {
+            return root;
+        }
+        if (right != null) {
+            return right;
+        }
+        return left;
+    }
 
     /**
      * <a href="https://leetcode.com/problems/count-complete-tree-nodes/?envType=study-plan-v2&envId=top-interview-150">222. Count Complete Tree Nodes</a>
