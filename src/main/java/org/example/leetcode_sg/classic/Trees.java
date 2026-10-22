@@ -10,6 +10,40 @@ public class Trees {
 
 
     /**
+     * <a href="https://leetcode.com/problems/count-complete-tree-nodes/?envType=study-plan-v2&envId=top-interview-150">222. Count Complete Tree Nodes</a>
+     *
+     * Given the root of a complete binary tree, return the number of the nodes in the tree.
+     *
+     * According to Wikipedia, every level, except possibly the last, is completely filled in a complete binary tree, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+     *
+     * Design an algorithm that runs in less than O(n) time complexity.
+     * @param root
+     * @return
+     */
+    public static int countNodes(TreeNode root) {
+        int height = calTreeHeight(root);
+        if (height == 0) {
+            return 0;
+        }
+        int rightHeight = calTreeHeight(root.right);
+        if (height - 1 == rightHeight) {
+            return (1 << (height - 1)) + countNodes(root.right);
+        } else {
+            return (1 << (height - 2)) + countNodes(root.left);
+        }
+    }
+
+
+    public static int calTreeHeight(TreeNode root) {
+        int count = 0;
+        while (root != null) {
+            count++;
+            root = root.left;
+        }
+        return count;
+    }
+
+    /**
      * <a href="https://leetcode.com/problems/binary-tree-maximum-path-sum/?envType=study-plan-v2&envId=top-interview-150">124. Binary Tree Maximum Path Sum</a>
      *
      * A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. Note that the path does not need to pass through the root.
