@@ -6,6 +6,73 @@ import java.util.*;
 
 public class Trees {
 
+    /**
+     * <a href="https://leetcode.com/problems/validate-binary-search-tree/?envType=study-plan-v2&envId=top-interview-150">98. Validate Binary Search Tree</a>
+     * @param root
+     * @return
+     */
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    private boolean isValidBST(TreeNode root, int minValue, int maxValue) {
+        if (root == null) {
+            return true;
+        }
+        if (minValue > maxValue || root.val < minValue || root.val > maxValue) {
+            return false;
+        }
+
+        if (root.left == null && root.right == null) {
+            return true;
+        }
+
+        if (root.left != null && root.val == Integer.MIN_VALUE) {
+            return false;
+        }
+
+        if (root.right != null && root.val == Integer.MAX_VALUE) {
+            return false;
+        }
+
+        return isValidBST(root.right, root.val + 1, maxValue) && isValidBST(root.left, minValue, root.val - 1);
+    }
+
+    /**
+     * <a href="https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/?envType=study-plan-v2&envId=top-interview-150">230. Kth Smallest Element in a BST</a>
+     * Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.
+     * @param root
+     * @param k
+     * @return
+     */
+    public int kthSmallest(TreeNode root, int k) {
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (root.left != null) {
+            stack.push(root.left);
+            root = root.left;
+        }
+        int index = 0;
+
+        while (!stack.isEmpty()) {
+            stack.peek();
+            TreeNode node = stack.pop();
+            index++;
+            if (index == k) {
+                return node.val;
+            }
+
+            if (node.right != null) {
+                stack.push(node.right);
+                node = node.right;
+                while (node.left != null) {
+                    stack.push(node.left);
+                    node = node.left;
+                }
+            }
+        }
+        return -1;
+    }
 
     /**
      * <a href="https://leetcode.com/problems/minimum-absolute-difference-in-bst/?envType=study-plan-v2&envId=top-interview-150">530. Minimum Absolute Difference in BST</a>
