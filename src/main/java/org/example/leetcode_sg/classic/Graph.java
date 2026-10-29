@@ -1,7 +1,5 @@
 package org.example.leetcode_sg.classic;
 
-import org.example.leetcode.common.Interval;
-
 import java.util.*;
 
 public class Graph {
@@ -10,6 +8,75 @@ public class Graph {
         char[][] board = new char[][]{{'X', 'O', 'O', 'X', 'X', 'X', 'O', 'X', 'O', 'O'}, {'X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'}, {'X', 'X', 'X', 'X', 'O', 'X', 'X', 'X', 'X', 'X'}, {'X', 'O', 'X', 'X', 'X', 'O', 'X', 'X', 'X', 'O'}, {'O', 'X', 'X', 'X', 'O', 'X', 'O', 'X', 'O', 'X'}, {'X', 'X', 'O', 'X', 'X', 'O', 'O', 'X', 'X', 'X'}, {'O', 'X', 'X', 'O', 'O', 'X', 'O', 'X', 'X', 'O'}, {'O', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'X', 'X'}, {'X', 'O', 'O', 'X', 'X', 'O', 'X', 'X', 'O', 'O'}, {'X', 'X', 'X', 'O', 'O', 'X', 'O', 'X', 'X', 'O'}};
         solve(board);
     }
+
+    /**
+     * <a href="https://leetcode.com/problems/evaluate-division/?envType=study-plan-v2&envId=top-interview-150">399. Evaluate Division</a>
+     * You are given an array of variable pairs equations and an array of real numbers values, where equations[i] = [Ai, Bi] and values[i] represent the equation Ai / Bi = values[i]. Each Ai or Bi is a string that represents a single variable.
+     *
+     * You are also given some queries, where queries[j] = [Cj, Dj] represents the jth query where you must find the answer for Cj / Dj = ?.
+     *
+     * Return the answers to all queries. If a single answer cannot be determined, return -1.0.
+     *
+     * Note: The input is always valid. You may assume that evaluating the queries will not result in division by zero and that there is no contradiction.
+     *
+     * Note: The variables that do not occur in the list of equations are undefined, so the answer cannot be determined for them.
+     * @param equations 1 <= equations.length <= 20 equations = [["a","b"],["b","c"]],
+     * @param values values = [2.0,3.0]
+     * @param queries [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]]
+     * @return [6.00000,0.50000,-1.00000,1.00000,-1.00000]
+     */
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        Map<String, Map<String, Double>> map = new HashMap<>();
+
+        for (int i = 0; i < equations.size(); i++) {
+            List<String> equation = equations.get(i);
+            double value = values[i];
+
+            Map<String, Double> firstMap = map.getOrDefault(equation.get(0), new HashMap<>());
+            firstMap.put(equation.get(1), value);
+            map.put(equation.get(0), firstMap);
+
+            Map<String, Double> secondMap = map.getOrDefault(equation.get(1), new HashMap<>());
+            secondMap.put(equation.get(0), value == 0 ? 0 : (1 / value));
+            map.put(equation.get(1), secondMap);
+        }
+
+        double[] result = new double[queries.size()];
+        for (int i = 0; i < queries.size(); i++) {
+            List<String> query = queries.get(i);
+            result[i] = calcEquationDfs(query.get(0), query.get(1), map, new HashSet<>());
+        }
+        return result;
+    }
+
+    private double calcEquationDfs(String start, String end, Map<String, Map<String, Double>> map, HashSet<String> seen) {
+        if (!map.containsKey(start)) {
+            return -1;
+        }
+
+        if (Objects.equals(start, end)) {
+            return 1;
+        }
+
+        Map<String, Double> mappings = map.get(start);
+        if (mappings.containsKey(end)) {
+            return mappings.get(end);
+        }
+
+        seen.add(start);
+
+        for (Map.Entry<String, Double> entry : mappings.entrySet()) {
+            if (seen.contains(entry.getKey())) {
+                continue;
+            }
+            double remain = calcEquationDfs(entry.getKey(), end, map, seen);
+            if (remain != -1) {
+                return entry.getValue() * remain;
+            }
+        }
+        return -1;
+    }
+
 
     class Node {
         public int val;
