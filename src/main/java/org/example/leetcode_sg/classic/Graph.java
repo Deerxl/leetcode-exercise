@@ -4,9 +4,61 @@ import java.util.*;
 
 public class Graph {
 
-    public static void main(String[] args) {
-        char[][] board = new char[][]{{'X', 'O', 'O', 'X', 'X', 'X', 'O', 'X', 'O', 'O'}, {'X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'}, {'X', 'X', 'X', 'X', 'O', 'X', 'X', 'X', 'X', 'X'}, {'X', 'O', 'X', 'X', 'X', 'O', 'X', 'X', 'X', 'O'}, {'O', 'X', 'X', 'X', 'O', 'X', 'O', 'X', 'O', 'X'}, {'X', 'X', 'O', 'X', 'X', 'O', 'O', 'X', 'X', 'X'}, {'O', 'X', 'X', 'O', 'O', 'X', 'O', 'X', 'X', 'O'}, {'O', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'X', 'X'}, {'X', 'O', 'O', 'X', 'X', 'O', 'X', 'X', 'O', 'O'}, {'X', 'X', 'X', 'O', 'O', 'X', 'O', 'X', 'X', 'O'}};
-        solve(board);
+    /**
+     * <a href="https://leetcode.com/problems/course-schedule/?envType=study-plan-v2&envId=top-interview-150">207. Course Schedule</a>
+     * There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+     *
+     * For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+     * Return true if you can finish all courses. Otherwise, return false.
+     * @param numCourses  1 <= numCourses <= 2000
+     * @param prerequisites 0 <= prerequisites.length <= 5000
+     *                      prerequisites[i].length == 2
+     *                      0 <= ai, bi < numCourses
+     *                      All the pairs prerequisites[i] are unique.
+     * @return
+     */
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            List<Integer> coursePrerequisites = map.getOrDefault(prerequisite[0], new ArrayList<>());
+            coursePrerequisites.add(prerequisite[1]);
+            map.put(prerequisite[0], coursePrerequisites);
+        }
+        Set<Integer> okSet = new HashSet<>();
+        Set<Integer> seen = new HashSet<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (!canFinish(i, okSet, map, seen)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean canFinish(int course, Set<Integer> okSet, Map<Integer, List<Integer>> map, Set<Integer> seen) {
+        if (okSet.contains(course)) {
+            return true;
+        }
+
+        if (!map.containsKey(course)) {
+            okSet.add(course);
+            return true;
+        }
+
+        if (seen.contains(course)) {
+            return false;
+        }
+        seen.add(course);
+        List<Integer> coursePrerequisiteList = map.get(course);
+        for (int prerequisiteCourse : coursePrerequisiteList) {
+            boolean canFinish = canFinish(prerequisiteCourse, okSet, map, seen);
+            if (canFinish) {
+                okSet.add(prerequisiteCourse);
+            } else {
+                return false;
+            }
+        }
+        okSet.add(course);
+        return true;
     }
 
     /**
