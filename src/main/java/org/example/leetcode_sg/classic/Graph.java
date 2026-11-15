@@ -5,6 +5,50 @@ import java.util.*;
 public class Graph {
 
     /**
+     * <a href="https://leetcode.com/problems/snakes-and-ladders/description/?envType=study-plan-v2&envId=top-interview-150">909. Snakes and Ladders</a>
+     * @param board
+     * @return
+     */
+    public int snakesAndLadders(int[][] board) {
+        int n = board[0].length;
+
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.offer(1);
+
+        int[] minSteps = new int[n * n + 1];
+        Arrays.fill(minSteps, -1);
+        minSteps[1] = 0;
+
+        while (!queue.isEmpty()) {
+            int label = queue.poll();
+            if (label == n * n) {
+                break;
+            }
+
+            for (int newLabel = label + 1; newLabel <= Math.min(label + 6, n * n); newLabel++) {
+                int[] point = getXYByLabel(newLabel, n);
+                int jumpLabel = board[point[0]][point[1]] == -1 ? newLabel : board[point[0]][point[1]];
+                if (minSteps[jumpLabel] != -1) {
+                    continue;
+                }
+
+                minSteps[jumpLabel] = minSteps[label] + 1;
+                queue.offer(jumpLabel);
+            }
+        }
+
+        return minSteps[n * n];
+    }
+
+    public int[] getXYByLabel(int label, int n) {
+        int div = (label - 1) / n;
+        int row = n - div - 1;
+        int mod = (label - 1) % n;
+        int col = div % 2 == 0 ? mod : (n - mod - 1);
+        return new int[]{row, col};
+    }
+
+    /**
      * <a href="https://leetcode.com/problems/course-schedule-ii/?envType=study-plan-v2&envId=top-interview-150">210. Course Schedule II</a>
      * There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
      *
