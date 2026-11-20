@@ -4,6 +4,85 @@ import java.util.*;
 
 public class Graph {
 
+
+    /**
+     * <a href="https://leetcode.com/problems/minimum-genetic-mutation/description/?envType=study-plan-v2&envId=top-interview-150">433. Minimum Genetic Mutation</a>
+     * A gene string can be represented by an 8-character long string, with choices from 'A', 'C', 'G', and 'T'.
+     *
+     * Suppose we need to investigate a mutation from a gene string startGene to a gene string endGene where one mutation is defined as one single character changed in the gene string.
+     *
+     * For example, "AACCGGTT" --> "AACCGGTA" is one mutation.
+     * There is also a gene bank bank that records all the valid gene mutations. A gene must be in bank to make it a valid gene string.
+     *
+     * Given the two gene strings startGene and endGene and the gene bank bank, return the minimum number of mutations needed to mutate from startGene to endGene. If there is no such a mutation, return -1.
+     *
+     * Note that the starting point is assumed to be valid, so it might not be included in the bank.
+     *
+     * Example 1:
+     *
+     * Input: startGene = "AACCGGTT", endGene = "AACCGGTA", bank = ["AACCGGTA"]
+     * Output: 1
+     * Example 2:
+     *
+     * Input: startGene = "AACCGGTT", endGene = "AAACGGTA", bank = ["AACCGGTA","AACCGCTA","AAACGGTA"]
+     * Output: 2
+     * @param startGene startGene.length == endGene.length == bank[i].length == 8
+     * @param endGene
+     * @param bank 0 <= bank.length <= 10
+     * @return
+     */
+    public int minMutation(String startGene, String endGene, String[] bank) {
+        if (startGene.equals(endGene)) {
+            return 0;
+        }
+
+        Map<String, Integer> seenMap = new HashMap<>(bank.length);
+        boolean containsEndGene = false;
+        for (int i = 0; i < bank.length; i++) {
+            seenMap.put(bank[i], -1);
+            if (bank[i].equals(endGene)) {
+                containsEndGene = true;
+            }
+        }
+
+        if (!containsEndGene) {
+            return -1;
+        }
+
+        Queue<String> queue = new ArrayDeque<>();
+        queue.offer(startGene);
+        seenMap.put(startGene, 0);
+        while (!queue.isEmpty()) {
+            String currentGene = queue.poll();
+            if (currentGene.equals(endGene)) {
+                break;
+            }
+            int currentSteps = seenMap.get(currentGene);
+            for (String bankGene : bank) {
+                if (allowGeneMutation(currentGene, bankGene)
+                        && (currentSteps + 1 < seenMap.get(bankGene) || seenMap.get(bankGene) == -1)) {
+                    queue.offer(bankGene);
+                    seenMap.put(bankGene, currentSteps + 1);
+                }
+            }
+        }
+
+        return seenMap.get(endGene);
+    }
+
+    public boolean allowGeneMutation(String cur, String next) {
+        int diff = 0;
+        for (int i = 0; i < cur.length(); i++) {
+            if (cur.charAt(i) != next.charAt(i)) {
+                diff++;
+                if (diff > 1) {
+                    return false;
+                }
+            }
+        }
+        return diff == 1;
+    }
+
     /**
      * <a href="https://leetcode.com/problems/snakes-and-ladders/description/?envType=study-plan-v2&envId=top-interview-150">909. Snakes and Ladders</a>
      * @param board
