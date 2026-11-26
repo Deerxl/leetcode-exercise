@@ -1,11 +1,38 @@
 package org.example.leetcode_sg.classic;
 
-import org.example.leetcode.common.ListNode;
-
 import java.util.*;
 
 public class BackTracking {
 
+    /**
+     * <a href="https://leetcode.com/problems/permutations/?envType=study-plan-v2&envId=top-interview-150">46. Permutations</a>
+     * @param nums 1 <= nums.length <= 6
+     * -10 <= nums[i] <= 10
+     * All the integers of nums are unique.
+     * @return
+     */
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        permuteBackTrack(result, new ArrayList<>(), nums);
+        return result;
+    }
+
+
+    public void permuteBackTrack(List<List<Integer>> list, List<Integer> tmpList, int[] nums) {
+        if (tmpList.size() == nums.length) {
+            list.add(new ArrayList<>(tmpList));
+            return;
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (tmpList.contains(nums[i])) {
+                continue;
+            }
+            tmpList.add(nums[i]);
+            permuteBackTrack(list, tmpList, nums);
+            tmpList.remove(tmpList.size() - 1);
+        }
+    }
 
     /**
      * <a href="https://leetcode.com/problems/combinations/?envType=study-plan-v2&envId=top-interview-150">77. Combinations</a>
