@@ -15,6 +15,66 @@ public class ListNodeProblems {
 
 
     /**
+     * <a href="https://leetcode.com/problems/sort-list/description/?envType=study-plan-v2&envId=top-interview-150">148. Sort List</a>
+     * Given the head of a linked list, return the list after sorting it in ascending order.
+     * Follow up: Can you sort the linked list in O(n logn) time and O(1) memory (i.e. constant space)?
+     * @param head The number of nodes in the list is in the range [0, 5 * 104].
+     * @return
+     */
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode slow = head, fast = head, prev = null;
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        prev.next = null;
+        ListNode l1 = sortList(head);
+        ListNode l2 = sortList(slow);
+
+        return sortList(l1, l2);
+    }
+
+    ListNode sortList(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+
+        if (l2 == null) {
+            return l1;
+        }
+
+        ListNode l0 = new ListNode();
+        ListNode head = l0;
+
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                l0.next = l1;
+                l1 = l1.next;
+            } else {
+                l0.next = l2;
+                l2 = l2.next;
+            }
+            l0 = l0.next;
+        }
+
+        if (l1 != null) {
+            l0.next = l1;
+        }
+        if (l2 != null) {
+            l0.next = l2;
+        }
+
+        return head.next;
+    }
+
+
+    /**
      * <a href="https://leetcode.com/problems/partition-list/?envType=study-plan-v2&envId=top-interview-150">86. Partition List</a>
      * @param head
      * @param x
